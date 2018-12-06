@@ -33,13 +33,21 @@ adapter.on('stateChange', function (id, state) {
 	{
 		id = id.substring(adapter.namespace.length + 1);
 
-        adapter.setState(id, state.val, true);
-//		switch (id)
-//		{
-//			case 'media_state':
-//                
-//                break;
-//        }
+        if(id.indexOf("info.") !== -1 || id.indexOf("playing.") !== -1)
+        {
+            adapter.setState(id, state.val, true);
+            return;
+        }
+
+        adapter.log.info("state changed: " + id);
+
+		switch (id)
+		{
+			case 'command.message':
+                connection.send('{"MessageType":"Command", "Data": { "Name": "DisplayMessage", "Arguments": { "Header": "Message from ioBroker", "Text": "' + state.val + '", "TimeoutMs": 3000 } } }');
+                adapter.setState(id, "", true);
+                break;
+        }
     }
 });
 
@@ -69,7 +77,7 @@ function main() {
 
 function webOpen()
 {
-    connection.send('{"MessageType":"SessionsStart", "Data": "2000,2000"}');
+    connection.send('{"MessageType":"SessionsStart", "Data": "10000,10000"}');
     adapter.log.info("Mit Server verbunden.");
 }
 
@@ -123,7 +131,12 @@ function webMessage(e)
                 }
             }
         } else {
-            adapter.log.info("Device skipped: " + d.DeviceName);
+            adapter.log.debug("Device skipped: " + d.DeviceName);
+            adapter.setState("playing.seasonName", "", true);
+            adapter.setState("playing.seriesName", "", true);
+            adapter.setState("playing.type", "none", true);
+            adapter.setState("playing.name", "", true);
+            adapter.setState("playing.description", "", true);
         }
     }
 
