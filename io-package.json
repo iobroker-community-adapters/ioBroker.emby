@@ -29,7 +29,7 @@
         "icon": "emby.png",
         "materialize": true,
         "enabled": true,
-        "extIcon": "https://github.com/thewhobox/ioBroker.emby/raw/master/admin/emby.png",
+        "extIcon": "https://raw.githubusercontent.com/thewhobox/ioBroker.emby/master/admin/emby.png",
         "keywords": ["emby", "server", "media", "video"],
         "readme": "Dies ist ein test",
         "loglevel": "info",
