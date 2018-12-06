@@ -1,20 +1,24 @@
 {
   "name": "iobroker.emby",
-  "version": "0.6.0",
+  "version": "0.0.1",
   "description": "Emby Adapter",
   "author": {
     "name": "Mike",
-    "email": "test@google.de"
+    "email": "admin@mikegerst.de"
   },
   "contributors": [
     {
       "name": "Mike",
-      "email": "test@google.de"
+      "email": "admin@mikegerst.de"
     }
   ],
-  "homepage": "http://gaymenring.com",
+  "homepage": "https://github.com/thewhobox/ioBroker.emby",
   "license": "MIT",
   "keywords": ["emby", "server", "media", "video"],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/thewhobox/ioBroker.emby"
+  },
   "dependencies": {
     "websocket": "^1.0.23"
   },
@@ -24,5 +28,8 @@
     "chai": "^4.1.2"
   },
   "main": "main.js",
+  "bugs": {
+    "url": "hhttps://github.com/thewhobox/ioBroker.emby/issues"
+  },
   "readmeFilename": "README.md"
 }

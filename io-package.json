@@ -29,7 +29,7 @@
         "icon": "emby.png",
         "materialize": true,
         "enabled": true,
-        "extIcon": "https://raw.githubusercontent.com/MediaBrowser/Emby.Resources/master/images/Logos/logoicon.png",
+        "extIcon": "https://github.com/thewhobox/ioBroker.emby/raw/master/admin/emby.png",
         "keywords": ["emby", "server", "media", "video"],
         "readme": "Dies ist ein test",
         "loglevel": "info",
@@ -38,7 +38,7 @@
         "messagebox": false
     },
     "native": {
-        "ip": "",
+        "ip": "0.0.0.0:8096",
         "deviceNames": "",
         "timer": 1000
     },
