@@ -32,7 +32,6 @@ adapter.on('stateChange', function (id, state) {
     if (id && state && !state.ack)
 	{
 		id = id.substring(adapter.namespace.length + 1);
-        adapter.log.info("state change: " + id + " - " + state.val);
 
         adapter.setState(id, state.val, true);
 //		switch (id)
@@ -58,8 +57,9 @@ adapter.on('ready', function () {
 
 function main() {
     adapter.subscribeStates('*');
-adapter.log.info("starting websocket");
-    connection = new W3CWebSocket('ws://192.168.0.129:8096?api_key=8306e66875c54b4c816fed315c3cd2e6&deviceId=00001');
+    adapter.log.info("starting websocket");
+    adapter.log.info("try to connect to: " + adapter.config.ip);
+    connection = new W3CWebSocket('ws://' + adapter.config.ip + '?api_key=8306e66875c54b4c816fed315c3cd2e6&deviceId=00001');
     adapter.log.info("started websocket");
 
     connection.onopen = webOpen;
@@ -81,17 +81,31 @@ function webError(error)
 function webMessage(e)
 {
     var data = JSON.parse(e.data);
+    var flagpaused = false;
 
     for(var i = 0; i < data.Data.length; i++)
     {
         var d = data.Data[i];
         var state = d.PlayState;
-        
-        if(typeof state.MediaSourceId !== 'undefined')
+
+        if(typeof d.PlaylistItemId !== 'undefined')
         {
-            adapter.setState("isPaused", state.IsPaused, true);
+            flagpaused = true;
+            var ispaused;
+            if(typeof state.MediaSourceId !== 'undefined')
+            {
+                ispaused = state.IsPaused;
+            } else {
+                ispaused = true;
+            }
+
+            adapter.setState("isPaused", ispaused, true);
             adapter.setState("isMuted", state.IsMuted, true);
             adapter.setState("deviceName", d.DeviceName, true);
+            
         }
     }
+
+    if(!flagpaused)
+        adapter.setState("isPaused", true, true);
 }

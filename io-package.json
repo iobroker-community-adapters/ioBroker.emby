@@ -46,32 +46,72 @@
 
     ],
     "instanceObjects": [
-        {
-          "_id": "on",
-          "type": "state",
-          "common": {
-            "name": "Is Emby is ON",
-            "role": "indicator.online",
-            "type": "string",
-            "read": true,
-            "write": false
-          },
-          "native": {}
+      {
+        "_id": "info",
+        "type": "channel",
+        "common": {
+            "name": "Information"
         },
-        {
-          "_id": "deviceName",
-          "type": "state",
-          "common": {
-            "name": "Name of the Device now playing",
-            "role": "state",
-            "type": "string",
-            "read": true,
-            "write": false
-          },
-          "native": {}
+        "native": {}
+      },{
+        "_id": "playing",
+        "type": "channel",
+        "common": {
+            "name": "Now Playing"
         },
+        "native": {}
+      },
+
+      {
+        "_id": "info.client",
+        "type": "state",
+        "common": {
+          "name": "Which client is used",
+          "role": "state",
+          "type": "string",
+          "read": true,
+          "write": false
+        },
+        "native": {}
+      },
+      {
+        "_id": "info.on",
+        "type": "state",
+        "common": {
+          "name": "Is Emby is ON",
+          "role": "indicator.online",
+          "type": "string",
+          "read": true,
+          "write": false
+        },
+        "native": {}
+      },
+      {
+        "_id": "info.deviceName",
+        "type": "state",
+        "common": {
+          "name": "Name of the Device now playing",
+          "role": "state",
+          "type": "string",
+          "read": true,
+          "write": false
+        },
+        "native": {}
+      },
+      {
+        "_id": "info.deviceId",
+        "type": "state",
+        "common": {
+          "name": "Id of the Device now playing",
+          "role": "state",
+          "type": "string",
+          "read": true,
+          "write": false
+        },
+        "native": {}
+      },
         {
-          "_id": "isPaused",
+          "_id": "info.isPaused",
           "type": "state",
           "common": {
             "name": "Is Media paused?",
@@ -83,7 +123,7 @@
           "native": {}
         },
         {
-          "_id": "isMuted",
+          "_id": "info.isMuted",
           "type": "state",
           "common": {
             "name": "Is Player muted?",
@@ -94,6 +134,71 @@
           },
           "native": {}
         },
+
+
+        {
+          "_id": "playing.name",
+          "type": "state",
+          "common": {
+            "name": "Name of file playing",
+            "role": "state",
+            "type": "string",
+            "read": true,
+            "write": false
+          },
+          "native": {}
+        },
+        {
+          "_id": "playing.decription",
+          "type": "state",
+          "common": {
+            "name": "Description of file playing",
+            "role": "state",
+            "type": "string",
+            "read": true,
+            "write": false
+          },
+          "native": {}
+        },
+        {
+          "_id": "playing.type",
+          "type": "state",
+          "common": {
+            "name": "Type of file playing",
+            "role": "state",
+            "type": "string",
+            "read": true,
+            "write": false
+          },
+          "native": {}
+        },
+        {
+          "_id": "playing.seriesName",
+          "type": "state",
+          "common": {
+            "name": "Name of serie now playing",
+            "role": "state",
+            "type": "string",
+            "read": true,
+            "write": false
+          },
+          "native": {}
+        },
+        {
+          "_id": "playing.seasonName",
+          "type": "state",
+          "common": {
+            "name": "Name of season now playing",
+            "role": "state",
+            "type": "string",
+            "read": true,
+            "write": false
+          },
+          "native": {}
+        },
+
+
+
         {
           "_id": "play",
           "type": "state",
