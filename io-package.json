@@ -149,7 +149,7 @@
           "native": {}
         },
         {
-          "_id": "playing.decription",
+          "_id": "playing.description",
           "type": "state",
           "common": {
             "name": "Description of file playing",

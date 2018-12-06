@@ -86,7 +86,6 @@ function webMessage(e)
     for(var i = 0; i < data.Data.length; i++)
     {
         var d = data.Data[i];
-        var state = d.PlayState;
 
         if(typeof d.PlaylistItemId !== 'undefined')
         {
@@ -99,10 +98,26 @@ function webMessage(e)
                 ispaused = true;
             }
 
-            adapter.setState("isPaused", ispaused, true);
-            adapter.setState("isMuted", state.IsMuted, true);
-            adapter.setState("deviceName", d.DeviceName, true);
-            
+            adapter.setState("info.isPaused", ispaused, true);
+            adapter.setState("info.isMuted", d.PlayState.IsMuted, true);
+            adapter.setState("info.deviceName", d.DeviceName, true);
+        }
+        
+        if(typeof d.NowPlayingItem !== 'undefined')
+        {
+            var npi = d.NowPlayingItem;
+            adapter.setState("playing.name", npi.Name, true);
+            adapter.setState("playing.description", npi.Overview, true);
+            adapter.setState("playing.type", npi.Type, true);
+
+            if(typeof npi.SeasonName !== 'undefined')
+            {
+                adapter.setState("playing.seasonName", npi.SeasonName, true);
+                adapter.setState("playing.seriesName", npi.SeriesName, true);
+            } else {
+                adapter.setState("playing.seasonName", "", true);
+                adapter.setState("playing.seriesName", "", true);
+            }
         }
     }
 
