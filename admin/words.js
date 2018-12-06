@@ -4,5 +4,7 @@
 
 systemDictionary = {
     "on save": { "de": "Beim Speichern von Einstellungen der Adapter wird sofort neu gestartet." },
-    "IP": { "de": "IP/ Domain des Emby Servers (mit Port)" }
+    "IP": { "de": "IP/ Domain des Emby Servers (mit Port)" },
+    "ApiKey": { "de": "ApiKey", "en": "ApiKey" },
+    "DeviceNames": { "de": "Geräte Namen (zum Überwachen)", "en": "Device Names (to watch)" }
 };
