@@ -72,19 +72,7 @@
         "type": "state",
         "common": {
           "name": "Which client is used",
-          "role": "state",
-          "type": "string",
-          "read": true,
-          "write": false
-        },
-        "native": {}
-      },
-      {
-        "_id": "info.on",
-        "type": "state",
-        "common": {
-          "name": "Is Emby is ON",
-          "role": "indicator.online",
+          "role": "info.name",
           "type": "string",
           "read": true,
           "write": false
@@ -96,7 +84,7 @@
         "type": "state",
         "common": {
           "name": "Name of the Device now playing",
-          "role": "state",
+          "role": "info.name",
           "type": "string",
           "read": true,
           "write": false
@@ -132,7 +120,7 @@
           "type": "state",
           "common": {
             "name": "Is Player muted?",
-            "role": "media.state",
+            "role": "media.mute",
             "type": "boolean",
             "read": true,
             "write": false
@@ -146,7 +134,7 @@
           "type": "state",
           "common": {
             "name": "Name of file playing",
-            "role": "state",
+            "role": "media.title",
             "type": "string",
             "read": true,
             "write": false
@@ -182,7 +170,7 @@
           "type": "state",
           "common": {
             "name": "Name of serie now playing",
-            "role": "state",
+            "role": "media.title",
             "type": "string",
             "read": true,
             "write": false
@@ -194,7 +182,7 @@
           "type": "state",
           "common": {
             "name": "Name of season now playing",
-            "role": "state",
+            "role": "media.season",
             "type": "string",
             "read": true,
             "write": false
@@ -221,8 +209,8 @@
           "type": "state",
           "common": {
             "name": "Play",
-            "role": "button",
-            "type": "boolean",
+            "role": "state",
+            "type": "string",
             "read": false,
             "write": true
           },
