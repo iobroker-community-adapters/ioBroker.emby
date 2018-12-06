@@ -1,0 +1,4 @@
+{
+  "IP": "IP vom Emby Server (mit Port, oder Domain)",
+  "on save": "on save adapter restarts with new config immediately"
+}

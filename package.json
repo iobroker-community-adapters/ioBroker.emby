@@ -1,0 +1,28 @@
+{
+  "name": "iobroker.emby",
+  "version": "0.6.0",
+  "description": "Emby Adapter",
+  "author": {
+    "name": "Mike",
+    "email": "test@google.de"
+  },
+  "contributors": [
+    {
+      "name": "Mike",
+      "email": "test@google.de"
+    }
+  ],
+  "homepage": "http://gaymenring.com",
+  "license": "MIT",
+  "keywords": ["emby", "server", "media", "video"],
+  "dependencies": {
+    "websocket": "^1.0.23"
+  },
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "mocha": "^4.1.0",
+    "chai": "^4.1.2"
+  },
+  "main": "main.js",
+  "readmeFilename": "README.md"
+}

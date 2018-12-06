@@ -1,0 +1,110 @@
+{
+    "common": {
+        "name": "emby",
+        "version": "0.0.1",
+        "news": {
+            "0.0.1": {
+                "en": "initial adapter",
+                "de": "Initiale Version"
+            }
+        },
+		"title": "Emby Adapter",
+        "titleLang": {
+            "en": "Emby Adapter",
+            "de": "Emby Adapter"
+        },
+        "desc": {
+            "en": "Controle and visualise your Emby Server",
+            "de": "Kontrolliere und visualisiere deinen Emby Server"
+        },
+        "authors": [
+            "@@Author@@ <@@email@@>"
+        ],
+        "docs": {
+            "en": "docs/en/admin.md",
+            "es": "docs/es/admin.md"
+        },
+        "platform": "Javascript/Node.js",
+        "mode": "daemon",
+        "icon": "emby.png",
+        "materialize": true,
+        "enabled": true,
+        "extIcon": "https://raw.githubusercontent.com/MediaBrowser/Emby.Resources/master/images/Logos/logoicon.png",
+        "keywords": ["emby", "server", "media", "video"],
+        "readme": "Dies ist ein test",
+        "loglevel": "info",
+        "type": "general",
+        "license": "MIT",
+        "messagebox": false
+    },
+    "native": {
+        "ip": "",
+        "deviceNames": "",
+        "timer": 1000
+    },
+    "objects": [
+
+    ],
+    "instanceObjects": [
+        {
+          "_id": "on",
+          "type": "state",
+          "common": {
+            "name": "Is Emby is ON",
+            "role": "indicator.online",
+            "type": "string",
+            "read": true,
+            "write": false
+          },
+          "native": {}
+        },
+        {
+          "_id": "deviceName",
+          "type": "state",
+          "common": {
+            "name": "Name of the Device now playing",
+            "role": "state",
+            "type": "string",
+            "read": true,
+            "write": false
+          },
+          "native": {}
+        },
+        {
+          "_id": "isPaused",
+          "type": "state",
+          "common": {
+            "name": "Is Media paused?",
+            "role": "media.state",
+            "type": "boolean",
+            "read": true,
+            "write": false
+          },
+          "native": {}
+        },
+        {
+          "_id": "isMuted",
+          "type": "state",
+          "common": {
+            "name": "Is Player muted?",
+            "role": "media.state",
+            "type": "boolean",
+            "read": true,
+            "write": false
+          },
+          "native": {}
+        },
+        {
+          "_id": "play",
+          "type": "state",
+          "common": {
+            "name": "Play",
+            "role": "button",
+            "type": "boolean",
+            "read": false,
+            "write": true
+          },
+          "native": {}
+        }
+      ]
+}
