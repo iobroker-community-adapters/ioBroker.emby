@@ -59,7 +59,7 @@ function main() {
     adapter.subscribeStates('*');
     adapter.log.info("starting websocket");
     adapter.log.info("try to connect to: " + adapter.config.ip);
-    connection = new W3CWebSocket('ws://' + adapter.config.ip + '?api_key=8306e66875c54b4c816fed315c3cd2e6&deviceId=00001');
+    connection = new W3CWebSocket('ws://' + adapter.config.ip + '?api_key=' + adapter.config.apikey + '&deviceId=00001'); //8306e66875c54b4c816fed315c3cd2e6
     adapter.log.info("started websocket");
 
     connection.onopen = webOpen;
@@ -87,37 +87,43 @@ function webMessage(e)
     {
         var d = data.Data[i];
 
-        if(typeof d.PlaylistItemId !== 'undefined')
+        if(adapter.config.deviceNames == "" || ( adapter.config.deviceNames != "" && adapter.config.deviceNames.indexOf(d.DeviceName) !== -1))
         {
-            flagpaused = true;
-            var ispaused;
-            if(typeof d.PlayState.MediaSourceId !== 'undefined')
-            {
-                ispaused = d.PlayState.IsPaused;
-            } else {
-                ispaused = true;
-            }
 
-            adapter.setState("info.isPaused", ispaused, true);
-            adapter.setState("info.isMuted", d.PlayState.IsMuted, true);
-            adapter.setState("info.deviceName", d.DeviceName, true);
-        }
-        
-        if(typeof d.NowPlayingItem !== 'undefined')
-        {
-            var npi = d.NowPlayingItem;
-            adapter.setState("playing.name", npi.Name, true);
-            adapter.setState("playing.description", npi.Overview, true);
-            adapter.setState("playing.type", npi.Type, true);
-
-            if(typeof npi.SeasonName !== 'undefined')
+            if(typeof d.PlaylistItemId !== 'undefined')
             {
-                adapter.setState("playing.seasonName", npi.SeasonName, true);
-                adapter.setState("playing.seriesName", npi.SeriesName, true);
-            } else {
-                adapter.setState("playing.seasonName", "", true);
-                adapter.setState("playing.seriesName", "", true);
+                flagpaused = true;
+                var ispaused;
+                if(typeof d.PlayState.MediaSourceId !== 'undefined')
+                {
+                    ispaused = d.PlayState.IsPaused;
+                } else {
+                    ispaused = true;
+                }
+
+                adapter.setState("info.isPaused", ispaused, true);
+                adapter.setState("info.isMuted", d.PlayState.IsMuted, true);
+                adapter.setState("info.deviceName", d.DeviceName, true);
             }
+            
+            if(typeof d.NowPlayingItem !== 'undefined')
+            {
+                var npi = d.NowPlayingItem;
+                adapter.setState("playing.name", npi.Name, true);
+                adapter.setState("playing.description", npi.Overview, true);
+                adapter.setState("playing.type", npi.Type, true);
+
+                if(typeof npi.SeasonName !== 'undefined')
+                {
+                    adapter.setState("playing.seasonName", npi.SeasonName, true);
+                    adapter.setState("playing.seriesName", npi.SeriesName, true);
+                } else {
+                    adapter.setState("playing.seasonName", "", true);
+                    adapter.setState("playing.seriesName", "", true);
+                }
+            }
+        } else {
+            adapter.log.info("Device skipped: " + d.DeviceName);
         }
     }
 
