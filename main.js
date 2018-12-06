@@ -91,9 +91,9 @@ function webMessage(e)
         {
             flagpaused = true;
             var ispaused;
-            if(typeof state.MediaSourceId !== 'undefined')
+            if(typeof d.PlayState.MediaSourceId !== 'undefined')
             {
-                ispaused = state.IsPaused;
+                ispaused = d.PlayState.IsPaused;
             } else {
                 ispaused = true;
             }
