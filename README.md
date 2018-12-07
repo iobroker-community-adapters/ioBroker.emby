@@ -1,10 +1,10 @@
 ![Logo](admin/emby.png)
-# ioBroker.template
+# ioBroker.emby
 =================
 
-This adapter is a template for the creation of an ioBroker adapter. You do not need it unless you plan on developing your own adapter.
+This adapter will allow you to connect to your Emby Server and controle it.
 
-It includes both code running within iobroker and as vis widget. If you only plan to create a vis widget then you should use the [iobroker.vis-template](https://github.com/ioBroker/ioBroker.vis-template) instead.
+Please follow the Steps to ensure the Adapter will work correctly and you can see all Devices.
 
 ## Steps 
 1. Install the Adapter from Github
@@ -45,9 +45,9 @@ It includes both code running within iobroker and as vis widget. If you only pla
 
 
 | Command | Description | Info |
-| ------------- | ------------- |
-| x.media.description  | Description of the shown File.  |  |
-| Content Cell  | Content Cell  |
+| ------------- | ------------- | ------------- |
+| x.media.description | Description of the shown File. |  |
+| Content Cell  | Content Cell  |  |
 
 
 ### Commands
