@@ -88,6 +88,17 @@ function webError(error)
 
 function webMessage(e)
 {
+    adapter.setObjectNotExists("test", {
+        type: 'channel',
+        common: {
+            name: "test",
+
+        },
+        native: {
+        }
+});
+
+
     var data = JSON.parse(e.data);
     var flagpaused = false;
 
@@ -95,12 +106,7 @@ function webMessage(e)
     {
         var d = data.Data[i];
 
-        adapter.setObjectNotExists("test", {
-            "type": "channel",
-            "common": {
-                "name": d.DeviceName
-            }
-          });
+        
 
 
         if(adapter.config.deviceNames == "" || ( adapter.config.deviceNames != "" && adapter.config.deviceNames.indexOf(d.DeviceName) !== -1))
