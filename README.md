@@ -28,26 +28,16 @@ Please follow the Steps to ensure the Adapter will work correctly and you can se
 
 
 ### Media
-* x.media.description
-  - Description of the shown File.
-* x.media.isMuted
-  - If Media is Muted. Not all devices support this and will be False.
-* x.media.isPaused
-  - If Media is Paused. Will also be True if User closes the client.
-* x.media.title
-  - The Title of the shown File.
-* x.media.type
-  - The Type of the shown File. (Episode, Video, Book, etc)
-* x.media.seasonName
-  - The Name of the Season if .media.type is Episode otherwise it will be empty.
-* x.media.seriesName
-  - The Name of the Serie if .media.type is Episode otherwise it will be empty.
-
 
 | Command | Description | Info |
 | ------------- | ------------- | ------------- |
 | x.media.description | Description of the shown File. |  |
-| Content Cell  | Content Cell  |  |
+| x.media.isMuted | If Media is Muted. | Not all devices support this and will be False. |
+| x.media.isPaused | If Media is Paused. | Will also be True if User closes the client. |
+| x.media.title | The Title of the shown File. |  |
+| x.media.type | The Type of the shown File. | Episode, Video, Book, etc. |
+| x.media.seasonName | The Name of the Season  | Only if .media.type is Episode otherwise it will be empty. |
+| x.media.seriesName | The Name of the Serie | Only if .media.type is Episode otherwise it will be empty. |
 
 
 ### Commands
