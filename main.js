@@ -46,7 +46,6 @@ adapter.on('stateChange', function (id, state) {
         var cmd = id.substring(dId.length + 1);
         
         var headers = { 
-            'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.8; rv:24.0) Gecko/20100101 Firefox/24.0',
             'Content-Type' : 'application/json' 
         };
 
@@ -56,7 +55,7 @@ adapter.on('stateChange', function (id, state) {
                 adapter.log.info("Body: " + '{"Header":"Test", "Text":"' + state.val + '", "TimeoutMs":"5000" }');
                 request.post({
                         uri: "http://" + adapter.config.ip + "/Sessions/" + dId + "/Message?api_key=" + adapter.config.apikey,
-                        form: '{"Header":"Test", "Text":"' + state.val + '", "TimeoutMs":"5000" }',
+                        body: '{"Header":"Test", "Text":"' + state.val + '", "TimeoutMs":"5000" }',
                         headers: headers
                     },
                     function(error, resp, body) {
