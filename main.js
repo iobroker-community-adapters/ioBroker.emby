@@ -95,13 +95,11 @@ function webMessage(e)
     {
         var d = data.Data[i];
 
-        adapter.setObject(i, {
-            "_id": i,
+        adapter.setObject("test", {
             "type": "channel",
             "common": {
                 "name": d.DeviceName
-            },
-            "native": {}
+            }
           });
 
 
