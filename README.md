@@ -17,7 +17,7 @@ It includes both code running within iobroker and as vis widget. If you only pla
 
 4. To see the first Items you will have to open a Emby Client to recieve some Data.
   
-  ```The Adapter will not get Data if **no** client is open."```
+  ```The Adapter will not get Data if **no** client is open.```
 
 
 ## Objects
@@ -42,6 +42,12 @@ It includes both code running within iobroker and as vis widget. If you only pla
   - The Name of the Season if .media.type is Episode otherwise it will be empty.
 * x.media.seriesName
   - The Name of the Serie if .media.type is Episode otherwise it will be empty.
+
+
+| Command | Description | Info |
+| ------------- | ------------- |
+| x.media.description  | Description of the shown File.  |  |
+| Content Cell  | Content Cell  |
 
 
 ### Commands
