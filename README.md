@@ -27,9 +27,26 @@ It includes both code running within iobroker and as vis widget. If you only pla
 
 ## Objects
 
+### Infos
+* x.info.deviceName - Shows the Name of the Device
+
+
+###
+* x.media.isMuted
+ - If Media is Muted. Not all devices support this and will be False.
+* x.media.isPaused
+ - If Media is Paused. Will also be True if User closes the client.
+* x.media.title
+ - The Title of the shown File.
+* x.media.seasonName
+ - The Name of the Season if .media.type is Episode otherwise it will be empty.
+* x.media.seriesName
+ - The Name of the Serie if .media.type is Episode otherwise it will be empty.
+
+
 ### Commands
-* x.command.dialog   -
-    Show a dialog on the selected Device.
+* x.command.dialog
+  - Show a dialog on the selected Device.
     You can set Header and Body: Seperate it by '|'
     For example: Alarm|Some one opened the door.
     If no Header is given it will show ioBroker as Header.
