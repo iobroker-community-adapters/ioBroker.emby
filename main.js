@@ -130,16 +130,17 @@ function webMessage(e)
                     adapter.setState("playing.seriesName", "", true);
                 }
             }
-        } else {
-            adapter.log.debug("Device skipped: " + d.DeviceName);
-            adapter.setState("playing.seasonName", "", true);
-            adapter.setState("playing.seriesName", "", true);
-            adapter.setState("playing.type", "none", true);
-            adapter.setState("playing.name", "", true);
-            adapter.setState("playing.description", "", true);
         }
     }
 
     if(!flagpaused)
+    {
         adapter.setState("isPaused", true, true);
+        adapter.log.debug("Device skipped: " + d.DeviceName);
+        adapter.setState("playing.seasonName", "", true);
+        adapter.setState("playing.seriesName", "", true);
+        adapter.setState("playing.type", "none", true);
+        adapter.setState("playing.name", "", true);
+        adapter.setState("playing.description", "", true);
+    }
 }

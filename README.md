@@ -24,3 +24,10 @@ It includes both code running within iobroker and as vis widget. If you only pla
   
   ```npm install -g gulp-cli```
  
+ ## Changelog
+ ### 0.0.2
+* added more states
+* added DisplayMessage
+
+### 0.0.1
+* Initial version
