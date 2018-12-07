@@ -45,15 +45,11 @@ adapter.on('stateChange', function (id, state) {
         var dId = id.substring(0, id.indexOf('.'));
         var cmd = id.substring(dId.length + 1);
         
-        adapter.log.info("state changed: " + id);
-        adapter.log.info("for: " + dId);
-        adapter.log.info("cmd: " + cmd);
-
 		switch (cmd)
 		{
             case 'command.play':
-            adapter.log.info("http://" + adapter.config.ip + "/Sessions/" + dId + "/Command/SetVolume");
-                request.post("http://" + adapter.config.ip + "/Sessions/" + dId + "/GoHome",
+            adapter.log.info("http://" + adapter.config.ip + "/Sessions/" + dId + "/Command/SetVolume?api_key=" + adapter.config.apiKey);
+                request.post("http://" + adapter.config.ip + "/Sessions/" + dId + "/GoHome?api_key=" + adapter.config.apiKey,
                     { Arguments:{ "Volume": state.val } },
                     function(error, resp, body) {
                         if(!error)
@@ -68,8 +64,8 @@ adapter.on('stateChange', function (id, state) {
                 break;
 
             case 'command.volume':
-            adapter.log.info("http://" + adapter.config.ip + "/Sessions/" + dId + "/Command/SetVolume");
-                request.post("http://" + adapter.config.ip + "/Sessions/" + dId + "/Command/SetVolume",
+            adapter.log.info("http://" + adapter.config.ip + "/Sessions/" + dId + "/Command/SetVolume?api_key=" + adapter.config.apiKey);
+                request.post("http://" + adapter.config.ip + "/Sessions/" + dId + "/Command/SetVolume?api_key=" + adapter.config.apiKey,
                     { Arguments:{ "Volume": state.val } },
                     function(error, resp, body) {
                         if(!error)
@@ -81,6 +77,10 @@ adapter.on('stateChange', function (id, state) {
 
                 //connection.send('{"MessageType":"Command", "Data": { "Name": "DisplayMessage", "Arguments": { "Header": "Message from ioBroker", "Text": "' + state.val + '", "TimeoutMs": 3000 } } }');
                 
+                break;
+
+            default:
+                adapter.log.info("Not supported command: " + id);
                 break;
         }
     }
