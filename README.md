@@ -7,37 +7,37 @@ This adapter is a template for the creation of an ioBroker adapter. You do not n
 It includes both code running within iobroker and as vis widget. If you only plan to create a vis widget then you should use the [iobroker.vis-template](https://github.com/ioBroker/ioBroker.vis-template) instead.
 
 ## Steps 
-1. download and unpack this packet from github ```https://github.com/ioBroker/ioBroker.template/archive/master.zip```
-  or clone git repository ```git clone --depth=1 https://github.com/ioBroker/ioBroker.template.git```
+1. Install the Adapter from Github
 
-2. download required npm packets. Write in ioBroker.template directory:
+2. Edit the Settings and enter the IP, ApiKey and maybe some DeviceIds you want to ignore.
 
-  ```npm install```
+  ```IP **with** Port => 192.168.0.100:8096```
   
-3. set name of this template. Call
-  
-  ```gulp rename --name mynewname --email email@mail.com --author "Author Name"```
-  
-  *mynewname* must be **lower** case and with no spaces.
+3. Save and restart the Adapter.
 
-  If gulp is not available, install gulp globally:
+4. To see the first Items you will have to open a Emby Client to recieve some Data.
   
-  ```npm install -g gulp-cli```
+  ```The Adapter will not get Data if **no** client is open."```
 
 
 ## Objects
 
 ### Infos
-* x.info.deviceName - Shows the Name of the Device
+* x.info.deviceName
+  - Shows the Name of the Device
 
 
-###
+### Media
+* x.media.description
+  - Description of the shown File.
 * x.media.isMuted
   - If Media is Muted. Not all devices support this and will be False.
 * x.media.isPaused
   - If Media is Paused. Will also be True if User closes the client.
 * x.media.title
   - The Title of the shown File.
+* x.media.type
+  - The Type of the shown File. (Episode, Video, Book, etc)
 * x.media.seasonName
   - The Name of the Season if .media.type is Episode otherwise it will be empty.
 * x.media.seriesName
