@@ -44,35 +44,15 @@
     "native": {
         "ip": "0.0.0.0:8096",
         "apikey": "",
-        "deviceNames": "",
+        "deviceIds": "",
         "timer": 1000
     },
     "objects": [
 
     ],
     "instanceObjects": [
-      {
-        "_id": "command",
-        "type": "channel",
-        "common": {
-            "name": "Information"
-        },
-        "native": {}
-      },
 
-
-        {
-          "_id": "command.play",
-          "type": "state",
-          "common": {
-            "name": "Play",
-            "role": "button",
-            "type": "boolean",
-            "read": false,
-            "write": true
-          },
-          "native": {}
-        },
+        
         {
           "_id": "command.message",
           "type": "state",

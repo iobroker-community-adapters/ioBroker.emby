@@ -1,8 +1,10 @@
 'use strict';
 
+var request = require('request');
 var W3CWebSocket = require('websocket').w3cwebsocket;
 const utils =    require(__dirname + '/lib/utils'); // Get common adapter utils
 const adapter = new utils.Adapter('emby');
+
 var websocket;
 var checkOnline;
 var connection;
@@ -39,13 +41,40 @@ adapter.on('stateChange', function (id, state) {
             return;
         }
 
-        adapter.log.info("state changed: " + id);
 
-		switch (id)
+        var dId = id.substring(0, id.indexOf('.'));
+        var cmd = id.substring(dId.length + 1);
+        
+        adapter.log.info("state changed: " + id);
+        adapter.log.info("for: " + dId);
+        adapter.log.info("cmd: " + cmd);
+
+		switch (cmd)
 		{
-			case 'command.message':
-                connection.send('{"MessageType":"Command", "Data": { "Name": "DisplayMessage", "Arguments": { "Header": "Message from ioBroker", "Text": "' + state.val + '", "TimeoutMs": 3000 } } }');
-                adapter.setState(id, "", true);
+            case 'command.play':
+                request.post("http://" + adapter.config.ip + "/Sessions/" + dId + "/GoHome",
+                    { Arguments:{ "Volume": state.val } },
+                    function(error, resp, body) {
+                        if(!error)
+                        adapter.setState(id, state.val, true);
+                    }
+                );
+
+                //connection.send('{"MessageType":"Command", "Data": { "Name": "DisplayMessage", "Arguments": { "Header": "Message from ioBroker", "Text": "' + state.val + '", "TimeoutMs": 3000 } } }');
+                
+                break;
+
+            case 'command.volume':
+                request.post("http://" + adapter.config.ip + "/Sessions/" + dId + "/Command/SetVolume",
+                    { Arguments:{ "Volume": state.val } },
+                    function(error, resp, body) {
+                        if(!error)
+                        adapter.setState(id, state.val, true);
+                    }
+                );
+
+                //connection.send('{"MessageType":"Command", "Data": { "Name": "DisplayMessage", "Arguments": { "Header": "Message from ioBroker", "Text": "' + state.val + '", "TimeoutMs": 3000 } } }');
+                
                 break;
         }
     }
@@ -94,10 +123,10 @@ function webMessage(e)
     {
         var d = data.Data[i];
         
-        if(adapter.config.deviceNames == "" || ( adapter.config.deviceNames != "" && adapter.config.deviceNames.indexOf(d.DeviceName) !== -1))
+        if(adapter.config.deviceIds == "" || ( adapter.config.deviceIds != "" && adapter.config.deviceIds.indexOf(d.Id) !== -1))
         {
             createDevice(d.Id, d.DeviceName);
-            adapter.setState(d.Id + ".media.deviceName", d.DeviceName, true);
+            adapter.setState(d.Id + ".info.deviceName", d.DeviceName, true);
 
             if(typeof d.NowPlayingItem !== 'undefined')
             {
@@ -167,6 +196,8 @@ function createDevice(id, dName)
         native: { }
     });
 
+
+
     adapter.setObjectNotExists(sid + ".info.deviceName", {
         "type": "state",
         "common": {
@@ -178,6 +209,9 @@ function createDevice(id, dName)
         },
         "native": {}
     });
+
+
+
     adapter.setObjectNotExists(sid + ".media.isPaused", {
         "type": "state",
           "common": {
@@ -200,10 +234,6 @@ function createDevice(id, dName)
         },
           "native": {}
     });
-
-
-
-
     adapter.setObjectNotExists(sid + ".media.title", {
         "type": "state",
           "common": {
@@ -258,5 +288,30 @@ function createDevice(id, dName)
             "write": false
           },
           "native": {}
+    });
+
+
+
+    adapter.setObjectNotExists(sid + ".command.play", {
+        "type": "state",
+            "common": {
+            "name": "Play",
+            "role": "button",
+            "type": "boolean",
+            "read": false,
+            "write": true
+            },
+            "native": {}
+    });
+    adapter.setObjectNotExists(sid + ".command.volume", {
+        "type": "state",
+            "common": {
+            "name": "Volume",
+            "role": "level.volume",
+            "type": "number",
+            "read": true,
+            "write": true
+            },
+            "native": {}
     });
 }

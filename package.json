@@ -20,6 +20,7 @@
     "url": "https://github.com/thewhobox/ioBroker.emby"
   },
   "dependencies": {
+    "request": "^2.88.0",
     "websocket": "^1.0.23"
   },
   "devDependencies": {
