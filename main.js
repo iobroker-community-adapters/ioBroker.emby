@@ -149,8 +149,6 @@ function webMessage(e)
     {
         var d = data.Data[i];
 
-        adapter.log.info("Commands for '" + d.DeviceName + "': " + JSON.stringify(d.SupportedCommands));
-        
         if(adapter.config.deviceIds == "" || ( adapter.config.deviceIds != "" && adapter.config.deviceIds.indexOf(d.Id) !== -1))
         {
             createDevice(d.Id, d.DeviceName);
@@ -324,7 +322,7 @@ function createDevice(id, dName)
         "type": "state",
             "common": {
             "name": "Message",
-            "role": "button",
+            "role": "state",
             "type": "string",
             "read": false,
             "write": true

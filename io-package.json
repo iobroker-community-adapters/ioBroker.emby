@@ -47,23 +47,6 @@
         "deviceIds": "",
         "timer": 1000
     },
-    "objects": [
-
-    ],
-    "instanceObjects": [
-
-        
-        {
-          "_id": "command.message",
-          "type": "state",
-          "common": {
-            "name": "Play",
-            "role": "state",
-            "type": "string",
-            "read": false,
-            "write": true
-          },
-          "native": {}
-        }
-      ]
+    "objects": [],
+    "instanceObjects": []
 }
