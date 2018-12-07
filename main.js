@@ -52,6 +52,19 @@ adapter.on('stateChange', function (id, state) {
 
 		switch (cmd)
 		{
+            case 'command.message':
+                request.post("http://" + adapter.config.ip + "/Sessions/" + dId + "/Message?api_key=" + adapter.config.apikey,
+                    '{"Header":"Test", "Text":"' + state.val + '", "TimeoutMs":"5000" }',
+                    function(error, resp, body) {
+                        if(!error)
+                        adapter.setState(id, "", true);
+                        else
+                        adapter.log.info("Fehler: " + JSON.stringify(resp));
+                    }
+                );
+                break;
+
+
             case 'command.goHome':
                 request.post("http://" + adapter.config.ip + "/Sessions/" + dId + "/Command/GoHome?api_key=" + adapter.config.apikey,
                     { },
@@ -72,7 +85,7 @@ adapter.on('stateChange', function (id, state) {
                 request.post({
                         uri: "http://" + adapter.config.ip + "/Sessions/" + dId + "/Command/SetVolume?api_key=" + adapter.config.apikey,
                         form: { Arguments:{ "Volume": state.val } },
-                        headers: headers,
+                        headers: headers
                     },
                     function(error, resp, body) {
                         if(!error)
@@ -135,6 +148,8 @@ function webMessage(e)
     for(var i = 0; i < data.Data.length; i++)
     {
         var d = data.Data[i];
+
+        console.log.info("Commands for '" + d.DeviceName + "': " + JSON.stringify(d.SupportedCommands));
         
         if(adapter.config.deviceIds == "" || ( adapter.config.deviceIds != "" && adapter.config.deviceIds.indexOf(d.Id) !== -1))
         {
@@ -305,10 +320,21 @@ function createDevice(id, dName)
 
 
 
-    adapter.setObjectNotExists(sid + ".command.play", {
+    adapter.setObjectNotExists(sid + ".command.message", {
         "type": "state",
             "common": {
-            "name": "Play",
+            "name": "Message",
+            "role": "button",
+            "type": "string",
+            "read": false,
+            "write": true
+            },
+            "native": {}
+    });
+    adapter.setObjectNotExists(sid + ".command.goHome", {
+        "type": "state",
+            "common": {
+            "name": "GoHome",
             "role": "button",
             "type": "boolean",
             "read": false,
