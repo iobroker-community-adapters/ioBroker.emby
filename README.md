@@ -33,15 +33,15 @@ It includes both code running within iobroker and as vis widget. If you only pla
 
 ###
 * x.media.isMuted
- - If Media is Muted. Not all devices support this and will be False.
+  - If Media is Muted. Not all devices support this and will be False.
 * x.media.isPaused
- - If Media is Paused. Will also be True if User closes the client.
+  - If Media is Paused. Will also be True if User closes the client.
 * x.media.title
- - The Title of the shown File.
+  - The Title of the shown File.
 * x.media.seasonName
- - The Name of the Season if .media.type is Episode otherwise it will be empty.
+  - The Name of the Season if .media.type is Episode otherwise it will be empty.
 * x.media.seriesName
- - The Name of the Serie if .media.type is Episode otherwise it will be empty.
+  - The Name of the Serie if .media.type is Episode otherwise it will be empty.
 
 
 ### Commands
@@ -50,12 +50,12 @@ It includes both code running within iobroker and as vis widget. If you only pla
     You can set Header and Body: Seperate it by '|'
     For example: Alarm|Some one opened the door.
     If no Header is given it will show ioBroker as Header.
-* x.command.goHome   -
-    Sends a command to the selected Device which will return to the Homescreen
-* x.command.message  -
-    Show a message on the selected Device for 5 sec.
-* x.command.volume   -
-    Sets the Volume of the selected Device.
+* x.command.goHome
+  - Sends a command to the selected Device which will return to the Homescreen
+* x.command.message
+  - Show a message on the selected Device for 5 sec.
+* x.command.volume
+  - Sets the Volume of the selected Device.
     Doesn't work on the most of devices since it doenst controle the TV Volume.
 
  
