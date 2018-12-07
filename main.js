@@ -49,7 +49,7 @@ adapter.on('stateChange', function (id, state) {
 		{
             case 'command.play':
             adapter.log.info("http://" + adapter.config.ip + "/Sessions/" + dId + "/Command/SetVolume?api_key=" + adapter.config.apikey);
-                request.post("http://" + adapter.config.ip + "/Sessions/" + dId + "/GoHome?api_key=" + adapter.config.apikey,
+                request.post("http://" + adapter.config.ip + "/Sessions/" + dId + "/Command/GoHome?api_key=" + adapter.config.apikey,
                     { Arguments:{ "Volume": state.val } },
                     function(error, resp, body) {
                         adapter.log.info(body);
