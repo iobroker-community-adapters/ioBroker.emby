@@ -149,7 +149,7 @@ function webMessage(e)
     {
         var d = data.Data[i];
 
-        console.log.info("Commands for '" + d.DeviceName + "': " + JSON.stringify(d.SupportedCommands));
+        adapter.log.info("Commands for '" + d.DeviceName + "': " + JSON.stringify(d.SupportedCommands));
         
         if(adapter.config.deviceIds == "" || ( adapter.config.deviceIds != "" && adapter.config.deviceIds.indexOf(d.Id) !== -1))
         {
