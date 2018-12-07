@@ -45,14 +45,17 @@ adapter.on('stateChange', function (id, state) {
         var dId = id.substring(0, id.indexOf('.'));
         var cmd = id.substring(dId.length + 1);
         
+        var headers = { 
+            'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.8; rv:24.0) Gecko/20100101 Firefox/24.0',
+            'Content-Type' : 'application/json' 
+        };
+
 		switch (cmd)
 		{
-            case 'command.play':
-            adapter.log.info("http://" + adapter.config.ip + "/Sessions/" + dId + "/Command/SetVolume?api_key=" + adapter.config.apikey);
+            case 'command.goHome':
                 request.post("http://" + adapter.config.ip + "/Sessions/" + dId + "/Command/GoHome?api_key=" + adapter.config.apikey,
-                    { Arguments:{ "Volume": state.val } },
+                    { },
                     function(error, resp, body) {
-                        adapter.log.info(body);
                         if(!error)
                         adapter.setState(id, state.val, true);
                         else
@@ -65,11 +68,13 @@ adapter.on('stateChange', function (id, state) {
                 break;
 
             case 'command.volume':
-            adapter.log.info("http://" + adapter.config.ip + "/Sessions/" + dId + "/Command/SetVolume?api_key=" + adapter.config.apikey);
-                request.post("http://" + adapter.config.ip + "/Sessions/" + dId + "/Command/SetVolume?api_key=" + adapter.config.apikey,
-                    { Arguments:{ "Volume": state.val } },
+                adapter.log.info("http://" + adapter.config.ip + "/Sessions/" + dId + "/Command/SetVolume?api_key=" + adapter.config.apikey);
+                request.post({
+                        uri: "http://" + adapter.config.ip + "/Sessions/" + dId + "/Command/SetVolume?api_key=" + adapter.config.apikey,
+                        form: { Arguments:{ "Volume": state.val } },
+                        headers: headers,
+                    },
                     function(error, resp, body) {
-                        adapter.log.info(body);
                         if(!error)
                         adapter.setState(id, state.val, true);
                         else
