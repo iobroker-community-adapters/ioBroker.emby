@@ -48,8 +48,8 @@ adapter.on('stateChange', function (id, state) {
 		switch (cmd)
 		{
             case 'command.play':
-            adapter.log.info("http://" + adapter.config.ip + "/Sessions/" + dId + "/Command/SetVolume?api_key=" + adapter.config.apiKey);
-                request.post("http://" + adapter.config.ip + "/Sessions/" + dId + "/GoHome?api_key=" + adapter.config.apiKey,
+            adapter.log.info("http://" + adapter.config.ip + "/Sessions/" + dId + "/Command/SetVolume?api_key=" + adapter.config.apikey);
+                request.post("http://" + adapter.config.ip + "/Sessions/" + dId + "/GoHome?api_key=" + adapter.config.apikey,
                     { Arguments:{ "Volume": state.val } },
                     function(error, resp, body) {
                         if(!error)
@@ -64,8 +64,8 @@ adapter.on('stateChange', function (id, state) {
                 break;
 
             case 'command.volume':
-            adapter.log.info("http://" + adapter.config.ip + "/Sessions/" + dId + "/Command/SetVolume?api_key=" + adapter.config.apiKey);
-                request.post("http://" + adapter.config.ip + "/Sessions/" + dId + "/Command/SetVolume?api_key=" + adapter.config.apiKey,
+            adapter.log.info("http://" + adapter.config.ip + "/Sessions/" + dId + "/Command/SetVolume?api_key=" + adapter.config.apikey);
+                request.post("http://" + adapter.config.ip + "/Sessions/" + dId + "/Command/SetVolume?api_key=" + adapter.config.apikey,
                     { Arguments:{ "Volume": state.val } },
                     function(error, resp, body) {
                         if(!error)
