@@ -122,7 +122,6 @@ function webMessage(e)
 
             if(typeof d.PlaylistItemId !== 'undefined')
             {
-                flagpaused = true;
                 var ispaused;
                 if(typeof d.PlayState.MediaSourceId !== 'undefined')
                 {
