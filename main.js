@@ -52,11 +52,14 @@ adapter.on('stateChange', function (id, state) {
 		switch (cmd)
 		{
             case 'command.play':
+            adapter.log.info("http://" + adapter.config.ip + "/Sessions/" + dId + "/Command/SetVolume");
                 request.post("http://" + adapter.config.ip + "/Sessions/" + dId + "/GoHome",
                     { Arguments:{ "Volume": state.val } },
                     function(error, resp, body) {
                         if(!error)
                         adapter.setState(id, state.val, true);
+                        else
+                        adapter.log.info("Fehler: " + JSON.stringify(resp));
                     }
                 );
 
@@ -65,11 +68,14 @@ adapter.on('stateChange', function (id, state) {
                 break;
 
             case 'command.volume':
+            adapter.log.info("http://" + adapter.config.ip + "/Sessions/" + dId + "/Command/SetVolume");
                 request.post("http://" + adapter.config.ip + "/Sessions/" + dId + "/Command/SetVolume",
                     { Arguments:{ "Volume": state.val } },
                     function(error, resp, body) {
                         if(!error)
                         adapter.setState(id, state.val, true);
+                        else
+                        adapter.log.info("Fehler: " + JSON.stringify(resp));
                     }
                 );
 
