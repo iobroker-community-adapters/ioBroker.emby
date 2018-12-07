@@ -52,6 +52,7 @@ adapter.on('stateChange', function (id, state) {
                 request.post("http://" + adapter.config.ip + "/Sessions/" + dId + "/GoHome?api_key=" + adapter.config.apikey,
                     { Arguments:{ "Volume": state.val } },
                     function(error, resp, body) {
+                        adapter.log.info(body);
                         if(!error)
                         adapter.setState(id, state.val, true);
                         else
@@ -68,6 +69,7 @@ adapter.on('stateChange', function (id, state) {
                 request.post("http://" + adapter.config.ip + "/Sessions/" + dId + "/Command/SetVolume?api_key=" + adapter.config.apikey,
                     { Arguments:{ "Volume": state.val } },
                     function(error, resp, body) {
+                        adapter.log.info(body);
                         if(!error)
                         adapter.setState(id, state.val, true);
                         else
