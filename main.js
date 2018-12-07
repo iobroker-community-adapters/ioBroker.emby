@@ -95,6 +95,16 @@ function webMessage(e)
     {
         var d = data.Data[i];
 
+        adapter.setObject(i, {
+            "_id": i,
+            "type": "channel",
+            "common": {
+                "name": d.DeviceName
+            },
+            "native": {}
+          });
+
+
         if(adapter.config.deviceNames == "" || ( adapter.config.deviceNames != "" && adapter.config.deviceNames.indexOf(d.DeviceName) !== -1))
         {
 
