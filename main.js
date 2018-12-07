@@ -92,12 +92,26 @@ function webMessage(e)
     adapter.setObjectNotExists(sid, {
         type: 'channel',
         common: {
-            name: "test",
-
+            name: "test"
         },
         native: {
+            type: "device"
         }
 });
+
+adapter.setObjectNotExists(sid + ".status", {
+    common: {
+        name: 'Status',
+        role: 'indicator.status',
+        write: false,
+        read: true,
+        type: 'boolean'
+    },
+    type: 'state',
+native: {}
+});
+
+adapter.log.info("new object: " + sid);
 
 
     var data = JSON.parse(e.data);
