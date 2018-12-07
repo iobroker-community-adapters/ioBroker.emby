@@ -88,60 +88,36 @@ function webError(error)
 
 function webMessage(e)
 {
-    var sid = adapter.namespace + '.' + "test";
-    adapter.setObjectNotExists(sid, {
-        type: 'channel',
-        common: {
-            name: "test"
-        },
-        native: {
-            type: "device"
-        }
-});
-
-adapter.setObjectNotExists(sid + ".status", {
-    common: {
-        name: 'Status',
-        role: 'indicator.status',
-        write: false,
-        read: true,
-        type: 'boolean'
-    },
-    type: 'state',
-native: {}
-});
-
-adapter.log.info("new object: " + sid);
-
-
     var data = JSON.parse(e.data);
-    var flagpaused = false;
 
     for(var i = 0; i < data.Data.length; i++)
     {
         var d = data.Data[i];
-
         
-
-
         if(adapter.config.deviceNames == "" || ( adapter.config.deviceNames != "" && adapter.config.deviceNames.indexOf(d.DeviceName) !== -1))
         {
+            createDevice(d.Id, d.DeviceName);
+            adapter.setState(d.Id + ".media.deviceName", d.DeviceName, true);
 
             if(typeof d.NowPlayingItem !== 'undefined')
             {
                 var npi = d.NowPlayingItem;
-                adapter.setState("playing.name", npi.Name, true);
-                adapter.setState("playing.description", npi.Overview, true);
-                adapter.setState("playing.type", npi.Type, true);
+                adapter.setState(d.Id + ".media.title", npi.Name, true);
+                adapter.setState(d.Id + ".media.description", npi.Overview, true);
+                adapter.setState(d.Id + ".media.type", npi.Type, true);
 
                 if(typeof npi.SeasonName !== 'undefined')
                 {
-                    adapter.setState("playing.seasonName", npi.SeasonName, true);
-                    adapter.setState("playing.seriesName", npi.SeriesName, true);
+                    adapter.setState(d.Id + ".media.seasonName", npi.SeasonName, true);
+                    adapter.setState(d.Id + ".media.seriesName", npi.SeriesName, true);
                 } else {
-                    adapter.setState("playing.seasonName", "", true);
-                    adapter.setState("playing.seriesName", "", true);
+                    adapter.setState(d.Id + ".media.seasonName", "", true);
+                    adapter.setState(d.Id + ".media.seriesName", "", true);
                 }
+            } else {
+                adapter.setState(d.Id + ".media.title", "", true);
+                adapter.setState(d.Id + ".media.description", "", true);
+                adapter.setState(d.Id + ".media.type", "None", true);
             }
 
             if(typeof d.PlaylistItemId !== 'undefined')
@@ -155,9 +131,10 @@ adapter.log.info("new object: " + sid);
                     ispaused = true;
                 }
 
-                adapter.setState("info.isPaused", ispaused, true);
-                adapter.setState("info.isMuted", d.PlayState.IsMuted, true);
-                adapter.setState("info.deviceName", d.DeviceName, true);
+                adapter.setState(d.Id + ".media.isPaused", ispaused, true);
+                adapter.setState(d.Id + ".media.isMuted", d.PlayState.IsMuted, true);
+            } else {
+                adapter.setState(d.Id + ".media.isPaused", true, true);
             }
             
         } else {
@@ -165,14 +142,122 @@ adapter.log.info("new object: " + sid);
         adapter.log.debug("Device skipped: " + d.DeviceName);
         }
     }
+}
 
-    if(!flagpaused)
-    {
-        adapter.setState("playing.seasonName", "", true);
-        adapter.setState("playing.seriesName", "", true);
-        adapter.setState("playing.type", "none", true);
-        adapter.setState("playing.name", "", true);
-        adapter.setState("playing.description", "", true);
-        adapter.setState("isPaused", true, true);
-    }
+function createDevice(id, dName)
+{
+    var sid = adapter.namespace + '.' + id;
+    adapter.setObjectNotExists(sid, {
+        type: 'channel',
+        common: {
+            name: dName
+        },
+        native: { }
+    });
+    adapter.setObjectNotExists(sid + ".info", {
+        type: 'channel',
+        common: {
+            name: "Info"
+        },
+        native: { }
+    });adapter.setObjectNotExists(sid + ".media", {
+        type: 'channel',
+        common: {
+            name: "Media Info"
+        },
+        native: { }
+    });
+
+    adapter.setObjectNotExists(sid + ".info.deviceName", {
+        "type": "state",
+        "common": {
+          "name": "Name of the Device now playing",
+          "role": "info.name",
+          "type": "string",
+          "read": true,
+          "write": false
+        },
+        "native": {}
+    });
+    adapter.setObjectNotExists(sid + ".media.isPaused", {
+        "type": "state",
+          "common": {
+            "name": "If Media is paused",
+            "role": "media.state",
+            "type": "boolean",
+            "read": true,
+            "write": false
+          },
+          "native": {}
+    });
+    adapter.setObjectNotExists(sid + ".media.isMuted", {
+        "type": "state",
+        "common": {
+          "name": "If Player is muted",
+          "role": "media.mute",
+          "type": "boolean",
+          "read": true,
+          "write": false
+        },
+          "native": {}
+    });
+
+
+
+
+    adapter.setObjectNotExists(sid + ".media.title", {
+        "type": "state",
+          "common": {
+            "name": "Title of file playing",
+            "role": "media.title",
+            "type": "string",
+            "read": true,
+            "write": false
+          },
+          "native": {}
+    });
+    adapter.setObjectNotExists(sid + ".media.seriesName", {
+        "type": "state",
+          "common": {
+            "name": "Name of serie now playing",
+            "role": "media.title",
+            "type": "string",
+            "read": true,
+            "write": false
+          },
+          "native": {}
+    });
+    adapter.setObjectNotExists(sid + ".media.seasonName", {
+        "type": "state",
+          "common": {
+            "name": "Name of season now playing",
+            "role": "media.season",
+            "type": "string",
+            "read": true,
+            "write": false
+          },
+          "native": {}
+    });
+    adapter.setObjectNotExists(sid + ".media.type", {
+        "type": "state",
+          "common": {
+            "name": "Type of file playing",
+            "role": "state",
+            "type": "string",
+            "read": true,
+            "write": false
+          },
+          "native": {}
+    });
+    adapter.setObjectNotExists(sid + ".media.description", {
+        "type": "state",
+          "common": {
+            "name": "Description of file playing",
+            "role": "state",
+            "type": "string",
+            "read": true,
+            "write": false
+          },
+          "native": {}
+    });
 }
