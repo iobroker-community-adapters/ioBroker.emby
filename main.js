@@ -88,7 +88,8 @@ function webError(error)
 
 function webMessage(e)
 {
-    adapter.setObjectNotExists("test", {
+    var sid = adapter.namespace + '.' + "test";
+    adapter.setObjectNotExists(sid, {
         type: 'channel',
         common: {
             name: "test",
