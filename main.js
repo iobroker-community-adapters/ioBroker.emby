@@ -95,7 +95,7 @@ function webMessage(e)
     {
         var d = data.Data[i];
 
-        adapter.setObject("test", {
+        adapter.setObjectNotExists("test", {
             "type": "channel",
             "common": {
                 "name": d.DeviceName
