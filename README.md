@@ -28,16 +28,16 @@ It includes both code running within iobroker and as vis widget. If you only pla
 ## Objects
 
 ### Commands
-* x.command.dialog
+* x.command.dialog   -
     Show a dialog on the selected Device.
     You can set Header and Body: Seperate it by '|'
     For example: Alarm|Some one opened the door.
     If no Header is given it will show ioBroker as Header.
-* x.command.goHome
+* x.command.goHome   -
     Sends a command to the selected Device which will return to the Homescreen
-* x.command.message
+* x.command.message  -
     Show a message on the selected Device for 5 sec.
-* x.command.volume
+* x.command.volume   -
     Sets the Volume of the selected Device.
     Doesn't work on the most of devices since it doenst controle the TV Volume.
 
