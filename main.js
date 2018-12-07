@@ -59,7 +59,7 @@ adapter.on('stateChange', function (id, state) {
                     },
                     function(error, resp, body) {
                         if(!error)
-                            adapter.setState(id, state.val, true);
+                            adapter.setState(id, "", true);
                         else
                             adapter.log.info("Fehler: " + JSON.stringify(resp));
                     }
@@ -83,7 +83,7 @@ adapter.on('stateChange', function (id, state) {
                     },
                     function(error, resp, body) {
                         if(!error)
-                        adapter.setState(id, state.val, true);
+                        adapter.setState(id, "", true);
                         else
                         adapter.log.info("Fehler: " + JSON.stringify(resp));
                     }

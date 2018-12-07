@@ -23,8 +23,10 @@ Please follow the Steps to ensure the Adapter will work correctly and you can se
 ## Objects
 
 ### Infos
-* x.info.deviceName
-  - Shows the Name of the Device
+
+| Command | Description | Info |
+| ------------- | ------------- | ------------- |
+| x.info.deviceName | Shows the Name of the Device |  |
 
 
 ### Media
@@ -49,6 +51,7 @@ Please follow the Steps to ensure the Adapter will work correctly and you can se
 | x.command.message | Show a message on the selected Device for 5 sec. |  |
 | x.command.volume | Sets the Volume of the selected Device. | Doesn't work on the most of devices since it doenst controle the TV Volume. |
  
+
  ## Changelog
  ### 0.0.2
 * added more states
