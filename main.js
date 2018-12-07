@@ -98,22 +98,6 @@ function webMessage(e)
         if(adapter.config.deviceNames == "" || ( adapter.config.deviceNames != "" && adapter.config.deviceNames.indexOf(d.DeviceName) !== -1))
         {
 
-            if(typeof d.PlaylistItemId !== 'undefined')
-            {
-                flagpaused = true;
-                var ispaused;
-                if(typeof d.PlayState.MediaSourceId !== 'undefined')
-                {
-                    ispaused = d.PlayState.IsPaused;
-                } else {
-                    ispaused = true;
-                }
-
-                adapter.setState("info.isPaused", ispaused, true);
-                adapter.setState("info.isMuted", d.PlayState.IsMuted, true);
-                adapter.setState("info.deviceName", d.DeviceName, true);
-            }
-            
             if(typeof d.NowPlayingItem !== 'undefined')
             {
                 var npi = d.NowPlayingItem;
@@ -130,17 +114,36 @@ function webMessage(e)
                     adapter.setState("playing.seriesName", "", true);
                 }
             }
+
+            if(typeof d.PlaylistItemId !== 'undefined')
+            {
+                flagpaused = true;
+                var ispaused;
+                if(typeof d.PlayState.MediaSourceId !== 'undefined')
+                {
+                    ispaused = d.PlayState.IsPaused;
+                } else {
+                    ispaused = true;
+                }
+
+                adapter.setState("info.isPaused", ispaused, true);
+                adapter.setState("info.isMuted", d.PlayState.IsMuted, true);
+                adapter.setState("info.deviceName", d.DeviceName, true);
+            }
+            
+        } else {
+            
+        adapter.log.debug("Device skipped: " + d.DeviceName);
         }
     }
 
     if(!flagpaused)
     {
-        adapter.setState("isPaused", true, true);
-        adapter.log.debug("Device skipped: " + d.DeviceName);
         adapter.setState("playing.seasonName", "", true);
         adapter.setState("playing.seriesName", "", true);
         adapter.setState("playing.type", "none", true);
         adapter.setState("playing.name", "", true);
         adapter.setState("playing.description", "", true);
+        adapter.setState("isPaused", true, true);
     }
 }
