@@ -52,10 +52,33 @@ adapter.on('stateChange', function (id, state) {
 		switch (cmd)
 		{
             case 'command.message':
-                adapter.log.info("Body: " + '{"Header":"Test", "Text":"' + state.val + '", "TimeoutMs":"5000" }');
                 request.post({
                         uri: "http://" + adapter.config.ip + "/Sessions/" + dId + "/Message?api_key=" + adapter.config.apikey,
                         body: '{"Header":"Test", "Text":"' + state.val + '", "TimeoutMs":"5000" }',
+                        headers: headers
+                    },
+                    function(error, resp, body) {
+                        if(!error)
+                            adapter.setState(id, state.val, true);
+                        else
+                            adapter.log.info("Fehler: " + JSON.stringify(resp));
+                    }
+                );
+                break;
+
+
+            case 'command.dialog':
+                var jsonbody = '';
+                if(state.val.indexOf('|') !== -1) {
+                    var paras = state.val.split('|');
+                    jsonbody = '{"Header":"' + paras[0] + '", "Text":"' + paras[1] + '" }';
+                } else {
+                    jsonbody = '{"Header":"ioBroker", "Text":"' + state.val + '" }';
+                }
+
+                request.post({
+                        uri: "http://" + adapter.config.ip + "/Sessions/" + dId + "/Message?api_key=" + adapter.config.apikey,
+                        body: jsonbody,
                         headers: headers
                     },
                     function(error, resp, body) {
@@ -325,6 +348,17 @@ function createDevice(id, dName)
         "type": "state",
             "common": {
             "name": "Message",
+            "role": "state",
+            "type": "string",
+            "read": false,
+            "write": true
+            },
+            "native": {}
+    });
+    adapter.setObjectNotExists(sid + ".command.dialog", {
+        "type": "state",
+            "common": {
+            "name": "Message Dialog",
             "role": "state",
             "type": "string",
             "read": false,
