@@ -54,11 +54,14 @@ adapter.on('stateChange', function (id, state) {
 		{
             case 'command.message':
                 adapter.log.info("Body: " + '{"Header":"Test", "Text":"' + state.val + '", "TimeoutMs":"5000" }');
-                request.post("http://" + adapter.config.ip + "/Sessions/" + dId + "/Message?api_key=" + adapter.config.apikey,
-                    '{"Header":"Test", "Text":"' + state.val + '", "TimeoutMs":"5000" }',
+                request.post({
+                        uri: "http://" + adapter.config.ip + "/Sessions/" + dId + "/Message?api_key=" + adapter.config.apikey,
+                        form: '{"Header":"Test", "Text":"' + state.val + '", "TimeoutMs":"5000" }',
+                        headers: headers
+                    },
                     function(error, resp, body) {
                         if(!error)
-                        adapter.setState(id, "", true);
+                        adapter.setState(id, state.val, true);
                         else
                         adapter.log.info("Fehler: " + JSON.stringify(resp));
                     }
