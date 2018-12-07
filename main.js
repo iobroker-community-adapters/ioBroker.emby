@@ -53,6 +53,7 @@ adapter.on('stateChange', function (id, state) {
 		switch (cmd)
 		{
             case 'command.message':
+                adapter.log.info("Body: " + '{"Header":"Test", "Text":"' + state.val + '", "TimeoutMs":"5000" }');
                 request.post("http://" + adapter.config.ip + "/Sessions/" + dId + "/Message?api_key=" + adapter.config.apikey,
                     '{"Header":"Test", "Text":"' + state.val + '", "TimeoutMs":"5000" }',
                     function(error, resp, body) {
