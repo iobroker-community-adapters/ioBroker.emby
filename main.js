@@ -228,7 +228,7 @@ function createDevice(id, dName)
 {
     var sid = adapter.namespace + '.' + id;
     adapter.setObjectNotExists(sid, {
-        type: 'channel',
+        type: 'device',
         common: {
             name: dName
         },
