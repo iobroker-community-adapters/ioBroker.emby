@@ -92,7 +92,9 @@ adapter.on('stateChange', function (id, state) {
 
 
             case 'command.goHome':
-                request.post("http://" + adapter.config.ip + "/Sessions/" + dId + "/Command/GoHome?api_key=" + adapter.config.apikey,
+                connection.send('{"MessageType":"Command", "Data": { "Name": "DisplayMessage", "Arguments": { "Header": "Message from ioBroker", "Text": "' + state.val + '", "TimeoutMs": 3000 } } }');
+                
+                /*request.post("http://" + adapter.config.ip + "/Sessions/" + dId + "/Command/GoHome?api_key=" + adapter.config.apikey,
                     { },
                     function(error, resp, body) {
                         if(!error)
@@ -100,10 +102,7 @@ adapter.on('stateChange', function (id, state) {
                         else
                         adapter.log.info("Fehler: " + JSON.stringify(resp));
                     }
-                );
-
-                //connection.send('{"MessageType":"Command", "Data": { "Name": "DisplayMessage", "Arguments": { "Header": "Message from ioBroker", "Text": "' + state.val + '", "TimeoutMs": 3000 } } }');
-                
+                );*/
                 break;
 
             case 'command.volume':
@@ -120,9 +119,6 @@ adapter.on('stateChange', function (id, state) {
                         adapter.log.info("Fehler: " + JSON.stringify(resp));
                     }
                 );
-
-                //connection.send('{"MessageType":"Command", "Data": { "Name": "DisplayMessage", "Arguments": { "Header": "Message from ioBroker", "Text": "' + state.val + '", "TimeoutMs": 3000 } } }');
-                
                 break;
 
             default:
@@ -177,8 +173,9 @@ function webMessage(e)
 
         if(adapter.config.deviceIds == "" || ( adapter.config.deviceIds != "" && adapter.config.deviceIds.indexOf(d.Id) !== -1))
         {
-            createDevice(d.Id, d.DeviceName);
+            createDevice(d);
             adapter.setState(d.Id + ".info.deviceName", d.DeviceName, true);
+            adapter.setState(d.Id + ".info.userName", d.UserName, true);
 
             if(typeof d.NowPlayingItem !== 'undefined')
             {
@@ -224,13 +221,13 @@ function webMessage(e)
     }
 }
 
-function createDevice(id, dName)
+function createDevice(device)
 {
-    var sid = adapter.namespace + '.' + id;
+    var sid = adapter.namespace + '.' + device.Id;
     adapter.setObjectNotExists(sid, {
         type: 'device',
         common: {
-            name: dName
+            name: device.DeviceName
         },
         native: { }
     });
@@ -240,7 +237,8 @@ function createDevice(id, dName)
             name: "Info"
         },
         native: { }
-    });adapter.setObjectNotExists(sid + ".media", {
+    });
+    adapter.setObjectNotExists(sid + ".media", {
         type: 'channel',
         common: {
             name: "Media Info"
@@ -254,6 +252,17 @@ function createDevice(id, dName)
         "type": "state",
         "common": {
           "name": "Name of the Device now playing",
+          "role": "info.name",
+          "type": "string",
+          "read": true,
+          "write": false
+        },
+        "native": {}
+    });
+    adapter.setObjectNotExists(sid + ".info.userName", {
+        "type": "state",
+        "common": {
+          "name": "Logged in User",
           "role": "info.name",
           "type": "string",
           "read": true,
@@ -342,50 +351,81 @@ function createDevice(id, dName)
           "native": {}
     });
 
+    if(!device.SupportsRemoteControl)
+        return;
 
 
-    adapter.setObjectNotExists(sid + ".command.message", {
-        "type": "state",
-            "common": {
-            "name": "Message",
-            "role": "state",
-            "type": "string",
-            "read": false,
-            "write": true
-            },
-            "native": {}
+
+
+    adapter.setObjectNotExists(sid + ".command", {
+        type: 'channel',
+        common: {
+            name: "Controll Client"
+        },
+        native: { }
     });
-    adapter.setObjectNotExists(sid + ".command.dialog", {
-        "type": "state",
-            "common": {
-            "name": "Message Dialog",
-            "role": "state",
-            "type": "string",
-            "read": false,
-            "write": true
-            },
-            "native": {}
-    });
-    adapter.setObjectNotExists(sid + ".command.goHome", {
-        "type": "state",
-            "common": {
-            "name": "GoHome",
-            "role": "button",
-            "type": "boolean",
-            "read": false,
-            "write": true
-            },
-            "native": {}
-    });
-    adapter.setObjectNotExists(sid + ".command.volume", {
-        "type": "state",
-            "common": {
-            "name": "Volume",
-            "role": "level.volume",
-            "type": "number",
-            "read": true,
-            "write": true
-            },
-            "native": {}
-    });
+
+    for(var i = 0; i < device.SupportedCommands.length; i++)
+    {
+        switch(device.SupportedCommands[i])
+        {
+            case "DisplayMessage":
+                adapter.setObjectNotExists(sid + ".command.message", {
+                    "type": "state",
+                    "common": {
+                        "name": "Message",
+                        "role": "state",
+                        "type": "string",
+                        "read": false,
+                        "write": true
+                    },
+                    "native": {}
+                });
+                adapter.setObjectNotExists(sid + ".command.dialog", {
+                    "type": "state",
+                    "common": {
+                        "name": "Message Dialog",
+                        "role": "state",
+                        "type": "string",
+                        "read": false,
+                        "write": true
+                    },
+                    "native": {}
+                });
+                break;
+
+            case "GoHome":
+                adapter.setObjectNotExists(sid + ".command.goHome", {
+                    "type": "state",
+                    "common": {
+                        "name": "GoHome",
+                        "role": "button",
+                        "type": "boolean",
+                        "read": false,
+                        "write": true
+                    },
+                    "native": {}
+                });
+                break;
+
+            case "SetVolume":
+                adapter.setObjectNotExists(sid + ".command.volume", {
+                    "type": "state",
+                    "common": {
+                        "name": "Volume",
+                        "role": "level.volume",
+                        "type": "number",
+                        "read": true,
+                        "write": true
+                    },
+                    "native": {}
+                });
+                break;
+        }
+    }
+
+
+    
+    
+    
 }
