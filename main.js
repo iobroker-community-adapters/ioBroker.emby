@@ -239,9 +239,10 @@ function webMessage(e)
                         adapter.setState(d.Id + ".media.state", "paused", true);
                     else
                         adapter.setState(d.Id + ".media.state", "playing", true);
-                    } else {
-                    ispaused = true;
+                } else {
+                    adapter.setState(d.Id + ".media.state", "paused", true);
                 }
+                adapter.setState(d.Id + ".media.muted", d.PlayState.IsMuted, true);
             } else {
                 adapter.setState(d.Id + ".media.title", "", true);
                 adapter.setState(d.Id + ".media.description", "", true);
@@ -309,18 +310,6 @@ function createDevice(device)
     });
 
 
-
-    adapter.setObjectNotExists(sid + ".media.isPaused", {
-        "type": "state",
-          "common": {
-            "name": "If Media is paused",
-            "role": "media.state",
-            "type": "boolean",
-            "read": true,
-            "write": false
-          },
-          "native": {}
-    });
     adapter.setObjectNotExists(sid + ".media.state", {
         "type": "state",
           "common": {
