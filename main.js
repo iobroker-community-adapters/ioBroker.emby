@@ -150,16 +150,39 @@ function main() {
     connection.onopen = webOpen;
     connection.onerror = webError;
     connection.onmessage = webMessage;
+
+    
+    adapter.setObjectNotExists(adapter.namespace + ".info", {
+        type: 'channel',
+        common: {
+            name: "Info"
+        },
+        native: { }
+    });
+    adapter.setObjectNotExists(adapter.namespace + ".info.connection", {
+        "type": "state",
+        "common": {
+            "name": "If connected to Emby Server",
+            "role": "indicator.connected",
+            "type": "boolean",
+            "read": true,
+            "write": false,
+            "def": false
+        },
+        "native": {}
+    });
 }
 
 function webOpen()
 {
     connection.send('{"MessageType":"SessionsStart", "Data": "10000,10000"}');
     adapter.log.info("Mit Server verbunden.");
+    adapter.setState("info.connection", true, true);
 }
 
 function webError(error)
 {
+    adapter.setState("info.connection", false, true);
     adapter.log.error("Websocket Error : " + error);
 }
 
