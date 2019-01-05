@@ -92,17 +92,33 @@ adapter.on('stateChange', function (id, state) {
 
 
             case 'command.goHome':
-                connection.send('{"MessageType":"Command", "Data": { "Name": "DisplayMessage", "Arguments": { "Header": "Message from ioBroker", "Text": "' + state.val + '", "TimeoutMs": 3000 } } }');
-                
-                /*request.post("http://" + adapter.config.ip + "/Sessions/" + dId + "/Command/GoHome?api_key=" + adapter.config.apikey,
+                request.post("http://" + adapter.config.ip + "/Sessions/" + dId + "/Command/GoHome?api_key=" + adapter.config.apikey,
                     { },
                     function(error, resp, body) {
-                        if(!error)
-                        adapter.setState(id, state.val, true);
-                        else
+                        if(error)
                         adapter.log.info("Fehler: " + JSON.stringify(resp));
                     }
-                );*/
+                );
+                break;
+
+            case 'command.goHome':
+                request.post("http://" + adapter.config.ip + "/Sessions/" + dId + "/Command/GoToSearch?api_key=" + adapter.config.apikey,
+                    { },
+                    function(error, resp, body) {
+                        if(error)
+                        adapter.log.info("Fehler: " + JSON.stringify(resp));
+                    }
+                );
+                break;
+
+            case 'command.back':
+                request.post("http://" + adapter.config.ip + "/Sessions/" + dId + "/Command/Back?api_key=" + adapter.config.apikey,
+                    { },
+                    function(error, resp, body) {
+                        if(error)
+                        adapter.log.info("Fehler: " + JSON.stringify(resp));
+                    }
+                );
                 break;
 
             case 'command.volume':
@@ -215,27 +231,25 @@ function webMessage(e)
                     adapter.setState(d.Id + ".media.seasonName", "", true);
                     adapter.setState(d.Id + ".media.seriesName", "", true);
                 }
+
+                var ispaused;
+                if(typeof d.PlayState.MediaSourceId !== 'undefined')
+                {
+                    if(d.PlayState.IsPaused)
+                        adapter.setState(d.Id + ".media.state", "paused", true);
+                    else
+                        adapter.setState(d.Id + ".media.state", "playing", true);
+                    } else {
+                    ispaused = true;
+                }
             } else {
                 adapter.setState(d.Id + ".media.title", "", true);
                 adapter.setState(d.Id + ".media.description", "", true);
                 adapter.setState(d.Id + ".media.type", "None", true);
+                adapter.setState(d.Id + ".media.state", "idle", true);
             }
 
-            if(typeof d.PlaylistItemId !== 'undefined')
-            {
-                var ispaused;
-                if(typeof d.PlayState.MediaSourceId !== 'undefined')
-                {
-                    ispaused = d.PlayState.IsPaused;
-                } else {
-                    ispaused = true;
-                }
-
-                adapter.setState(d.Id + ".media.isPaused", ispaused, true);
-                adapter.setState(d.Id + ".media.isMuted", d.PlayState.IsMuted, true);
-            } else {
-                adapter.setState(d.Id + ".media.isPaused", true, true);
-            }
+            
             
         } else {
             
@@ -304,6 +318,22 @@ function createDevice(device)
             "type": "boolean",
             "read": true,
             "write": false
+          },
+          "native": {}
+    });
+    adapter.setObjectNotExists(sid + ".media.state", {
+        "type": "state",
+          "common": {
+            "name": "State of the CLient",
+            "role": "media.state",
+            "type": "string",
+            "read": true,
+            "write": true,
+            "states": {
+                "idle": "Idle",
+                "paused": "Paused",
+                "playing": "Playing"
+            }
           },
           "native": {}
     });
@@ -439,6 +469,34 @@ function createDevice(device)
                         "role": "level.volume",
                         "type": "number",
                         "read": true,
+                        "write": true
+                    },
+                    "native": {}
+                });
+                break;
+                
+            case "GoToSearch":
+                adapter.setObjectNotExists(sid + ".command.goToSearch", {
+                    "type": "state",
+                    "common": {
+                        "name": "GoToSearch",
+                        "role": "button",
+                        "type": "boolean",
+                        "read": false,
+                        "write": true
+                    },
+                    "native": {}
+                });
+                break;
+            
+            case "Back":
+                adapter.setObjectNotExists(sid + ".command.back", {
+                    "type": "state",
+                    "common": {
+                        "name": "Back",
+                        "role": "button",
+                        "type": "boolean",
+                        "read": false,
                         "write": true
                     },
                     "native": {}
