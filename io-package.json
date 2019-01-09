@@ -1,12 +1,16 @@
 {
     "common": {
         "name": "emby",
-        "version": "0.0.2",
+        "version": "0.0.3",
         "news": {
-          "0.0.2": {
-              "en": "added new states",
-              "de": "Neue States wurden hinzugefügt"
-          },
+            "0.0.3": {
+                "en": "added new states, connection state, and more improvment",
+                "de": "Neue States wurden hinzugefügt und weitere verbesserungen"
+            },
+            "0.0.2": {
+                "en": "added new states",
+                "de": "Neue States wurden hinzugefügt"
+            },
           "0.0.1": {
               "en": "initial adapter",
               "de": "Initiale Version"

@@ -1,6 +1,6 @@
 {
   "name": "iobroker.emby",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Emby Adapter",
   "author": {
     "name": "Mike",
@@ -22,11 +22,6 @@
   "dependencies": {
     "request": "^2.88.0",
     "websocket": "^1.0.23"
-  },
-  "devDependencies": {
-    "gulp": "^3.9.1",
-    "mocha": "^4.1.0",
-    "chai": "^4.1.2"
   },
   "main": "main.js",
   "bugs": {
