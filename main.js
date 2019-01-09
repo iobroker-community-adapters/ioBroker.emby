@@ -199,6 +199,8 @@ function webMessage(e)
                 adapter.setState(d.Id + ".media.title", "", true);
                 adapter.setState(d.Id + ".media.description", "", true);
                 adapter.setState(d.Id + ".media.type", "None", true);
+                adapter.setState(d.Id + ".media.seasonName", "", true);
+                adapter.setState(d.Id + ".media.seriesName", "", true);
             }
 
             if(typeof d.PlaylistItemId !== 'undefined')
@@ -218,8 +220,7 @@ function webMessage(e)
             }
             
         } else {
-            
-        adapter.log.debug("Device skipped: " + d.DeviceName);
+            adapter.log.debug("Device skipped: " + d.DeviceName);
         }
     }
 }
