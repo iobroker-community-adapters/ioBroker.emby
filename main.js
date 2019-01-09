@@ -199,6 +199,8 @@ function webMessage(e)
                 adapter.setState(d.Id + ".media.title", "", true);
                 adapter.setState(d.Id + ".media.description", "", true);
                 adapter.setState(d.Id + ".media.type", "None", true);
+                adapter.setState(d.Id + ".media.seasonName", "", true);
+                adapter.setState(d.Id + ".media.seriesName", "", true);
             }
 
             if(typeof d.PlaylistItemId !== 'undefined')
