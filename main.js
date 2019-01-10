@@ -313,7 +313,7 @@ function createDevice(device)
     adapter.setObjectNotExists(sid + ".media.state", {
         "type": "state",
           "common": {
-            "name": "State of the CLient",
+            "name": "State of the Client",
             "role": "media.state",
             "type": "string",
             "read": true,
