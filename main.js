@@ -95,15 +95,30 @@ adapter.on('stateChange', function (id, state) {
                 request.post("http://" + adapter.config.ip + "/Sessions/" + dId + "/Command/GoHome?api_key=" + adapter.config.apikey,
                     { },
                     function(error, resp, body) {
-                        if(!error)
-                        adapter.setState(id, state.val, true);
-                        else
+                        if(error)
                         adapter.log.info("Fehler: " + JSON.stringify(resp));
                     }
                 );
+                break;
 
-                //connection.send('{"MessageType":"Command", "Data": { "Name": "DisplayMessage", "Arguments": { "Header": "Message from ioBroker", "Text": "' + state.val + '", "TimeoutMs": 3000 } } }');
-                
+            case 'command.goHome':
+                request.post("http://" + adapter.config.ip + "/Sessions/" + dId + "/Command/GoToSearch?api_key=" + adapter.config.apikey,
+                    { },
+                    function(error, resp, body) {
+                        if(error)
+                        adapter.log.info("Fehler: " + JSON.stringify(resp));
+                    }
+                );
+                break;
+
+            case 'command.back':
+                request.post("http://" + adapter.config.ip + "/Sessions/" + dId + "/Command/Back?api_key=" + adapter.config.apikey,
+                    { },
+                    function(error, resp, body) {
+                        if(error)
+                        adapter.log.info("Fehler: " + JSON.stringify(resp));
+                    }
+                );
                 break;
 
             case 'command.volume':
@@ -120,9 +135,6 @@ adapter.on('stateChange', function (id, state) {
                         adapter.log.info("Fehler: " + JSON.stringify(resp));
                     }
                 );
-
-                //connection.send('{"MessageType":"Command", "Data": { "Name": "DisplayMessage", "Arguments": { "Header": "Message from ioBroker", "Text": "' + state.val + '", "TimeoutMs": 3000 } } }');
-                
                 break;
 
             default:
@@ -154,16 +166,39 @@ function main() {
     connection.onopen = webOpen;
     connection.onerror = webError;
     connection.onmessage = webMessage;
+
+    
+    adapter.setObjectNotExists(adapter.namespace + ".info", {
+        type: 'channel',
+        common: {
+            name: "Info"
+        },
+        native: { }
+    });
+    adapter.setObjectNotExists(adapter.namespace + ".info.connection", {
+        "type": "state",
+        "common": {
+            "name": "If connected to Emby Server",
+            "role": "indicator.connected",
+            "type": "boolean",
+            "read": true,
+            "write": false,
+            "def": false
+        },
+        "native": {}
+    });
 }
 
 function webOpen()
 {
     connection.send('{"MessageType":"SessionsStart", "Data": "10000,10000"}');
     adapter.log.info("Mit Server verbunden.");
+    adapter.setState("info.connection", true, true);
 }
 
 function webError(error)
 {
+    adapter.setState("info.connection", false, true);
     adapter.log.error("Websocket Error : " + error);
 }
 
@@ -177,8 +212,9 @@ function webMessage(e)
 
         if(adapter.config.deviceIds == "" || ( adapter.config.deviceIds != "" && adapter.config.deviceIds.indexOf(d.Id) !== -1))
         {
-            createDevice(d.Id, d.DeviceName);
+            createDevice(d);
             adapter.setState(d.Id + ".info.deviceName", d.DeviceName, true);
+            adapter.setState(d.Id + ".info.userName", d.UserName, true);
 
             if(typeof d.NowPlayingItem !== 'undefined')
             {
@@ -195,29 +231,26 @@ function webMessage(e)
                     adapter.setState(d.Id + ".media.seasonName", "", true);
                     adapter.setState(d.Id + ".media.seriesName", "", true);
                 }
+
+                var ispaused;
+                if(typeof d.PlayState.MediaSourceId !== 'undefined')
+                {
+                    if(d.PlayState.IsPaused)
+                        adapter.setState(d.Id + ".media.state", "paused", true);
+                    else
+                        adapter.setState(d.Id + ".media.state", "playing", true);
+                } else {
+                    adapter.setState(d.Id + ".media.state", "paused", true);
+                }
+                adapter.setState(d.Id + ".media.muted", d.PlayState.IsMuted, true);
             } else {
                 adapter.setState(d.Id + ".media.title", "", true);
                 adapter.setState(d.Id + ".media.description", "", true);
                 adapter.setState(d.Id + ".media.type", "None", true);
-                adapter.setState(d.Id + ".media.seasonName", "", true);
-                adapter.setState(d.Id + ".media.seriesName", "", true);
+                adapter.setState(d.Id + ".media.state", "idle", true);
             }
 
-            if(typeof d.PlaylistItemId !== 'undefined')
-            {
-                var ispaused;
-                if(typeof d.PlayState.MediaSourceId !== 'undefined')
-                {
-                    ispaused = d.PlayState.IsPaused;
-                } else {
-                    ispaused = true;
-                }
-
-                adapter.setState(d.Id + ".media.isPaused", ispaused, true);
-                adapter.setState(d.Id + ".media.isMuted", d.PlayState.IsMuted, true);
-            } else {
-                adapter.setState(d.Id + ".media.isPaused", true, true);
-            }
+            
             
         } else {
             
@@ -226,13 +259,13 @@ function webMessage(e)
     }
 }
 
-function createDevice(id, dName)
+function createDevice(device)
 {
-    var sid = adapter.namespace + '.' + id;
+    var sid = adapter.namespace + '.' + device.Id;
     adapter.setObjectNotExists(sid, {
         type: 'device',
         common: {
-            name: dName
+            name: device.DeviceName
         },
         native: { }
     });
@@ -242,7 +275,8 @@ function createDevice(id, dName)
             name: "Info"
         },
         native: { }
-    });adapter.setObjectNotExists(sid + ".media", {
+    });
+    adapter.setObjectNotExists(sid + ".media", {
         type: 'channel',
         common: {
             name: "Media Info"
@@ -263,17 +297,32 @@ function createDevice(id, dName)
         },
         "native": {}
     });
+    adapter.setObjectNotExists(sid + ".info.userName", {
+        "type": "state",
+        "common": {
+          "name": "Logged in User",
+          "role": "info.name",
+          "type": "string",
+          "read": true,
+          "write": false
+        },
+        "native": {}
+    });
 
 
-
-    adapter.setObjectNotExists(sid + ".media.isPaused", {
+    adapter.setObjectNotExists(sid + ".media.state", {
         "type": "state",
           "common": {
-            "name": "If Media is paused",
+            "name": "State of the CLient",
             "role": "media.state",
-            "type": "boolean",
+            "type": "string",
             "read": true,
-            "write": false
+            "write": true,
+            "states": {
+                "idle": "Idle",
+                "paused": "Paused",
+                "playing": "Playing"
+            }
           },
           "native": {}
     });
@@ -344,50 +393,109 @@ function createDevice(id, dName)
           "native": {}
     });
 
+    if(!device.SupportsRemoteControl)
+        return;
 
 
-    adapter.setObjectNotExists(sid + ".command.message", {
-        "type": "state",
-            "common": {
-            "name": "Message",
-            "role": "state",
-            "type": "string",
-            "read": false,
-            "write": true
-            },
-            "native": {}
+
+
+    adapter.setObjectNotExists(sid + ".command", {
+        type: 'channel',
+        common: {
+            name: "Controll Client"
+        },
+        native: { }
     });
-    adapter.setObjectNotExists(sid + ".command.dialog", {
-        "type": "state",
-            "common": {
-            "name": "Message Dialog",
-            "role": "state",
-            "type": "string",
-            "read": false,
-            "write": true
-            },
-            "native": {}
-    });
-    adapter.setObjectNotExists(sid + ".command.goHome", {
-        "type": "state",
-            "common": {
-            "name": "GoHome",
-            "role": "button",
-            "type": "boolean",
-            "read": false,
-            "write": true
-            },
-            "native": {}
-    });
-    adapter.setObjectNotExists(sid + ".command.volume", {
-        "type": "state",
-            "common": {
-            "name": "Volume",
-            "role": "level.volume",
-            "type": "number",
-            "read": true,
-            "write": true
-            },
-            "native": {}
-    });
+
+    for(var i = 0; i < device.SupportedCommands.length; i++)
+    {
+        switch(device.SupportedCommands[i])
+        {
+            case "DisplayMessage":
+                adapter.setObjectNotExists(sid + ".command.message", {
+                    "type": "state",
+                    "common": {
+                        "name": "Message",
+                        "role": "state",
+                        "type": "string",
+                        "read": false,
+                        "write": true
+                    },
+                    "native": {}
+                });
+                adapter.setObjectNotExists(sid + ".command.dialog", {
+                    "type": "state",
+                    "common": {
+                        "name": "Message Dialog",
+                        "role": "state",
+                        "type": "string",
+                        "read": false,
+                        "write": true
+                    },
+                    "native": {}
+                });
+                break;
+
+            case "GoHome":
+                adapter.setObjectNotExists(sid + ".command.goHome", {
+                    "type": "state",
+                    "common": {
+                        "name": "GoHome",
+                        "role": "button",
+                        "type": "boolean",
+                        "read": false,
+                        "write": true
+                    },
+                    "native": {}
+                });
+                break;
+
+            case "SetVolume":
+                adapter.setObjectNotExists(sid + ".command.volume", {
+                    "type": "state",
+                    "common": {
+                        "name": "Volume",
+                        "role": "level.volume",
+                        "type": "number",
+                        "read": true,
+                        "write": true
+                    },
+                    "native": {}
+                });
+                break;
+                
+            case "GoToSearch":
+                adapter.setObjectNotExists(sid + ".command.goToSearch", {
+                    "type": "state",
+                    "common": {
+                        "name": "GoToSearch",
+                        "role": "button",
+                        "type": "boolean",
+                        "read": false,
+                        "write": true
+                    },
+                    "native": {}
+                });
+                break;
+            
+            case "Back":
+                adapter.setObjectNotExists(sid + ".command.back", {
+                    "type": "state",
+                    "common": {
+                        "name": "Back",
+                        "role": "button",
+                        "type": "boolean",
+                        "read": false,
+                        "write": true
+                    },
+                    "native": {}
+                });
+                break;
+        }
+    }
+
+
+    
+    
+    
 }
