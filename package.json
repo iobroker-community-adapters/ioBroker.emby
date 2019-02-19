@@ -1,7 +1,7 @@
 {
   "name": "iobroker.emby",
   "version": "0.0.3",
-  "description": "Emby Adapter",
+  "description": "Emby",
   "author": {
     "name": "Mike",
     "email": "admin@mikegerst.de"
