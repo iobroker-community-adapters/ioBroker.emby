@@ -35,9 +35,9 @@ Please follow the Steps to ensure the Adapter will work correctly and you can se
 | ------------- | ------------- | ------------- |
 | x.media.description | Description of the shown File. |  |
 | x.media.isMuted | If Media is Muted. | Not all devices support this and will be False. |
-| x.media.isPaused | If Media is Paused. | Will also be True if User closes the client. |
+| x.media.state | State of Media. | playing, paused, idle |
 | x.media.title | The Title of the shown File. |  |
-| x.media.type | The Type of the shown File. | Episode, Video, Book, etc. |
+| x.media.type | The Type of the shown File. | Episode, Movie, Audio, None, etc. |
 | x.media.seasonName | The Name of the Season  | Only if .media.type is Episode otherwise it will be empty. |
 | x.media.seriesName | The Name of the Serie | Only if .media.type is Episode otherwise it will be empty. |
 
