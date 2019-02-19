@@ -52,8 +52,8 @@ Please follow the Steps to ensure the Adapter will work correctly and you can se
 | x.command.volume | Sets the Volume of the selected Device. | Doesn't work on the most of devices since it doenst controle the TV Volume. |
  
 
- ## Changelog
- ### 0.0.2
+## Changelog
+### 0.0.2
 * added more states
 * added DisplayMessage
 
