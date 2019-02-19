@@ -1,16 +1,34 @@
 'use strict';
 
-var request = require('request');
-var W3CWebSocket = require('websocket').w3cwebsocket;
+let request = require('request');
+let W3CWebSocket = require('websocket').w3cwebsocket;
 const utils =    require(__dirname + '/lib/utils'); // Get common adapter utils
-const adapter = new utils.Adapter('emby');
+let adapter;
 
-var websocket;
-var checkOnline;
-var connection;
+let websocket;
+let connection;
+
+
+function startAdapter(options) {
+    options = options || {};
+    Object.assign(options, {
+        name: "emby",
+
+        stateChange: fStateChange,
+        unload: fUnload,
+        ready: function() { main(); },
+    });
+
+    adapter = new utils.Adapter(options);
+
+
+
+    return adapter;
+
+};
 
 // is called when adapter shuts down - callback has to be called under any circumstances!
-adapter.on('unload', function (callback) {
+function fUnload (callback) {
     try {
         connection.send('{"MessageType":"SessionsStop", "Data": ""}');
         websocket.close();
@@ -20,17 +38,18 @@ adapter.on('unload', function (callback) {
     } catch (e) {
         callback();
     }
-});
+}
 
+/*
 // is called if a subscribed object changes
 adapter.on('objectChange', function (id, obj) {
     // Warning, obj can be null if it was deleted
     adapter.log.info('objectChange ' + id + ' ' + JSON.stringify(obj));
 });
+*/
 
 
-
-adapter.on('stateChange', function (id, state) {
+function fStateChange (id, state) {
     if (id && state && !state.ack)
 	{
 		id = id.substring(adapter.namespace.length + 1);
@@ -142,7 +161,7 @@ adapter.on('stateChange', function (id, state) {
                 break;
         }
     }
-});
+}
 
 //adapter.on('message', function (obj) {
 //    if (typeof obj === 'object' && obj.message) {
@@ -152,9 +171,6 @@ adapter.on('stateChange', function (id, state) {
 //    }
 //});
 
-adapter.on('ready', function () {
-    main();
-});
 
 function main() {
     adapter.subscribeStates('*');
@@ -499,3 +515,11 @@ function createDevice(device)
     
     
 }
+
+
+if (module && module.parent) {
+    module.exports = startAdapter;
+} else {
+    // or start the instance directly
+    startAdapter();
+} 

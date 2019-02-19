@@ -44,6 +44,7 @@
         "type": "general",
         "license": "MIT",
         "messagebox": false,
+        "compact": true,
         "localLink": "%web_protocol%://%ip%:%web_port%/emby/index.html",
         "welcomeScreen": {
             "link": "emby/index.html",
