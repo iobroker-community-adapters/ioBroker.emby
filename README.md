@@ -50,7 +50,10 @@ Please follow the Steps to ensure the Adapter will work correctly and you can se
 | x.command.goHome | Sends a command to the selected Device which will return to the Homescreen |  |
 | x.command.message | Show a message on the selected Device for 5 sec. |  |
 | x.command.volume | Sets the Volume of the selected Device. | Doesn't work on the most of devices since it doenst controle the TV Volume. |
- 
+
+
+### Other commands will come soon
+
 
 ## Changelog
 ### 0.0.2
