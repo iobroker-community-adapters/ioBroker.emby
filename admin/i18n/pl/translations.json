@@ -1,0 +1,6 @@
+{
+    "ApiKey": "Klucz API",
+    "DeviceIds": "Identyfikatory urządzeń, które mają być ignorowane (oddzielone przecinkami)",
+    "IP": "IP / Domena serwera Emby (z portem)",
+    "on save": "Po zapisaniu ustawień karty zostaną natychmiast ponownie uruchomione."
+}

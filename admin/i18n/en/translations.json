@@ -1,0 +1,6 @@
+{
+    "ApiKey": "API Key",
+    "DeviceIds": "Device Ids to be ignored (comma seperated)",
+    "IP": "IP/Domain of the Emby server (with port)",
+    "on save": "When saving settings of the adapters will be restarted immediately."
+}

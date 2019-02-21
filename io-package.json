@@ -5,29 +5,77 @@
         "news": {
             "0.0.4": {
                 "en": "Added compact mode",
-                "de": "Kompakt Modus hinzugefügt"
+                "de": "Kompakt Modus hinzugefügt",
+                "ru": "Добавлен компактный режим",
+                "pt": "Adicionado modo compacto",
+                "nl": "Compact-modus toegevoegd",
+                "fr": "Ajout du mode compact",
+                "it": "Aggiunta modalità compatta",
+                "es": "Modo compacto agregado",
+                "pl": "Dodano tryb kompaktowy",
+                "zh-cn": "增加了紧凑模式"
             },
             "0.0.3": {
                 "en": "added new states, connection state, and more improvment",
-                "de": "Neue States wurden hinzugefügt und weitere verbesserungen"
+                "de": "Neue States wurden hinzugefügt und weitere verbesserungen",
+                "ru": "добавлены новые состояния, состояние соединения и больше улучшений",
+                "pt": "adicionou novos estados, estado de conexão e mais aprimoramento",
+                "nl": "nieuwe toestanden, verbindingsstatus en meer improvment toegevoegd",
+                "fr": "ajout de nouveaux états, état de connexion et plus d'amélioration",
+                "it": "aggiunti nuovi stati, stato della connessione e più miglioramenti",
+                "es": "Se agregaron nuevos estados, estado de conexión y más mejoras.",
+                "pl": "dodano nowe stany, stan połączenia i większą poprawę",
+                "zh-cn": "添加了新状态，连接状态和更多改进"
             },
             "0.0.2": {
                 "en": "added new states",
-                "de": "Neue States wurden hinzugefügt"
+                "de": "Neue States wurden hinzugefügt",
+                "ru": "добавлены новые штаты",
+                "pt": "adicionou novos estados",
+                "nl": "nieuwe staten toegevoegd",
+                "fr": "ajouté de nouveaux états",
+                "it": "aggiunti nuovi stati",
+                "es": "añadido nuevos estados",
+                "pl": "dodano nowe stany",
+                "zh-cn": "增加了新的州"
             },
-          "0.0.1": {
-              "en": "initial adapter",
-              "de": "Initiale Version"
-          }
+            "0.0.1": {
+                "en": "initial adapter",
+                "de": "Initiale Version",
+                "ru": "начальный адаптер",
+                "pt": "adaptador inicial",
+                "nl": "eerste adapter",
+                "fr": "adaptateur initial",
+                "it": "adattatore iniziale",
+                "es": "adaptador inicial",
+                "pl": "początkowy adapter",
+                "zh-cn": "初始适配器"
+            }
         },
-		"title": "Emby",
+        "title": "Emby",
         "titleLang": {
             "en": "Emby",
-            "de": "Emby"
+            "de": "Emby",
+            "ru": "Emby",
+            "pt": "Emby",
+            "nl": "Emby",
+            "fr": "Emby",
+            "it": "ricamato",
+            "es": "Emby",
+            "pl": "Emby",
+            "zh-cn": "Emby"
         },
         "desc": {
             "en": "Controle and visualise your Emby Server",
-            "de": "Kontrolliere und visualisiere deinen Emby Server"
+            "de": "Kontrolliere und visualisiere deinen Emby Server",
+            "ru": "Контролируйте и визуализируйте свой Emby Server",
+            "pt": "Controle e visualize seu Emby Server",
+            "nl": "Contrôle en visualiseer uw Emby Server",
+            "fr": "Contrôlez et visualisez votre serveur Emby",
+            "it": "Controlla e visualizza il tuo server Emby",
+            "es": "Controla y visualiza tu servidor Emby.",
+            "pl": "Skomponuj i wizualizuj swój serwer Emby",
+            "zh-cn": "控制和可视化您的Emby服务器"
         },
         "authors": [
             "@@Author@@ <@@email@@>"
@@ -42,7 +90,12 @@
         "materialize": true,
         "enabled": true,
         "extIcon": "https://raw.githubusercontent.com/thewhobox/ioBroker.emby/master/admin/emby.png",
-        "keywords": ["emby", "server", "media", "video"],
+        "keywords": [
+            "emby",
+            "server",
+            "media",
+            "video"
+        ],
         "readme": "https://github.com/thewhobox/ioBroker.emby/blob/master/README.md",
         "loglevel": "info",
         "type": "general",

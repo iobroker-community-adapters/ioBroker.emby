@@ -1,0 +1,6 @@
+{
+    "ApiKey": "API sleutel",
+    "DeviceIds": "Device Ids die moet worden genegeerd (door komma's gescheiden)",
+    "IP": "IP / domein van de Emby-server (met poort)",
+    "on save": "Bij het opslaan worden de instellingen van de adapters onmiddellijk opnieuw gestart."
+}

@@ -1,0 +1,6 @@
+{
+    "ApiKey": "clé API",
+    "DeviceIds": "Les ID de périphérique à ignorer (séparés par une virgule)",
+    "IP": "IP / Domaine du serveur Emby (avec port)",
+    "on save": "Lors de l'enregistrement des paramètres des adaptateurs sera redémarré immédiatement."
+}

@@ -1,0 +1,6 @@
+{
+    "ApiKey": "Chave API",
+    "DeviceIds": "IDs de dispositivos a serem ignorados (separados por vírgula)",
+    "IP": "IP / Domínio do servidor Emby (com porta)",
+    "on save": "Ao salvar as configurações dos adaptadores, será reiniciado imediatamente."
+}
