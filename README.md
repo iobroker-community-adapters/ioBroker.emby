@@ -56,6 +56,14 @@ Please follow the Steps to ensure the Adapter will work correctly and you can se
 
 
 ## Changelog
+
+### 0.0.4
+* added compact mode
+
+### 0.0.3
+* added new states, connection state and more improvment
+
+
 ### 0.0.2
 * added more states
 * added DisplayMessage
