@@ -13,7 +13,6 @@ function startAdapter(options) {
     options = options || {};
     Object.assign(options, {
         name: "emby",
-
         stateChange: fStateChange,
         unload: fUnload,
         ready: function() { main(); },
@@ -21,10 +20,7 @@ function startAdapter(options) {
 
     adapter = new utils.Adapter(options);
 
-
-
     return adapter;
-
 };
 
 // is called when adapter shuts down - callback has to be called under any circumstances!
@@ -527,6 +523,5 @@ function createDevice(device)
 if (module && module.parent) {
     module.exports = startAdapter;
 } else {
-    // or start the instance directly
     startAdapter();
 } 
