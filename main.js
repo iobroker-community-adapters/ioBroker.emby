@@ -174,15 +174,6 @@ function fStateChange (id, state) {
 
 function main() {
     adapter.subscribeStates('*');
-    adapter.log.info("starting websocket");
-    adapter.log.info("try to connect to: " + adapter.config.ip);
-    connection = new W3CWebSocket('ws://' + adapter.config.ip + '?api_key=' + adapter.config.apikey + '&deviceId=00001'); //8306e66875c54b4c816fed315c3cd2e6
-    adapter.log.info("started websocket");
-
-    connection.onopen = webOpen;
-    connection.onerror = webError;
-    connection.onmessage = webMessage;
-
     
     adapter.setObjectNotExists(adapter.namespace + ".info", {
         type: 'channel',
@@ -203,12 +194,25 @@ function main() {
         },
         "native": {}
     });
+
+    tryConnect();
+}
+
+function tryConnect()
+{
+    adapter.log.info("try to connect to: " + adapter.config.ip);
+    connection = new W3CWebSocket('ws://' + adapter.config.ip + '?api_key=' + adapter.config.apikey + '&deviceId=00001'); //8306e66875c54b4c816fed315c3cd2e6
+    adapter.log.info("started websocket");
+
+    connection.onopen = webOpen;
+    connection.onerror = webError;
+    connection.onmessage = webMessage;
 }
 
 function webOpen()
 {
     connection.send('{"MessageType":"SessionsStart", "Data": "10000,10000"}');
-    adapter.log.info("Mit Server verbunden.");
+    adapter.log.info("connected with emby");
     adapter.setState("info.connection", true, true);
 }
 
@@ -216,6 +220,9 @@ function webError(error)
 {
     adapter.setState("info.connection", false, true);
     adapter.log.error("Websocket Error : " + error);
+    adapter.log.info("Reconnect-Versuch in 10s");
+
+    setTimeout(tryConnect, 10000);
 }
 
 function webMessage(e)
