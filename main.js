@@ -278,25 +278,35 @@ function webMessage(e)
     }
 }
 
+let laststate = "idle";
+let timeoutplay;
+let timeoutstate = "idle";
+
 function changeState(id, state)
 {
-    if(state != "playing")
-    {
-        juststopped = true;
-        setTimeout(function() {
-            adapter.log.debug(state);
-            if(juststopped)
-            adapter.log.debug("stopped 1");
-            else
-            adapter.log.debug("stopped 0");
+    if(laststate == state)
+        return;
 
-            if(juststopped)
-                adapter.setState(id + ".media.state", state, true);
-        }, adapter.config.timeout);
-    } else {
-        juststopped = false;
+    if(state == "playing")
+    {
+        clearTimeout(timeoutplay);
         adapter.setState(id + ".media.state", state, true);
+    } else {
+        if(laststate == "playing")
+        {
+            timeoutstate = state;
+            timeoutplay = setTimeout(function() {
+                adapter.log.debug(state);
+                adapter.log.debug(timeoutstate);
+                adapter.setState(id + ".media.state", timeoutstate, true);
+            }, adapter.config.timeout);
+        } else {
+            adapter.setState(id + ".media.state", state, true);
+        }
+        
     }
+
+    laststate = state;
 }
 
 function createDevice(device)
