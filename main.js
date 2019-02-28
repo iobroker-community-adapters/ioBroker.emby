@@ -282,7 +282,7 @@ function webMessage(e)
 let laststates = { };
 let timeoutplays = { };
 let timeoutstates = { };
-let timeoutstarted = false;
+let timeoutstarted = { };
 
 function changeState(id, state)
 {
@@ -295,16 +295,16 @@ function changeState(id, state)
     if(state == "playing")
     {
         clearTimeout(timeoutplays[id]);
-        timeoutstarted = false;
+        timeoutstarted[id] = false;
         adapter.setState(id + ".media.state", state, true);
     } else {
         timeoutstates[id] = state;
-        if(!timeoutstarted)
+        if(!timeoutstarted[id])
         {
-            timeoutstarted = true;
+            timeoutstarted[id] = true;
             timeoutplays[id] = setTimeout(function() {
                 adapter.setState(id + ".media.state", timeoutstates[id], true);
-                timeoutplays[id] = false;
+                timeoutstarted[id] = false;
             }, adapter.config.timeout);
         }
     }
