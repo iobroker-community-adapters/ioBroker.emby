@@ -1,8 +1,12 @@
 {
     "common": {
         "name": "emby",
-        "version": "0.0.4",
+        "version": "0.1.0",
         "news": {
+            "0.1.0": {
+                "en": "Added automatic try reconnect after one minute",
+                "de": "Automatischer Verbindungsversuch nach einer Minute"
+            },
             "0.0.4": {
                 "en": "Added compact mode",
                 "de": "Kompakt Modus hinzugefügt",
