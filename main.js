@@ -51,7 +51,7 @@ function fStateChange (id, state) {
 	{
 		id = id.substring(adapter.namespace.length + 1);
 
-        if(id.indexOf("info.") !== -1 || id.indexOf("playing.") !== -1)
+        if(id.indexOf("info.") !== -1 || id.indexOf("media.") !== -1)
         {
             adapter.log.debug(id);
             if(id.indexOf(".state") !== -1)
