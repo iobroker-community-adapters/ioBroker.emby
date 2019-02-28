@@ -51,17 +51,17 @@ function fStateChange (id, state) {
 	{
 		id = id.substring(adapter.namespace.length + 1);
 
-        adapter.log.debug(id);
-        
+        adapter.log.info(id);
+
         if(id.indexOf("info.") !== -1 || id.indexOf("media.") !== -1)
         {
             if(id.indexOf(".state") !== -1)
             {
-                adapter.log.debug("state = " + state.val);
+                adapter.log.info("state = " + state.val);
                 if(juststopped)
-                    adapter.log.debug("juststopped true");
+                    adapter.log.info("juststopped true");
                 else
-                    adapter.log.debug("juststopped false");
+                    adapter.log.info("juststopped false");
 
 
                 if(state.val != "playing")
@@ -69,14 +69,14 @@ function fStateChange (id, state) {
                     juststopped = true;
                     setTimeout(function() {
                         if(juststopped)
-                            adapter.log.debug("timeout juststopped true");
+                            adapter.log.info("timeout juststopped true");
                         else
-                            adapter.log.debug("timeout juststopped false");
+                            adapter.log.info("timeout juststopped false");
                         if(juststopped)
                             adapter.setState(id, state.val, true);
                     }, 1000);
                 } else {
-                    adapter.log.debug("not state");
+                    adapter.log.info("not state");
                     juststopped = false;
                 }
             } else {
