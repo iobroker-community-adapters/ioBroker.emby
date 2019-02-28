@@ -304,7 +304,7 @@ function changeState(id, state)
             timeoutstarted = true;
             timeoutplays[id] = setTimeout(function() {
                 adapter.setState(id + ".media.state", timeoutstates[id], true);
-                timeoutplay = false;
+                timeoutplays[id] = false;
             }, adapter.config.timeout);
         }
     }
