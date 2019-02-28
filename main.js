@@ -53,7 +53,7 @@ function fStateChange (id, state) {
 
         if(id.indexOf("info.") !== -1 || id.indexOf("playing.") !== -1)
         {
-            if(id.indexOf(".state"))
+            if(id.indexOf(".state") !== -1)
             {
                 if(state.val != "playing")
                 {
