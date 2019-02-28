@@ -262,7 +262,7 @@ function webMessage(e)
                 } else {
                     changeState(d.Id, "paused"); //adapter.setState(d.Id + ".media.state", "paused", true);
                 }
-                adapter.setState(d.Id + ".media.muted", d.PlayState.IsMuted, true);
+                adapter.setState(d.Id + ".media.isMuted", d.PlayState.IsMuted, true);
             } else {
                 adapter.setState(d.Id + ".media.title", "", true);
                 adapter.setState(d.Id + ".media.description", "", true);
