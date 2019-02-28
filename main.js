@@ -303,7 +303,6 @@ function changeState(id, state)
             timeoutstarted = true;
             timeoutplay = setTimeout(function() {
                 adapter.log.debug(timeoutstarted);
-                adapter.log.debug(timeoutstate);
                 adapter.setState(id + ".media.state", timeoutstate, true);
             }, adapter.config.timeout);
         }
