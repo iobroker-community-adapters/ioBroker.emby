@@ -292,18 +292,12 @@ function changeState(id, state)
         clearTimeout(timeoutplay);
         adapter.setState(id + ".media.state", state, true);
     } else {
-        if(laststate == "playing")
-        {
-            timeoutstate = state;
-            timeoutplay = setTimeout(function() {
-                adapter.log.debug(state);
-                adapter.log.debug(timeoutstate);
-                adapter.setState(id + ".media.state", timeoutstate, true);
-            }, adapter.config.timeout);
-        } else {
-            adapter.setState(id + ".media.state", state, true);
-        }
-        
+        timeoutstate = state;
+        timeoutplay = setTimeout(function() {
+            adapter.log.debug(state);
+            adapter.log.debug(timeoutstate);
+            adapter.setState(id + ".media.state", timeoutstate, true);
+        }, adapter.config.timeout);
     }
 
     laststate = state;
