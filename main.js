@@ -7,7 +7,12 @@ const utils =    require(__dirname + '/lib/utils'); // Get common adapter utils
 let adapter;
 let websocket;
 let connection;
-let juststopped = false;
+
+
+let laststates = { };
+let timeoutplays = { };
+let timeoutstates = { };
+let timeoutstarted = { };
 
 
 function startAdapter(options) {
@@ -30,6 +35,10 @@ function fUnload (callback) {
         connection.send('{"MessageType":"SessionsStop", "Data": ""}');
         websocket.close();
         checkOnline = null;
+        laststates = { };
+        timeoutplays = { };
+        timeoutstates = { };
+        timeoutstarted = { };
         adapter.log.info('cleaned everything up...');
         callback();
     } catch (e) {
@@ -269,28 +278,16 @@ function webMessage(e)
                 adapter.setState(d.Id + ".media.type", "None", true);
                 changeState(d.Id, "idle"); //adapter.setState(d.Id + ".media.state", "idle", true);
             }
-
-            
-            
         } else {
-            
-        adapter.log.debug("Device skipped: " + d.DeviceName);
+            adapter.log.debug("Device skipped: " + d.DeviceName);
         }
     }
 }
-
-let laststates = { };
-let timeoutplays = { };
-let timeoutstates = { };
-let timeoutstarted = { };
 
 function changeState(id, state)
 {
     if(laststates[id] == state)
         return;
-
-    adapter.log.debug(id);
-    adapter.log.debug(laststates[id] + " - " + state);
 
     if(state == "playing")
     {
