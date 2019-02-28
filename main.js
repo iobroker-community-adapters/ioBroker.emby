@@ -281,6 +281,7 @@ function webMessage(e)
 let laststate = "idle";
 let timeoutplay;
 let timeoutstate = "idle";
+let timeoutstarted = false;
 
 function changeState(id, state)
 {
@@ -290,14 +291,19 @@ function changeState(id, state)
     if(state == "playing")
     {
         clearTimeout(timeoutplay);
+        timeoutstarted = false;
         adapter.setState(id + ".media.state", state, true);
     } else {
         timeoutstate = state;
-        timeoutplay = setTimeout(function() {
-            adapter.log.debug(state);
-            adapter.log.debug(timeoutstate);
-            adapter.setState(id + ".media.state", timeoutstate, true);
-        }, adapter.config.timeout);
+        if(!timeoutstarted)
+        {
+            timeoutstarted = true;
+            timeoutplay = setTimeout(function() {
+                adapter.log.debug(state);
+                adapter.log.debug(timeoutstate);
+                adapter.setState(id + ".media.state", timeoutstate, true);
+            }, adapter.config.timeout);
+        }
     }
 
     laststate = state;
