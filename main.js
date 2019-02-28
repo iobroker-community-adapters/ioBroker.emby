@@ -284,6 +284,12 @@ function changeState(id, state)
     {
         juststopped = true;
         setTimeout(function() {
+            adapter.log.debug(state);
+            if(juststopped)
+            adapter.log.debug("stopped 1");
+            else
+            adapter.log.debug("stopped 0");
+
             if(juststopped)
                 adapter.setState(id + ".media.state", state, true);
         }, adapter.config.timeout);
