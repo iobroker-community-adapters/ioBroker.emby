@@ -53,16 +53,29 @@ function fStateChange (id, state) {
 
         if(id.indexOf("info.") !== -1 || id.indexOf("playing.") !== -1)
         {
+            adapter.log.debug(id);
             if(id.indexOf(".state") !== -1)
             {
+                adapter.log.debug("state = " + state.val);
+                if(juststopped)
+                    adapter.log.debug("juststopped true");
+                else
+                    adapter.log.debug("juststopped false");
+
+
                 if(state.val != "playing")
                 {
                     juststopped = true;
                     setTimeout(function() {
                         if(juststopped)
+                            adapter.log.debug("timeout juststopped true");
+                        else
+                            adapter.log.debug("timeout juststopped false");
+                        if(juststopped)
                             adapter.setState(id, state.val, true);
                     }, 1000);
                 } else {
+                    adapter.log.debug("not state");
                     juststopped = false;
                 }
             } else {
