@@ -19,5 +19,11 @@ systemDictionary = {
     "DeviceIds": { 
         "de": "Geräte Ids die ignoriert werden sollen (Mit Komma getrennt)",
         "ru": "Идентификаторы устройств, которые следует игнорировать (через запятую)",
-        "en": "Device Ids to be ignored (comma seperated)" }
+        "en": "Device Ids to be ignored (comma seperated)" },
+    "Timeout": {
+        "de": "Verzögerung für Pause/Leerlauf",
+        "en": "Delay for pause/idle" },
+    "TimeoutDesc": {
+        "de": "Nötig wenn mehrere Folgen hintereinander gespielt werden.",
+        "en": "Necessary when you watch more episodes in one row." }
 };

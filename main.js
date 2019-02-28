@@ -3,10 +3,11 @@
 let request = require('request');
 let W3CWebSocket = require('websocket').w3cwebsocket;
 const utils =    require(__dirname + '/lib/utils'); // Get common adapter utils
-let adapter;
 
+let adapter;
 let websocket;
 let connection;
+let juststopped = false;
 
 
 function startAdapter(options) {
@@ -276,7 +277,6 @@ function webMessage(e)
         }
     }
 }
-let juststopped = false;
 
 function changeState(id, state)
 {
@@ -286,7 +286,7 @@ function changeState(id, state)
         setTimeout(function() {
             if(juststopped)
                 adapter.setState(id + ".media.state", state, true);
-        }, 1000);
+        }, adapter.config.timeout);
     } else {
         juststopped = false;
         adapter.setState(id + ".media.state", state, true);

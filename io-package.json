@@ -113,7 +113,7 @@
         "ip": "0.0.0.0:8096",
         "apikey": "",
         "deviceIds": "",
-        "timer": 1000
+        "timeout": 1500
     },
     "objects": [],
     "instanceObjects": []
