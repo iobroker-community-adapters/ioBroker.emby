@@ -198,6 +198,7 @@ function main() {
 function tryConnect()
 {
     adapter.log.debug("try to connect to: " + adapter.config.ip);
+    adapter.log.debug("2");
     connection = new W3CWebSocket('ws://' + adapter.config.ip + '?api_key=' + adapter.config.apikey + '&deviceId=00001'); //8306e66875c54b4c816fed315c3cd2e6
     
     connection.onopen = webOpen;
@@ -288,6 +289,8 @@ function changeState(id, state)
     if(laststate == state)
         return;
 
+    adapter.log.debug(state);
+
     if(state == "playing")
     {
         clearTimeout(timeoutplay);
@@ -299,7 +302,6 @@ function changeState(id, state)
         {
             timeoutstarted = true;
             timeoutplay = setTimeout(function() {
-                adapter.log.debug(state);
                 adapter.log.debug(timeoutstate);
                 adapter.setState(id + ".media.state", timeoutstate, true);
             }, adapter.config.timeout);
