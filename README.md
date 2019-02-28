@@ -2,6 +2,11 @@
 # ioBroker.emby
 =================
 
+[![NPM version](http://img.shields.io/npm/v/iobroker.emby.svg)](https://www.npmjs.com/package/iobroker.emby)
+[![Downloads](https://img.shields.io/npm/dm/iobroker.emby.svg)](https://www.npmjs.com/package/iobroker.emby)
+
+[![NPM](https://nodei.co/npm/iobroker.emby.png?downloads=true)](https://nodei.co/npm/iobroker.emby/)
+
 This adapter will allow you to connect to your Emby Server and controle it.
 
 Please follow the Steps to ensure the Adapter will work correctly and you can see all Devices.
