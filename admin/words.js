@@ -3,8 +3,21 @@
 'use strict';
 
 systemDictionary = {
-    "on save": { "de": "Beim Speichern von Einstellungen der Adapter wird sofort neu gestartet." },
-    "IP": { "de": "IP/ Domain des Emby Servers (mit Port)" },
-    "ApiKey": { "de": "ApiKey", "en": "ApiKey" },
-    "DeviceIds": { "de": "Geräte Ids die ignoriert werden sollen (Mit Komma getrennt)", "en": "Device Ids to be ignored (comma seperated)" }
+    "on save": { 
+        "de": "Beim Speichern von Einstellungen der Adapter wird sofort neu gestartet.",
+        "ru": "При сохранении настроек адаптеры будут перезагружены сразу.",
+        "en": "When saving settings of the adapters will be restarted immediately."
+    },
+    "IP": { 
+        "de": "IP/ Domain des Emby Servers (mit Port)",
+        "ru": "IP / Домен сервера Emby (с портом)",
+        "en": "IP/Domain of the Emby server (with port)" },
+    "ApiKey": { 
+        "de": "API Key",
+        "ru": "Ключ API",
+        "en": "API Key" },
+    "DeviceIds": { 
+        "de": "Geräte Ids die ignoriert werden sollen (Mit Komma getrennt)",
+        "ru": "Идентификаторы устройств, которые следует игнорировать (через запятую)",
+        "en": "Device Ids to be ignored (comma seperated)" }
 };
