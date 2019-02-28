@@ -216,7 +216,7 @@ function webError(error)
 {
     adapter.setState("info.connection", false, true);
     adapter.log.error("Websocket Error : " + JSON.stringify(error));
-    adapter.log.info("Reconnect-Versuch in 60s");
+    adapter.log.info("Reconnect-Versuch in 10s");
 
     setTimeout(tryConnect, 60000);
 }
