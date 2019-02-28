@@ -279,36 +279,37 @@ function webMessage(e)
     }
 }
 
-let laststate = "idle";
-let timeoutplay;
-let timeoutstate = "idle";
+let laststates = { };
+let timeoutplays = { };
+let timeoutstates = { };
 let timeoutstarted = false;
 
 function changeState(id, state)
 {
-    if(laststate == state)
+    if(laststates[id] == state)
         return;
 
-    adapter.log.debug(state);
+    adapter.log.debug(id);
+    adapter.log.debug(laststates[id] + " - " + state);
 
     if(state == "playing")
     {
-        clearTimeout(timeoutplay);
+        clearTimeout(timeoutplays[id]);
         timeoutstarted = false;
         adapter.setState(id + ".media.state", state, true);
     } else {
-        timeoutstate = state;
+        timeoutstates[id] = state;
         if(!timeoutstarted)
         {
             timeoutstarted = true;
-            timeoutplay = setTimeout(function() {
-                adapter.setState(id + ".media.state", timeoutstate, true);
+            timeoutplays[id] = setTimeout(function() {
+                adapter.setState(id + ".media.state", timeoutstates[id], true);
                 timeoutplay = false;
             }, adapter.config.timeout);
         }
     }
 
-    laststate = state;
+    laststates[id] = state;
 }
 
 function createDevice(device)
