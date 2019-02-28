@@ -23,9 +23,16 @@
     "request": "^2.88.0",
     "websocket": "^1.0.23"
   },
+  "devDependencies": {
+    "mocha": "^5.2.0",
+    "chai": "^4.1.2"
+  },
   "main": "main.js",
   "bugs": {
     "url": "https://github.com/thewhobox/ioBroker.emby/issues"
+  },
+  "scripts": {
+    "test": "node node_modules/mocha/bin/mocha --exit"
   },
   "readmeFilename": "README.md"
 }
