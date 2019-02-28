@@ -7,6 +7,7 @@ let adapter;
 
 let websocket;
 let connection;
+let juststopped = false;
 
 
 function startAdapter(options) {
@@ -52,7 +53,21 @@ function fStateChange (id, state) {
 
         if(id.indexOf("info.") !== -1 || id.indexOf("playing.") !== -1)
         {
-            adapter.setState(id, state.val, true);
+            if(id.indexOf(".state"))
+            {
+                if(state.val != "playing")
+                {
+                    juststopped = true;
+                    setTimeout(function() {
+                        if(juststopped)
+                            adapter.setState(id, state.val, true);
+                    }, 1000);
+                } else {
+                    juststopped = false;
+                }
+            } else {
+                adapter.setState(id, state.val, true);
+            }
             return;
         }
 
@@ -196,10 +211,9 @@ function main() {
 
 function tryConnect()
 {
-    adapter.log.info("try to connect to: " + adapter.config.ip);
+    adapter.log.debug("try to connect to: " + adapter.config.ip);
     connection = new W3CWebSocket('ws://' + adapter.config.ip + '?api_key=' + adapter.config.apikey + '&deviceId=00001'); //8306e66875c54b4c816fed315c3cd2e6
-    adapter.log.info("started websocket");
-
+    
     connection.onopen = webOpen;
     connection.onerror = webError;
     connection.onmessage = webMessage;
@@ -208,15 +222,15 @@ function tryConnect()
 function webOpen()
 {
     connection.send('{"MessageType":"SessionsStart", "Data": "10000,10000"}');
-    adapter.log.info("connected with emby");
+    adapter.log.info("connected with emby (" + adapter.config.ip + ")");
     adapter.setState("info.connection", true, true);
 }
 
 function webError(error)
 {
     adapter.setState("info.connection", false, true);
-    adapter.log.error("Websocket Error : " + JSON.stringify(error));
-    adapter.log.info("Reconnect-Versuch in 60s");
+    adapter.log.debug("Websocket Error : " + JSON.stringify(error));
+    adapter.log.error("WebSocket Error. Try Reconnect in 60s");
 
     setTimeout(tryConnect, 60000);
 }
