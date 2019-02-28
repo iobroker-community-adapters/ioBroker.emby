@@ -215,10 +215,10 @@ function webOpen()
 function webError(error)
 {
     adapter.setState("info.connection", false, true);
-    adapter.log.error("Websocket Error : " + error);
+    adapter.log.error("Websocket Error : " + JSON.stringify(error));
     adapter.log.info("Reconnect-Versuch in 10s");
 
-    setTimeout(tryConnect, 10000);
+    setTimeout(tryConnect, 60000);
 }
 
 function webMessage(e)
