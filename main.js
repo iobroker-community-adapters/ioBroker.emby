@@ -254,11 +254,11 @@ function webMessage(e)
                 if(typeof d.PlayState.MediaSourceId !== 'undefined')
                 {
                     if(d.PlayState.IsPaused)
-                        adapter.setState(d.Id + ".media.state", "paused", true);
+                        changeState("paused"); //adapter.setState(d.Id + ".media.state", "paused", true);
                     else
-                        adapter.setState(d.Id + ".media.state", "playing", true);
+                        changeState("playing"); //adapter.setState(d.Id + ".media.state", "playing", true);
                 } else {
-                    adapter.setState(d.Id + ".media.state", "paused", true);
+                    changeState("paused"); //adapter.setState(d.Id + ".media.state", "paused", true);
                 }
                 adapter.setState(d.Id + ".media.muted", d.PlayState.IsMuted, true);
             } else {
