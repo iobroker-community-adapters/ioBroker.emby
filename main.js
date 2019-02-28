@@ -7,7 +7,6 @@ let adapter;
 
 let websocket;
 let connection;
-let juststopped = false;
 
 
 function startAdapter(options) {
@@ -51,37 +50,9 @@ function fStateChange (id, state) {
 	{
 		id = id.substring(adapter.namespace.length + 1);
 
-        adapter.log.info(id);
-
-        if(id.indexOf("info.") !== -1 || id.indexOf("media.") !== -1)
+        if(id.indexOf("info.") !== -1 || id.indexOf("playing.") !== -1)
         {
-            if(id.indexOf(".state") !== -1)
-            {
-                adapter.log.info("state = " + state.val);
-                if(juststopped)
-                    adapter.log.info("juststopped true");
-                else
-                    adapter.log.info("juststopped false");
-
-
-                if(state.val != "playing")
-                {
-                    juststopped = true;
-                    setTimeout(function() {
-                        if(juststopped)
-                            adapter.log.info("timeout juststopped true");
-                        else
-                            adapter.log.info("timeout juststopped false");
-                        if(juststopped)
-                            adapter.setState(id, state.val, true);
-                    }, 1000);
-                } else {
-                    adapter.log.info("not state");
-                    juststopped = false;
-                }
-            } else {
-                adapter.setState(id, state.val, true);
-            }
+            adapter.setState(id, state.val, true);
             return;
         }
 
@@ -303,6 +274,22 @@ function webMessage(e)
             
         adapter.log.debug("Device skipped: " + d.DeviceName);
         }
+    }
+}
+let juststopped = false;
+
+function changeState(id, state)
+{
+    if(state != "playing")
+    {
+        juststopped = true;
+        setTimeout(function() {
+            if(juststopped)
+                adapter.setState(id + ".media.state", state, true);
+        }, 1000);
+    } else {
+        juststopped = false;
+        adapter.setState(id + ".media.state", state, true);
     }
 }
 
