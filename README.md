@@ -2,6 +2,7 @@
 # ioBroker.emby
 =================
 
+[![Build Status](https://travis-ci.org/thewhobox/ioBroker.discovery.svg?branch=master)](https://travis-ci.org/thewhobox/ioBroker.discovery)
 [![NPM version](http://img.shields.io/npm/v/iobroker.emby.svg)](https://www.npmjs.com/package/iobroker.emby)
 [![Downloads](https://img.shields.io/npm/dm/iobroker.emby.svg)](https://www.npmjs.com/package/iobroker.emby)
 
