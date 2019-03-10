@@ -87,10 +87,6 @@
         "authors": [
             "@@Author@@ <@@email@@>"
         ],
-        "docs": {
-            "en": "docs/en/admin.md",
-            "es": "docs/es/admin.md"
-        },
         "platform": "Javascript/Node.js",
         "mode": "daemon",
         "icon": "emby.png",
