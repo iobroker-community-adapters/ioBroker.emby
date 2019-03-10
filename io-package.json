@@ -103,15 +103,7 @@
         "type": "general",
         "license": "MIT",
         "messagebox": false,
-        "compact": true,
-        "localLink": "%web_protocol%://%ip%:%web_port%/emby/index.html",
-        "welcomeScreen": {
-            "link": "emby/index.html",
-            "name": "emby",
-            "img": "emby.admin/emby.png",
-            "color": "black",
-            "order": 2
-        }
+        "compact": true
     },
     "native": {
         "ip": "0.0.0.0:8096",
