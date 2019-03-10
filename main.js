@@ -76,10 +76,9 @@ function fStateChange (id, state) {
 
 		switch (cmd)
 		{
-            case 'command.pause':
+            case 'command.toggleplay':
                 request.post({
-                        uri: "http://" + adapter.config.ip + "/Sessions/" + dId + "/Playing/Pause?api_key=" + adapter.config.apikey,
-                        body: '{"Header":"Test", "Text":"' + state.val + '", "TimeoutMs":"5000" }',
+                        uri: "http://" + adapter.config.ip + "/Sessions/" + dId + "/Playing/PlayPause?api_key=" + adapter.config.apikey,
                         headers: headers
                     },
                     function(error, resp, body) {
@@ -91,6 +90,76 @@ function fStateChange (id, state) {
                 );
                 break;
 
+
+            case 'command.play':
+                request.post({
+                        uri: "http://" + adapter.config.ip + "/Sessions/" + dId + "/Playing/Unpause?api_key=" + adapter.config.apikey,
+                        headers: headers
+                    },
+                    function(error, resp, body) {
+                        if(!error)
+                            adapter.setState(id, "", true);
+                        else
+                            adapter.log.info("Fehler: " + JSON.stringify(resp));
+                    }
+                );
+                break;
+
+            case 'command.pause':
+                request.post({
+                        uri: "http://" + adapter.config.ip + "/Sessions/" + dId + "/Playing/Pause?api_key=" + adapter.config.apikey,
+                        headers: headers
+                    },
+                    function(error, resp, body) {
+                        if(!error)
+                            adapter.setState(id, "", true);
+                        else
+                            adapter.log.info("Fehler: " + JSON.stringify(resp));
+                    }
+                );
+                break;
+
+            case 'command.mute':
+                request.post({
+                        uri: "http://" + adapter.config.ip + "/Sessions/" + dId + "/Command/Mute?api_key=" + adapter.config.apikey,
+                        headers: headers
+                    },
+                    function(error, resp, body) {
+                        if(!error)
+                            adapter.setState(id, "", true);
+                        else
+                            adapter.log.info("Fehler: " + JSON.stringify(resp));
+                    }
+                );
+                break;
+
+            case 'command.unmute':
+                request.post({
+                        uri: "http://" + adapter.config.ip + "/Sessions/" + dId + "/Command/Unmute?api_key=" + adapter.config.apikey,
+                        headers: headers
+                    },
+                    function(error, resp, body) {
+                        if(!error)
+                            adapter.setState(id, "", true);
+                        else
+                            adapter.log.info("Fehler: " + JSON.stringify(resp));
+                    }
+                );
+                break;
+
+            case 'command.togglemute':
+                request.post({
+                        uri: "http://" + adapter.config.ip + "/Sessions/" + dId + "/Command/ToggleMute?api_key=" + adapter.config.apikey,
+                        headers: headers
+                    },
+                    function(error, resp, body) {
+                        if(!error)
+                            adapter.setState(id, "", true);
+                        else
+                            adapter.log.info("Fehler: " + JSON.stringify(resp));
+                    }
+                );
+                break;
 
             case 'command.message':
                 request.post({
@@ -142,8 +211,18 @@ function fStateChange (id, state) {
                 );
                 break;
 
-            case 'command.goHome':
+            case 'command.goToSearch':
                 request.post("http://" + adapter.config.ip + "/Sessions/" + dId + "/Command/GoToSearch?api_key=" + adapter.config.apikey,
+                    { },
+                    function(error, resp, body) {
+                        if(error)
+                        adapter.log.info("Fehler: " + JSON.stringify(resp));
+                    }
+                );
+                break;
+
+            case 'command.goToSettings':
+                request.post("http://" + adapter.config.ip + "/Sessions/" + dId + "/Command/GoToSettings?api_key=" + adapter.config.apikey,
                     { },
                     function(error, resp, body) {
                         if(error)
@@ -176,10 +255,11 @@ function fStateChange (id, state) {
                         adapter.log.info("Fehler: " + JSON.stringify(resp));
                     }
                 );
+                adapter.log.info(JSON.stringify(JSON.parse('{ Arguments:{ Volume: ' + state.val + ' } }')));
                 break;
 
             default:
-                adapter.log.info("Not supported command: " + id);
+                adapter.log.info("Not supported command: " + cmd + " | " + id);
                 break;
         }
     }
@@ -485,6 +565,31 @@ function createDevice(device)
         },
         "native": {}
     });
+    
+    adapter.setObjectNotExists(sid + ".command.play", {
+        "type": "state",
+        "common": {
+            "name": "Play",
+            "role": "button",
+            "type": "button",
+            "read": false,
+            "write": true
+        },
+        "native": {}
+    });
+    adapter.setObjectNotExists(sid + ".command.toggleplay", {
+        "type": "state",
+        "common": {
+            "name": "Toggle Play",
+            "role": "button",
+            "type": "button",
+            "read": false,
+            "write": true
+        },
+        "native": {}
+    });
+    
+    
 
 
     for(var i = 0; i < device.SupportedCommands.length; i++)
@@ -534,7 +639,7 @@ function createDevice(device)
                 adapter.setObjectNotExists(sid + ".command.volume", {
                     "type": "state",
                     "common": {
-                        "name": "Volume",
+                        "name": "Set Volume (causes crash on some devices)",
                         "role": "level.volume",
                         "type": "number",
                         "read": true,
@@ -548,7 +653,21 @@ function createDevice(device)
                 adapter.setObjectNotExists(sid + ".command.goToSearch", {
                     "type": "state",
                     "common": {
-                        "name": "GoToSearch",
+                        "name": "Go to search",
+                        "role": "button",
+                        "type": "boolean",
+                        "read": false,
+                        "write": true
+                    },
+                    "native": {}
+                });
+                break;
+
+            case "GoToSettings":
+                adapter.setObjectNotExists(sid + ".command.goToSettings", {
+                    "type": "state",
+                    "common": {
+                        "name": "Go to settings",
                         "role": "button",
                         "type": "boolean",
                         "read": false,
@@ -565,6 +684,48 @@ function createDevice(device)
                         "name": "Back",
                         "role": "button",
                         "type": "boolean",
+                        "read": false,
+                        "write": true
+                    },
+                    "native": {}
+                });
+                break;
+
+            case "Mute":
+                adapter.setObjectNotExists(sid + ".command.mute", {
+                    "type": "state",
+                    "common": {
+                        "name": "Mute",
+                        "role": "button",
+                        "type": "button",
+                        "read": false,
+                        "write": true
+                    },
+                    "native": {}
+                });
+                break;
+
+            case "UnMute":
+                adapter.setObjectNotExists(sid + ".command.unmute", {
+                    "type": "state",
+                    "common": {
+                        "name": "Unmute",
+                        "role": "button",
+                        "type": "button",
+                        "read": false,
+                        "write": true
+                    },
+                    "native": {}
+                });
+                break;
+
+            case "ToggleMute":
+                adapter.setObjectNotExists(sid + ".command.togglemute", {
+                    "type": "state",
+                    "common": {
+                        "name": "Toggle Mute",
+                        "role": "button",
+                        "type": "button",
                         "read": false,
                         "write": true
                     },
