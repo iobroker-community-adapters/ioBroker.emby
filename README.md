@@ -63,6 +63,9 @@ Please follow the Steps to ensure the Adapter will work correctly and you can se
 
 ## Changelog
 
+### 0.1.2
+* Added more commands
+
 ### 0.1.1
 * Added delay if you watch mor episodes
 

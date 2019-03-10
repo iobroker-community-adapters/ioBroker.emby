@@ -3,6 +3,10 @@
         "name": "emby",
         "version": "0.1.1",
         "news": {
+            "0.1.2": {
+                "en": "Added more commands",
+                "de": "Mehr Kommandos hinzugefügt"
+            },
             "0.1.1": {
                 "en": "Added delay if you watch mor episodes",
                 "de": "Verzögerung hinzugefügt wenn man mehrere Folgen anschaut"

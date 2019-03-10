@@ -76,6 +76,22 @@ function fStateChange (id, state) {
 
 		switch (cmd)
 		{
+            case 'command.pause':
+                request.post({
+                        uri: "http://" + adapter.config.ip + "/Sessions/" + dId + "/Playing/Pause?api_key=" + adapter.config.apikey,
+                        body: '{"Header":"Test", "Text":"' + state.val + '", "TimeoutMs":"5000" }',
+                        headers: headers
+                    },
+                    function(error, resp, body) {
+                        if(!error)
+                            adapter.setState(id, "", true);
+                        else
+                            adapter.log.info("Fehler: " + JSON.stringify(resp));
+                    }
+                );
+                break;
+
+
             case 'command.message':
                 request.post({
                         uri: "http://" + adapter.config.ip + "/Sessions/" + dId + "/Message?api_key=" + adapter.config.apikey,
@@ -150,7 +166,7 @@ function fStateChange (id, state) {
                 adapter.log.info("http://" + adapter.config.ip + "/Sessions/" + dId + "/Command/SetVolume?api_key=" + adapter.config.apikey);
                 request.post({
                         uri: "http://" + adapter.config.ip + "/Sessions/" + dId + "/Command/SetVolume?api_key=" + adapter.config.apikey,
-                        form: { Arguments:{ "Volume": state.val } },
+                        form: JSON.parse('{ Arguments:{ Volume: ' + state.val + ' } }'),
                         headers: headers
                     },
                     function(error, resp, body) {
@@ -456,6 +472,20 @@ function createDevice(device)
         },
         native: { }
     });
+
+
+    adapter.setObjectNotExists(sid + ".command.pause", {
+        "type": "state",
+        "common": {
+            "name": "Pause",
+            "role": "button",
+            "type": "button",
+            "read": false,
+            "write": true
+        },
+        "native": {}
+    });
+
 
     for(var i = 0; i < device.SupportedCommands.length; i++)
     {
