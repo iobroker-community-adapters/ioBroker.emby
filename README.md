@@ -3,7 +3,7 @@
 =================
 
 [![Build Status](https://travis-ci.org/thewhobox/ioBroker.emby.svg?branch=master)](https://travis-ci.org/thewhobox/ioBroker.emby)
-[![NPM version](http://img.shields.io/npm/v/iobroker.emby.svg)](https://www.npmjs.com/package/iobroker.emby)
+![Number of Installations](http://iobroker.live/badges/emby-installed.svg) ![Number of Installations](http://iobroker.live/badges/emby-stable.svg) [![NPM version](http://img.shields.io/npm/v/iobroker.emby.svg)](https://www.npmjs.com/package/iobroker.emby)
 [![Downloads](https://img.shields.io/npm/dm/iobroker.emby.svg)](https://www.npmjs.com/package/iobroker.emby)
 
 [![NPM](https://nodei.co/npm/iobroker.emby.png?downloads=true)](https://nodei.co/npm/iobroker.emby/)
