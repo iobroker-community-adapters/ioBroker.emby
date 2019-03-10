@@ -14,7 +14,12 @@
   ],
   "homepage": "https://github.com/thewhobox/ioBroker.emby",
   "license": "MIT",
-  "keywords": ["emby", "server", "media", "video"],
+  "keywords": [
+    "emby",
+    "server",
+    "media",
+    "video"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/thewhobox/ioBroker.emby"
