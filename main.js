@@ -221,16 +221,6 @@ function fStateChange (id, state) {
                 );
                 break;
 
-            case 'command.goToSettings':
-                request.post("http://" + adapter.config.ip + "/Sessions/" + dId + "/Command/GoToSettings?api_key=" + adapter.config.apikey,
-                    { },
-                    function(error, resp, body) {
-                        if(error)
-                        adapter.log.info("Fehler: " + JSON.stringify(resp));
-                    }
-                );
-                break;
-
             case 'command.back':
                 request.post("http://" + adapter.config.ip + "/Sessions/" + dId + "/Command/Back?api_key=" + adapter.config.apikey,
                     { },
@@ -454,6 +444,17 @@ function createDevice(device)
         },
         "native": {}
     });
+    adapter.setObjectNotExists(sid + ".info.supportedCommands", {
+        "type": "state",
+        "common": {
+          "name": "List of supported Commands",
+          "role": "info.name",
+          "type": "string",
+          "read": true,
+          "write": false
+        },
+        "native": {}
+    });
 
 
     adapter.setObjectNotExists(sid + ".media.state", {
@@ -588,10 +589,9 @@ function createDevice(device)
         },
         "native": {}
     });
-    
-    
 
-
+    adapter.setState(sid + ".info.supportedCommands", JSON.stringify(device.SupportedCommands), true);
+    
     for(var i = 0; i < device.SupportedCommands.length; i++)
     {
         switch(device.SupportedCommands[i])
@@ -663,20 +663,6 @@ function createDevice(device)
                 });
                 break;
 
-            case "GoToSettings":
-                adapter.setObjectNotExists(sid + ".command.goToSettings", {
-                    "type": "state",
-                    "common": {
-                        "name": "Go to settings",
-                        "role": "button",
-                        "type": "boolean",
-                        "read": false,
-                        "write": true
-                    },
-                    "native": {}
-                });
-                break;
-            
             case "Back":
                 adapter.setObjectNotExists(sid + ".command.back", {
                     "type": "state",

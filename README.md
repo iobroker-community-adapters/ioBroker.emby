@@ -33,6 +33,8 @@ Please follow the Steps to ensure the Adapter will work correctly and you can se
 | Command | Description | Info |
 | ------------- | ------------- | ------------- |
 | x.info.deviceName | Shows the Name of the Device |  |
+| x.info.userName | Shows the Name of User logged in on the device |  |
+| x.info.supportedCommands | List of supported commands |  |
 
 
 ### Media
@@ -55,6 +57,12 @@ Please follow the Steps to ensure the Adapter will work correctly and you can se
 | x.command.dialog | Show a dialog on the selected Device. | For example: Header\|Some text (if no header given, ioBroker will be Header) |
 | x.command.goHome | Sends a command to the selected Device which will return to the Homescreen |  |
 | x.command.message | Show a message on the selected Device for 5 sec. |  |
+| x.command.play | Plays Media | Only if media is paused |
+| x.command.pause | Pauses Media | Only if media is playing |
+| x.command.toggleplay | Toggles Playstate | play/pause |
+| x.command.mute | Mutes the device |  |
+| x.command.unmute | Unmutes the device |  |
+| x.command.togglemute | Toggles mute of device |  |
 | x.command.volume | Sets the Volume of the selected Device. | Doesn't work on the most of devices since it doenst controle the TV Volume. |
 
 
