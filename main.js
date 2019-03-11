@@ -361,6 +361,8 @@ function webMessage(e)
             } else {
                 adapter.setState(d.Id + ".media.title", "", true);
                 adapter.setState(d.Id + ".media.description", "", true);
+                adapter.setState(d.Id + ".media.seasonName", "", true);
+                adapter.setState(d.Id + ".media.seriesName", "", true);
                 adapter.setState(d.Id + ".media.type", "None", true);
                 changeState(d.Id, "idle"); //adapter.setState(d.Id + ".media.state", "idle", true);
             }
