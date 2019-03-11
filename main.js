@@ -292,6 +292,11 @@ function main() {
 
 function tryConnect()
 {
+    if(adapter.config.apikey == "")
+    {
+        adapter.log.warn("There is no ApiKey. You can recieve information but cant controle clients.");
+    }
+
     adapter.log.debug("try to connect to: " + adapter.config.ip);
     adapter.log.debug("2");
     connection = new W3CWebSocket('ws://' + adapter.config.ip + '?api_key=' + adapter.config.apikey + '&deviceId=00001'); //8306e66875c54b4c816fed315c3cd2e6
