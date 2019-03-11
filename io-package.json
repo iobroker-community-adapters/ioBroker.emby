@@ -89,7 +89,7 @@
             "zh-cn": "控制和可视化您的Emby服务器"
         },
         "authors": [
-            "@@Author@@ <@@email@@>"
+            "thewhobox <iobroker@mikegerst.de>"
         ],
         "platform": "Javascript/Node.js",
         "mode": "daemon",
