@@ -95,7 +95,7 @@
         "mode": "daemon",
         "icon": "emby.png",
         "materialize": true,
-        "enabled": true,
+        "enabled": false,
         "extIcon": "https://raw.githubusercontent.com/thewhobox/ioBroker.emby/master/admin/emby.png",
         "keywords": ["emby", "server", "media", "video"],
         "readme": "https://github.com/thewhobox/ioBroker.emby/blob/master/README.md",
