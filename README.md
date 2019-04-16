@@ -96,7 +96,7 @@ Please follow the Steps to ensure the Adapter will work correctly and you can se
 
 
 
-##License
+## License
 
 MIT License
 
