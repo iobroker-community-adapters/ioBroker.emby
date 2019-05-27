@@ -340,7 +340,12 @@ function webMessage(e)
 
             if(typeof d.NowPlayingItem !== 'undefined')
             {
+                var endDate = new Date(Date.now() + ((d.NowPlayingItem.RunTimeTicks - d.PlayState.PositionTicks) / 10000));
+                var endString = endDate.getHours() + ":" + (endDate.getMinutes() < 10 ? "0"+endDate.getMinutes() : endDate.getMinutes()) ;
+
+
                 var npi = d.NowPlayingItem;
+                adapter.setState(d.Id + ".media.endtime", endString, true);
                 adapter.setState(d.Id + ".media.title", npi.Name, true);
                 adapter.setState(d.Id + ".media.description", npi.Overview, true);
                 adapter.setState(d.Id + ".media.type", npi.Type, true);
@@ -391,6 +396,7 @@ function webMessage(e)
                 adapter.setState(d.Id + ".media.seasonName", "", true);
                 adapter.setState(d.Id + ".media.seriesName", "", true);
                 adapter.setState(d.Id + ".media.type", "None", true);
+                adapter.setState(d.Id + ".media.endtime", "", true);
                 adapter.setState(d.Id + ".posters.main", "", true);
                 adapter.setState(d.Id + ".posters.season", "", true);
                 adapter.setState(d.Id + ".posters.episode", "", true);
