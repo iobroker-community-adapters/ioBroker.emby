@@ -584,6 +584,17 @@ function createDevice(device)
           },
           "native": {}
     });
+    adapter.setObjectNotExists(sid + ".media.endtime", {
+        "type": "state",
+          "common": {
+            "name": "Endtime of playing video/audio",
+            "role": "state",
+            "type": "string",
+            "read": true,
+            "write": false
+          },
+          "native": {}
+    });
     adapter.setObjectNotExists(sid + ".posters.main", {
         "type": "state",
           "common": {
