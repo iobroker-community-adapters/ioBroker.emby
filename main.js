@@ -391,6 +391,9 @@ function webMessage(e)
                 adapter.setState(d.Id + ".media.seasonName", "", true);
                 adapter.setState(d.Id + ".media.seriesName", "", true);
                 adapter.setState(d.Id + ".media.type", "None", true);
+                adapter.setState(d.Id + ".posters.main", "", true);
+                adapter.setState(d.Id + ".posters.season", "", true);
+                adapter.setState(d.Id + ".posters.episode", "", true);
                 changeState(d.Id, "idle"); //adapter.setState(d.Id + ".media.state", "idle", true);
             }
         } else {
