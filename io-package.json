@@ -1,8 +1,12 @@
 {
     "common": {
         "name": "emby",
-        "version": "0.1.2",
+        "version": "1.0.0",
         "news": {
+            "1.0.0": {
+                "en": "Added more commands",
+                "de": "Mehr Kommandos hinzugefügt"
+            },
             "0.1.2": {
                 "en": "Added more commands",
                 "de": "Mehr Kommandos hinzugefügt"
@@ -37,31 +41,7 @@
                 "es": "Se agregaron nuevos estados, estado de conexión y más mejoras.",
                 "pl": "dodano nowe stany, stan połączenia i większą poprawę",
                 "zh-cn": "添加了新状态，连接状态和更多改进"
-            },
-            "0.0.2": {
-                "en": "added new states",
-                "de": "Neue States wurden hinzugefügt",
-                "ru": "добавлены новые штаты",
-                "pt": "adicionou novos estados",
-                "nl": "nieuwe staten toegevoegd",
-                "fr": "ajouté de nouveaux états",
-                "it": "aggiunti nuovi stati",
-                "es": "añadido nuevos estados",
-                "pl": "dodano nowe stany",
-                "zh-cn": "增加了新的州"
-            },
-          "0.0.1": {
-              "en": "initial adapter",
-              "de": "Initiale Version",
-              "ru": "начальный адаптер",
-              "pt": "adaptador inicial",
-              "nl": "eerste adapter",
-              "fr": "adaptateur initial",
-              "it": "adattatore iniziale",
-              "es": "adaptador inicial",
-              "pl": "początkowy adapter",
-              "zh-cn": "初始适配器"
-          }
+            }
         },
 		"title": "Emby",
         "titleLang": {
@@ -107,6 +87,7 @@
     },
     "native": {
         "ip": "0.0.0.0:8096",
+        "isSSL": false,
         "apikey": "",
         "deviceIds": "",
         "timeout": 500

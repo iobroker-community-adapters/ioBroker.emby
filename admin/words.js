@@ -12,6 +12,10 @@ systemDictionary = {
         "de": "IP/ Domain des Emby Servers (mit Port)",
         "ru": "IP / Домен сервера Emby (с портом)",
         "en": "IP/Domain of the Emby server (with port)" },
+    "isSSL": { 
+        "de": "Verbindung benötigt SSL",
+        "ru": "Для подключения требуется SSL",
+        "en": "Connection requires SSL" },
     "ApiKey": { 
         "de": "API Key",
         "ru": "Ключ API",

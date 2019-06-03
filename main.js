@@ -299,7 +299,8 @@ function tryConnect()
 
     adapter.log.debug("try to connect to: " + adapter.config.ip);
     adapter.log.debug("2");
-    connection = new W3CWebSocket('ws://' + adapter.config.ip + '?api_key=' + adapter.config.apikey + '&deviceId=00001'); //8306e66875c54b4c816fed315c3cd2e6
+    var prefix = adapter.config.isSSL ? "wss://" : "ws://";
+    connection = new W3CWebSocket(prefix + adapter.config.ip + '?api_key=' + adapter.config.apikey + '&deviceId=00001'); //8306e66875c54b4c816fed315c3cd2e6
     
     connection.onopen = webOpen;
     connection.onerror = webError;
@@ -350,15 +351,20 @@ function webMessage(e)
                 adapter.setState(d.Id + ".media.description", npi.Overview, true);
                 adapter.setState(d.Id + ".media.type", npi.Type, true);
 
+
+                
+                var prefix = adapter.config.isSSL ? "https://" : "http://";
+                var basePoster = prefix + adapter.config.ip + "/Items/"
+
                 switch(npi.Type) {
                     case "Episode":
-                        adapter.setState(d.Id + ".posters.main", "https://emby.mikegerst.de/Items/" + npi.SeriesId + "/Images/Primary", true);
-                        adapter.setState(d.Id + ".posters.season", "https://emby.mikegerst.de/Items/" + npi.SeasonId + "/Images/Primary", true);
-                        adapter.setState(d.Id + ".posters.episode", "https://emby.mikegerst.de/Items/" + npi.Id + "/Images/Primary", true);
+                        adapter.setState(d.Id + ".posters.main", basePoster + npi.SeriesId + "/Images/Primary", true);
+                        adapter.setState(d.Id + ".posters.season", basePoster + npi.SeasonId + "/Images/Primary", true);
+                        adapter.setState(d.Id + ".posters.episode", basePoster + npi.Id + "/Images/Primary", true);
                         break;
 
                     case "Movie":
-                        adapter.setState(d.Id + ".posters.main", "https://emby.mikegerst.de/Items/" + npi.Id + "/Images/Primary", true);
+                        adapter.setState(d.Id + ".posters.main", basePoster + npi.Id + "/Images/Primary", true);
                         adapter.setState(d.Id + ".posters.season", "", true);
                         adapter.setState(d.Id + ".posters.episode", "", true);
                         break;
