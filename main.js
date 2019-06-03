@@ -2,7 +2,7 @@
 
 let request = require('request');
 let W3CWebSocket = require('websocket').w3cwebsocket;
-const utils =    require(__dirname + '/lib/utils'); // Get common adapter utils
+const utils = require('@iobroker/adapter-core'); // Get common adapter utils
 
 let adapter;
 let websocket;
@@ -335,13 +335,40 @@ function webMessage(e)
             createDevice(d);
             adapter.setState(d.Id + ".info.deviceName", d.DeviceName, true);
             adapter.setState(d.Id + ".info.userName", d.UserName, true);
+            
+            if(d.Capabilities.DeviceProfile == undefined) continue;
 
             if(typeof d.NowPlayingItem !== 'undefined')
             {
+                var endDate = new Date(Date.now() + ((d.NowPlayingItem.RunTimeTicks - d.PlayState.PositionTicks) / 10000));
+                var endString = endDate.getHours() + ":" + (endDate.getMinutes() < 10 ? "0"+endDate.getMinutes() : endDate.getMinutes()) ;
+
+
                 var npi = d.NowPlayingItem;
+                adapter.setState(d.Id + ".media.endtime", endString, true);
                 adapter.setState(d.Id + ".media.title", npi.Name, true);
                 adapter.setState(d.Id + ".media.description", npi.Overview, true);
                 adapter.setState(d.Id + ".media.type", npi.Type, true);
+
+                switch(npi.Type) {
+                    case "Episode":
+                        adapter.setState(d.Id + ".posters.main", "https://emby.mikegerst.de/Items/" + npi.SeriesId + "/Images/Primary", true);
+                        adapter.setState(d.Id + ".posters.season", "https://emby.mikegerst.de/Items/" + npi.SeasonId + "/Images/Primary", true);
+                        adapter.setState(d.Id + ".posters.episode", "https://emby.mikegerst.de/Items/" + npi.Id + "/Images/Primary", true);
+                        break;
+
+                    case "Movie":
+                        adapter.setState(d.Id + ".posters.main", "https://emby.mikegerst.de/Items/" + npi.Id + "/Images/Primary", true);
+                        adapter.setState(d.Id + ".posters.season", "", true);
+                        adapter.setState(d.Id + ".posters.episode", "", true);
+                        break;
+
+                    default:
+                        adapter.setState(d.Id + ".posters.main", "", true);
+                        adapter.setState(d.Id + ".posters.season", "", true);
+                        adapter.setState(d.Id + ".posters.episode", "", true);
+                        break;
+                }
 
                 if(typeof npi.SeasonName !== 'undefined')
                 {
@@ -369,6 +396,10 @@ function webMessage(e)
                 adapter.setState(d.Id + ".media.seasonName", "", true);
                 adapter.setState(d.Id + ".media.seriesName", "", true);
                 adapter.setState(d.Id + ".media.type", "None", true);
+                adapter.setState(d.Id + ".media.endtime", "", true);
+                adapter.setState(d.Id + ".posters.main", "", true);
+                adapter.setState(d.Id + ".posters.season", "", true);
+                adapter.setState(d.Id + ".posters.episode", "", true);
                 changeState(d.Id, "idle"); //adapter.setState(d.Id + ".media.state", "idle", true);
             }
         } else {
@@ -423,6 +454,13 @@ function createDevice(device)
         type: 'channel',
         common: {
             name: "Media Info"
+        },
+        native: { }
+    });
+    adapter.setObjectNotExists(sid + ".posters", {
+        type: 'channel',
+        common: {
+            name: "Media Posters"
         },
         native: { }
     });
@@ -539,6 +577,50 @@ function createDevice(device)
         "type": "state",
           "common": {
             "name": "Description of file playing",
+            "role": "state",
+            "type": "string",
+            "read": true,
+            "write": false
+          },
+          "native": {}
+    });
+    adapter.setObjectNotExists(sid + ".media.endtime", {
+        "type": "state",
+          "common": {
+            "name": "Endtime of playing video/audio",
+            "role": "state",
+            "type": "string",
+            "read": true,
+            "write": false
+          },
+          "native": {}
+    });
+    adapter.setObjectNotExists(sid + ".posters.main", {
+        "type": "state",
+          "common": {
+            "name": "Main Poster",
+            "role": "state",
+            "type": "string",
+            "read": true,
+            "write": false
+          },
+          "native": {}
+    });
+    adapter.setObjectNotExists(sid + ".posters.episode", {
+        "type": "state",
+          "common": {
+            "name": "Episode Poster",
+            "role": "state",
+            "type": "string",
+            "read": true,
+            "write": false
+          },
+          "native": {}
+    });
+    adapter.setObjectNotExists(sid + ".posters.season", {
+        "type": "state",
+          "common": {
+            "name": "Season Poster",
             "role": "state",
             "type": "string",
             "read": true,

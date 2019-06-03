@@ -100,7 +100,7 @@
         "keywords": ["emby", "server", "media", "video"],
         "readme": "https://github.com/thewhobox/ioBroker.emby/blob/master/README.md",
         "loglevel": "info",
-        "type": "general",
+        "type": "multimedia",
         "license": "MIT",
         "messagebox": false,
         "compact": true

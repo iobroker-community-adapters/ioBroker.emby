@@ -7,6 +7,7 @@ node_js:
   - '6'
   - '8'
   - '10'
+  - '12'
 sudo: required
 before_install:
   - 'if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then sudo scutil --set HostName iobroker-testhost; fi'
@@ -17,10 +18,10 @@ before_script:
   - npm install winston@3.2.1
   - 'npm install https://github.com/ioBroker/ioBroker.js-controller/tarball/master --production'
 env:
-  - CXX=g++-4.9
+  - CXX=g++-6
 addons:
   apt:
     sources:
       - ubuntu-toolchain-r-test
     packages:
-      - g++-4.9
+      - g++-6
