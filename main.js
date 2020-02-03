@@ -337,7 +337,7 @@ function webMessage(e)
             adapter.setState(d.Id + ".info.deviceName", d.DeviceName, true);
             adapter.setState(d.Id + ".info.userName", d.UserName, true);
             
-            if(d.Capabilities.DeviceProfile == undefined) continue;
+            if(d.Capabilities == undefined || d.Capabilities.DeviceProfile == undefined) continue;
 
             if(typeof d.NowPlayingItem !== 'undefined')
             {
