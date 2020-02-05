@@ -327,6 +327,8 @@ function webMessage(e)
 {
     var data = JSON.parse(e.data);
 
+    adapter.log.debug(JSON.stringify(data));
+
     for(var i = 0; i < data.Data.length; i++)
     {
         var d = data.Data[i];
