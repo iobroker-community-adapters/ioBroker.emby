@@ -339,8 +339,6 @@ function webMessage(e)
             adapter.setState(d.Id + ".info.deviceName", d.DeviceName, true);
             adapter.setState(d.Id + ".info.userName", d.UserName, true);
             
-            if(d.Capabilities == undefined || d.Capabilities.DeviceProfile == undefined) continue;
-
             if(typeof d.NowPlayingItem !== 'undefined')
             {
                 var endDate = new Date(Date.now() + ((d.NowPlayingItem.RunTimeTicks - d.PlayState.PositionTicks) / 10000));
