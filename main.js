@@ -5,11 +5,9 @@ let W3CWebSocket = require('websocket').w3cwebsocket;
 const utils = require('@iobroker/adapter-core'); // Get common adapter utils
 
 let adapter;
-let websocket;
 let connection;
-
-
 let laststates = { };
+let timeoutretry;
 let timeoutplays = { };
 let timeoutstates = { };
 let timeoutstarted = { };
@@ -33,13 +31,19 @@ function startAdapter(options) {
 function fUnload (callback) {
     try {
         connection.send('{"MessageType":"SessionsStop", "Data": ""}');
-        websocket.close();
+        if(connection != undefined) connection.close();
         checkOnline = null;
         laststates = { };
+
+        Object.keys(timeoutplays).forEach((timeout) => { clearTimeout(timeoutplays[timeout]); })
+        Object.keys(timeoutstates).forEach((timeout) => { clearTimeout(timeoutstates[timeout]); })
+        Object.keys(timeoutstarted).forEach((timeout) => { clearTimeout(timeoutstarted[timeout]); })
+        
         timeoutplays = { };
         timeoutstates = { };
         timeoutstarted = { };
         adapter.log.info('cleaned everything up...');
+        clearTimeout(timeoutretry);
         callback();
     } catch (e) {
         callback();
@@ -309,7 +313,7 @@ function tryConnect()
     } catch(e) {
         adapter.setState("info.connection", false, true);
         adapter.log.warn("Verbindung konnte nicht hergestellt werden. Nächster Versuch in 1 Minute: \"" + e.message + "\"");
-        setTimeout(tryConnect, 60000);
+        timeoutretry = setTimeout(tryConnect, 60000);
     }
 }
 
@@ -319,7 +323,7 @@ function webOpen()
         adapter.log.error("Verbindung konnte nicht hergestellt werden. (readyState) Nächster Versuch in 1 Minute.");
         if(connection) connection.close();
         connection = null;
-        setTimeout(tryConnect, 60000);
+        timeoutretry = setTimeout(tryConnect, 60000);
         return;
     }
     connection.send('{"MessageType":"SessionsStart", "Data": "10000,10000"}');
@@ -333,7 +337,7 @@ function webError(error)
     adapter.log.debug("Websocket Error : " + JSON.stringify(error));
     adapter.log.error("WebSocket Error. Try Reconnect in 60s");
 
-    setTimeout(tryConnect, 60000);
+    timeoutretry = setTimeout(tryConnect, 60000);
 }
 
 function webMessage(e)
@@ -357,15 +361,12 @@ function webMessage(e)
                 var endDate = new Date(Date.now() + ((d.NowPlayingItem.RunTimeTicks - d.PlayState.PositionTicks) / 10000));
                 var endString = endDate.getHours() + ":" + (endDate.getMinutes() < 10 ? "0"+endDate.getMinutes() : endDate.getMinutes()) ;
 
-
                 var npi = d.NowPlayingItem;
                 adapter.setState(d.Id + ".media.endtime", endString, true);
                 adapter.setState(d.Id + ".media.title", npi.Name, true);
                 adapter.setState(d.Id + ".media.description", npi.Overview, true);
                 adapter.setState(d.Id + ".media.type", npi.Type, true);
 
-
-                
                 var prefix = adapter.config.isSSL ? "https://" : "http://";
                 var basePoster = prefix + adapter.config.ip + "/Items/"
 
