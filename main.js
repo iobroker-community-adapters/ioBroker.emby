@@ -303,7 +303,6 @@ function tryConnect()
         }
     
         adapter.log.debug("try to connect to: " + adapter.config.ip);
-        adapter.log.debug("2");
         var prefix = adapter.config.isSSL ? "wss://" : "ws://";
         connection = new W3CWebSocket(prefix + adapter.config.ip + '?api_key=' + adapter.config.apikey + '&deviceId=00001'); //8306e66875c54b4c816fed315c3cd2e6
         
