@@ -292,23 +292,36 @@ function main() {
 
 function tryConnect()
 {
-    if(adapter.config.apikey == "")
-    {
-        adapter.log.warn("There is no ApiKey. You can recieve information but cant controle clients.");
-    }
-
-    adapter.log.debug("try to connect to: " + adapter.config.ip);
-    adapter.log.debug("2");
-    var prefix = adapter.config.isSSL ? "wss://" : "ws://";
-    connection = new W3CWebSocket(prefix + adapter.config.ip + '?api_key=' + adapter.config.apikey + '&deviceId=00001'); //8306e66875c54b4c816fed315c3cd2e6
+    try {
+        if(adapter.config.apikey == "")
+        {
+            adapter.log.warn("There is no ApiKey. You can recieve information but cant controle clients.");
+        }
     
-    connection.onopen = webOpen;
-    connection.onerror = webError;
-    connection.onmessage = webMessage;
+        adapter.log.debug("try to connect to: " + adapter.config.ip);
+        adapter.log.debug("2");
+        var prefix = adapter.config.isSSL ? "wss://" : "ws://";
+        connection = new W3CWebSocket(prefix + adapter.config.ip + '?api_key=' + adapter.config.apikey + '&deviceId=00001'); //8306e66875c54b4c816fed315c3cd2e6
+        
+        connection.onopen = webOpen;
+        connection.onerror = webError;
+        connection.onmessage = webMessage;
+    } catch(e) {
+        adapter.setState("info.connection", false, true);
+        adapter.log.warn("Verbindung konnte nicht hergestellt werden. Nächster Versuch in 1 Minute: \"" + e.message + "\"");
+        setTimeout(tryConnect, 60000);
+    }
 }
 
 function webOpen()
 {
+    if(connection == undefined || connection.readyState !== 1) {
+        adapter.log.error("Verbindung konnte nicht hergestellt werden. (readyState) Nächster Versuch in 1 Minute.");
+        if(connection) connection.close();
+        connection = null;
+        setTimeout(tryConnect, 60000);
+        return;
+    }
     connection.send('{"MessageType":"SessionsStart", "Data": "10000,10000"}');
     adapter.log.info("connected with emby (" + adapter.config.ip + ")");
     adapter.setState("info.connection", true, true);
