@@ -1,0 +1,6 @@
+gulpfile.js
+test
+.travis.yml
+appveyor.yml
+package-lock.json
+node_modules
