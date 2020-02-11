@@ -1,8 +1,12 @@
 {
     "common": {
         "name": "emby",
-        "version": "1.0.0",
+        "version": "1.0.1",
         "news": {
+            "1.0.1": {
+                "en": "Fixed bug for states",
+                "de": "Fehler für die States behoben"
+            },
             "1.0.0": {
                 "en": "Added more commands",
                 "de": "Mehr Kommandos hinzugefügt"
@@ -18,29 +22,6 @@
             "0.1.0": {
                 "en": "Added automatic try reconnect after one minute",
                 "de": "Automatischer Verbindungsversuch nach einer Minute"
-            },
-            "0.0.4": {
-                "en": "Added compact mode",
-                "de": "Kompakt Modus hinzugefügt",
-                "pt": "Adicionado modo compacto",
-                "nl": "Compact-modus toegevoegd",
-                "fr": "Ajout du mode compact",
-                "it": "Aggiunta modalità compatta",
-                "es": "Modo compacto agregado",
-                "pl": "Dodano tryb kompaktowy",
-                "zh-cn": "增加了紧凑模式"
-            },
-            "0.0.3": {
-                "en": "added new states, connection state, and more improvment",
-                "de": "Neue States wurden hinzugefügt und weitere verbesserungen",
-                "ru": "добавлены новые состояния, состояние соединения и больше улучшений",
-                "pt": "adicionou novos estados, estado de conexão e mais aprimoramento",
-                "nl": "nieuwe toestanden, verbindingsstatus en meer improvment toegevoegd",
-                "fr": "ajout de nouveaux états, état de connexion et plus d'amélioration",
-                "it": "aggiunti nuovi stati, stato della connessione e più miglioramenti",
-                "es": "Se agregaron nuevos estados, estado de conexión y más mejoras.",
-                "pl": "dodano nowe stany, stan połączenia i większą poprawę",
-                "zh-cn": "添加了新状态，连接状态和更多改进"
             }
         },
 		"title": "Emby",
