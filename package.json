@@ -12,6 +12,7 @@
       "email": "admin@mikegerst.de"
     }
   ],
+  "publishConfig": { "registry": "https://npm.pkg.github.com/" },
   "homepage": "https://github.com/thewhobox/ioBroker.emby",
   "license": "MIT",
   "keywords": [
