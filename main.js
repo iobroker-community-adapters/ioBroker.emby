@@ -357,9 +357,12 @@ function webMessage(e)
             
             if(typeof d.NowPlayingItem !== 'undefined')
             {
-                var endDate = new Date(Date.now() + ((d.NowPlayingItem.RunTimeTicks - d.PlayState.PositionTicks) / 10000));
-                var endString = endDate.getHours() + ":" + (endDate.getMinutes() < 10 ? "0"+endDate.getMinutes() : endDate.getMinutes()) ;
-
+		var endString = "";
+		if(d.NowPlayingItem != null) {
+                    var endDate = new Date(Date.now() + ((d.NowPlayingItem.RunTimeTicks - d.PlayState.PositionTicks) / 10000));
+                    endString = endDate.getHours() + ":" + (endDate.getMinutes() < 10 ? "0"+endDate.getMinutes() : endDate.getMinutes()) ;
+		}
+			
                 var npi = d.NowPlayingItem;
                 adapter.setState(d.Id + ".media.endtime", endString, true);
                 adapter.setState(d.Id + ".media.title", npi.Name, true);
