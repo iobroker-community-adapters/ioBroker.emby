@@ -365,6 +365,23 @@ function webMessage(e)
                 adapter.setState(d.Id + ".media.title", npi.Name, true);
                 adapter.setState(d.Id + ".media.description", npi.Overview, true);
                 adapter.setState(d.Id + ".media.type", npi.Type, true);
+                
+                adapter.setState(d.Id + ".media.rating", npi.CommunityRating, true);
+                adapter.setState(d.Id + ".media.year", npi.ProductionYear, true);
+                adapter.setState(d.Id + ".media.tags", npi.Taglines.join(","), true);
+                adapter.setState(d.Id + ".media.genres", npi.Genres.join(","), true);
+                adapter.setState(d.Id + ".media.backdropimage", npi.BackdropImageTags.join(","), true);
+                adapter.setState(d.Id + ".media.ratio", npi.PrimaryImageAspectRatio, true);
+
+                if(typeof npi.OfficialRating != 'undefined')
+                    adapter.setState(d.Id + ".media.agerating", npi.OfficialRating, true);
+                else
+                    adapter.setState(d.Id + ".media.agerating", "", true);
+
+                if(typeof npi.OriginalTitle != 'undefined')
+                    adapter.setState(d.Id + ".media.originaltitle", npi.OriginalTitle, true);
+                else
+                    adapter.setState(d.Id + ".media.originaltitle", "", true);
 
                 var prefix = adapter.config.isSSL ? "https://" : "http://";
                 var basePoster = prefix + adapter.config.ip + "/Items/"
@@ -614,6 +631,99 @@ function createDevice(device)
           },
           "native": {}
     });
+    adapter.setObjectNotExists(sid + ".media.rating", {
+        "type": "state",
+          "common": {
+            "name": "Community Rating",
+            "role": "state",
+            "type": "number",
+            "read": true,
+            "write": false
+          },
+          "native": {}
+    });
+    adapter.setObjectNotExists(sid + ".media.year", {
+        "type": "state",
+          "common": {
+            "name": "Production Year",
+            "role": "state",
+            "type": "number",
+            "read": true,
+            "write": false
+          },
+          "native": {}
+    });
+    adapter.setObjectNotExists(sid + ".media.tags", {
+        "type": "state",
+          "common": {
+            "name": "Tags",
+            "role": "state",
+            "type": "string",
+            "read": true,
+            "write": false
+          },
+          "native": {}
+    });
+    adapter.setObjectNotExists(sid + ".media.genres", {
+        "type": "state",
+          "common": {
+            "name": "Genres",
+            "role": "state",
+            "type": "string",
+            "read": true,
+            "write": false
+          },
+          "native": {}
+    });
+    adapter.setObjectNotExists(sid + ".media.backdropimage", {
+        "type": "state",
+          "common": {
+            "name": "BackdropImageTags",
+            "role": "state",
+            "type": "string",
+            "read": true,
+            "write": false
+          },
+          "native": {}
+    });
+    adapter.setObjectNotExists(sid + ".media.ratio", {
+        "type": "state",
+          "common": {
+            "name": "Ratio",
+            "role": "state",
+            "type": "number",
+            "read": true,
+            "write": false
+          },
+          "native": {}
+    });
+    adapter.setObjectNotExists(sid + ".media.agerating", {
+        "type": "state",
+          "common": {
+            "name": "Age Rating",
+            "role": "state",
+            "type": "string",
+            "read": true,
+            "write": false
+          },
+          "native": {}
+    });
+    adapter.setObjectNotExists(sid + ".media.originaltitle", {
+        "type": "state",
+          "common": {
+            "name": "Original Title",
+            "role": "state",
+            "type": "string",
+            "read": true,
+            "write": false
+          },
+          "native": {}
+    });
+
+
+
+
+
     adapter.setObjectNotExists(sid + ".posters.main", {
         "type": "state",
           "common": {
