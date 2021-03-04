@@ -1,8 +1,12 @@
 {
     "common": {
         "name": "emby",
-        "version": "1.0.2",
+        "version": "1.0.3",
         "news": {
+            "1.0.3": {
+                "en": "Added more info for playing item",
+                "de": "Mehr infos über das abgespielte Item hinzugefügt"
+            },
             "1.0.2": {
                 "en": "Published to stable",
                 "de": "In Stable veröffentlicht"
