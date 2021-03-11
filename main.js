@@ -374,7 +374,11 @@ function webMessage(e)
                 adapter.setState(d.Id + ".media.tags", npi.Taglines.join(","), true);
                 adapter.setState(d.Id + ".media.genres", npi.Genres.join(","), true);
                 adapter.setState(d.Id + ".media.backdropimage", npi.BackdropImageTags.join(","), true);
-                adapter.setState(d.Id + ".media.ratio", npi.PrimaryImageAspectRatio, true);
+                
+                if(typeof npi.PrimaryImageAspectRatio != 'undefined')
+                    adapter.setState(d.Id + ".media.ratio", npi.PrimaryImageAspectRatio, true);
+                else
+                    adapter.setState(d.Id + ".media.ratio", "", true);
 
                 if(typeof npi.OfficialRating != 'undefined')
                     adapter.setState(d.Id + ".media.agerating", npi.OfficialRating, true);
