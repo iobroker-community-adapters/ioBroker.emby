@@ -5,8 +5,9 @@ os:
 language: node_js
 node_js:
   - '8'
-  - '10'
   - '12'
+  - '14'
+  - '16'
 sudo: required
 before_install:
   - 'if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then sudo scutil --set HostName iobroker-testhost; fi'
