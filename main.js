@@ -349,19 +349,22 @@ function webMessage(e)
     {
         var d = data.Data[i];
 
-        if(adapter.config.deviceIds == "" || ( adapter.config.deviceIds != "" && adapter.config.deviceIds.indexOf(d.Id) !== -1))
+        if(adapter.config.deviceIds == "" || ( adapter.config.deviceIds != "" && adapter.config.deviceIds.indexOf(d.Id) == -1))
         {
             createDevice(d);
             adapter.setState(d.Id + ".info.deviceName", d.DeviceName, true);
-            adapter.setState(d.Id + ".info.userName", d.UserName, true);
+            if(d.UserName !== 'undefined')
+                adapter.setState(d.Id + ".info.userName", d.UserName, true);
+            else
+                adapter.setState(d.Id + ".info.userName", "", true);
             
             if(typeof d.NowPlayingItem !== 'undefined')
             {
-		var endString = "";
-		if(d.NowPlayingItem != null) {
-                    var endDate = new Date(Date.now() + ((d.NowPlayingItem.RunTimeTicks - d.PlayState.PositionTicks) / 10000));
-                    endString = endDate.getHours() + ":" + (endDate.getMinutes() < 10 ? "0"+endDate.getMinutes() : endDate.getMinutes()) ;
-		}
+                var endString = "";
+                if(d.NowPlayingItem != null) {
+                            var endDate = new Date(Date.now() + ((d.NowPlayingItem.RunTimeTicks - d.PlayState.PositionTicks) / 10000));
+                            endString = endDate.getHours() + ":" + (endDate.getMinutes() < 10 ? "0"+endDate.getMinutes() : endDate.getMinutes()) ;
+                }
 			
                 var npi = d.NowPlayingItem;
                 adapter.setState(d.Id + ".media.endtime", endString, true);
