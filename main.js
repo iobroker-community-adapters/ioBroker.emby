@@ -352,46 +352,54 @@ function webMessage(e)
         if(adapter.config.deviceIds == "" || ( adapter.config.deviceIds != "" && adapter.config.deviceIds.indexOf(d.Id) == -1))
         {
             createDevice(d);
-            adapter.setState(d.Id + ".info.deviceName", d.DeviceName, true);
-            if(typeof d.UserName !== 'undefined')
-                adapter.setState(d.Id + ".info.userName", d.UserName, true);
-            else
-                adapter.setState(d.Id + ".info.userName", "", true);
+            if(typeof d.DeviceName !== 'undefined') adapter.setState(d.Id + ".info.deviceName", d.DeviceName, true);
+            else adapter.setState(d.Id + ".info.deviceName", "", true);
+            
+            if(typeof d.UserName !== 'undefined') adapter.setState(d.Id + ".info.userName", d.UserName, true);
+            else adapter.setState(d.Id + ".info.userName", "", true);
             
             if(typeof d.NowPlayingItem !== 'undefined')
             {
                 var endString = "";
-                if(d.NowPlayingItem != null) {
-                            var endDate = new Date(Date.now() + ((d.NowPlayingItem.RunTimeTicks - d.PlayState.PositionTicks) / 10000));
-                            endString = endDate.getHours() + ":" + (endDate.getMinutes() < 10 ? "0"+endDate.getMinutes() : endDate.getMinutes()) ;
+                if(d.NowPlayingItem.RunTimeTicks != null && d.PlayState.PositionTicks != null) {
+                    var endDate = new Date(Date.now() + ((d.NowPlayingItem.RunTimeTicks - d.PlayState.PositionTicks) / 10000));
+                    endString = endDate.getHours() + ":" + (endDate.getMinutes() < 10 ? "0"+endDate.getMinutes() : endDate.getMinutes()) ;
                 }
 			
                 var npi = d.NowPlayingItem;
                 adapter.setState(d.Id + ".media.endtime", endString, true);
-                adapter.setState(d.Id + ".media.title", npi.Name, true);
-                adapter.setState(d.Id + ".media.description", npi.Overview, true);
-                adapter.setState(d.Id + ".media.type", npi.Type, true);
-                
-                adapter.setState(d.Id + ".media.rating", npi.CommunityRating, true);
-                adapter.setState(d.Id + ".media.year", npi.ProductionYear, true);
-                adapter.setState(d.Id + ".media.tags", npi.Taglines.join(","), true);
-                adapter.setState(d.Id + ".media.genres", npi.Genres.join(","), true);
-                adapter.setState(d.Id + ".media.backdropimage", npi.BackdropImageTags.join(","), true);
-                
-                if(typeof npi.PrimaryImageAspectRatio != 'undefined')
-                    adapter.setState(d.Id + ".media.ratio", npi.PrimaryImageAspectRatio, true);
-                else
-                    adapter.setState(d.Id + ".media.ratio", "", true);
+                if(typeof npi.Name !== 'undefined') adapter.setState(d.Id + ".media.title", npi.Name, true);
+                else adapter.setState(d.Id + ".media.title", "", true);
 
-                if(typeof npi.OfficialRating != 'undefined')
-                    adapter.setState(d.Id + ".media.agerating", npi.OfficialRating, true);
-                else
-                    adapter.setState(d.Id + ".media.agerating", "", true);
+                if(typeof npi.Overview !== 'undefined') adapter.setState(d.Id + ".media.description", npi.Overview, true);
+                else adapter.setState(d.Id + ".media.description", "", true);
 
-                if(typeof npi.OriginalTitle != 'undefined')
-                    adapter.setState(d.Id + ".media.originaltitle", npi.OriginalTitle, true);
-                else
-                    adapter.setState(d.Id + ".media.originaltitle", "", true);
+                if(typeof npi.Type !== 'undefined') adapter.setState(d.Id + ".media.type", npi.Type, true);
+                else adapter.setState(d.Id + ".media.type", "", true);
+                
+                if(typeof npi.CommunityRating !== 'undefined') adapter.setState(d.Id + ".media.rating", npi.CommunityRating, true);
+                else adapter.setState(d.Id + ".media.rating", "", true);
+
+                if(typeof npi.ProductionYear !== 'undefined') adapter.setState(d.Id + ".media.year", npi.ProductionYear, true);
+                else adapter.setState(d.Id + ".media.year", "", true);
+
+                if(typeof npi.Taglines !== 'undefined') adapter.setState(d.Id + ".media.tags", npi.Taglines.join(","), true);
+                else adapter.setState(d.Id + ".media.tags", "", true);
+
+                if(typeof npi.Genres !== 'undefined') adapter.setState(d.Id + ".media.genres", npi.Genres.join(","), true);
+                else adapter.setState(d.Id + ".media.genres", "", true);
+
+                if(typeof npi.BackdropImageTags !== 'undefined') adapter.setState(d.Id + ".media.backdropimage", npi.BackdropImageTags.join(","), true);
+                else adapter.setState(d.Id + ".media.backdropimage", "", true);
+                
+                if(typeof npi.PrimaryImageAspectRatio != 'undefined') adapter.setState(d.Id + ".media.ratio", npi.PrimaryImageAspectRatio, true);
+                else adapter.setState(d.Id + ".media.ratio", "", true);
+
+                if(typeof npi.OfficialRating != 'undefined') adapter.setState(d.Id + ".media.agerating", npi.OfficialRating, true);
+                else adapter.setState(d.Id + ".media.agerating", "", true);
+
+                if(typeof npi.OriginalTitle != 'undefined') adapter.setState(d.Id + ".media.originaltitle", npi.OriginalTitle, true);
+                else adapter.setState(d.Id + ".media.originaltitle", "", true);
 
                 var prefix = adapter.config.isSSL ? "https://" : "http://";
                 var basePoster = prefix + adapter.config.ip + "/Items/"
