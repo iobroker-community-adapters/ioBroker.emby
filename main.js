@@ -353,7 +353,7 @@ function webMessage(e)
         {
             createDevice(d);
             adapter.setState(d.Id + ".info.deviceName", d.DeviceName, true);
-            if(d.UserName !== 'undefined')
+            if(typeof d.UserName !== 'undefined')
                 adapter.setState(d.Id + ".info.userName", d.UserName, true);
             else
                 adapter.setState(d.Id + ".info.userName", "", true);
