@@ -95,7 +95,7 @@ Please follow the Steps to ensure the Adapter will work correctly and you can se
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
-### **WORK IN PROGRESS**
+### 1.1.1 (2023-11-20)
 -   (mcm1957) Dependencies have been updated.
 
 ### 1.1.0 (2023-11-20)

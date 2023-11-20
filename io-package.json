@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "emby",
-    "version": "1.1.0",
+    "version": "1.1.1",
     "news": {
+      "1.1.1": {
+        "en": "Dependencies have been updated.",
+        "de": "Abhängigkeiten wurden aktualisiert.",
+        "ru": "Обновлены зависимости.",
+        "pt": "As dependências foram atualizadas.",
+        "nl": "Afhankelijkheid is geüpdateerd.",
+        "fr": "Les dépendances ont été mises à jour.",
+        "it": "Le dipendenze sono state aggiornate.",
+        "es": "Se han actualizado las dependencias.",
+        "pl": "W zależności zostały zaktualizowane.",
+        "uk": "Оновлено залежність.",
+        "zh-cn": "情况已经更新。."
+      },
       "1.1.0": {
         "en": "Adapter requires nodejs 16 now.\nAdapter has been moved into iobroker-community-adapters organization.\nAn error causing multiple 'undefined' messages has been fixed. [#23]\nDependencies have been updated.",
         "de": "Adapter benötigt jetzt Nodejs 16.\nAdapter wurde in die Iobroker-Community-Adapter Organization verschoben.\nEin Fehler, der mehrere 'undefined' Nachrichten verursachte, wurde behoben. [#23]\nAbhängigkeiten wurden aktualisiert.",
@@ -42,10 +55,6 @@
         "de": "Fehler für die States behoben"
       },
       "1.0.0": {
-        "en": "Added more commands",
-        "de": "Mehr Kommandos hinzugefügt"
-      },
-      "0.1.2": {
         "en": "Added more commands",
         "de": "Mehr Kommandos hinzugefügt"
       }
