@@ -107,7 +107,7 @@
     "type": "multimedia",
     "compact": true,
     "connectionType": "local",
-    "dataSource": "pull",
+    "dataSource": "poll",
     "materialize": true,
     "messagebox": false,
     "dependencies": [
