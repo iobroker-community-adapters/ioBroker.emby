@@ -95,6 +95,9 @@ Please follow the Steps to ensure the Adapter will work correctly and you can se
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+-   (mcm1957) Dependencies have been updated.
+
 ### 1.1.0 (2023-11-20)
 -   (mcm1957) Adapter requires nodejs 16 now.
 -   (mcm1957) Adapter has been moved into iobroker-community-adapters oragnization.
