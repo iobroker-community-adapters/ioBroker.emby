@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "emby",
-    "version": "1.1.0-alpha.0",
+    "version": "1.1.0",
     "news": {
+      "1.1.0": {
+        "en": "Adapter requires nodejs 16 now.\nAdapter has been moved into iobroker-community-adapters organization.\nAn error causing multiple 'undefined' messages has been fixed. [#23]\nDependencies have been updated.",
+        "de": "Adapter benötigt jetzt Nodejs 16.\nAdapter wurde in die Iobroker-Community-Adapter Organization verschoben.\nEin Fehler, der mehrere 'undefined' Nachrichten verursachte, wurde behoben. [#23]\nAbhängigkeiten wurden aktualisiert.",
+        "ru": "Адаптер требует nodejs 16 сейчас.\nАдаптер переехал в iobroker-community-adapters oragnization.\nИсправлена ошибка, вызывающая несколько неопределенных сообщений. #[23]\nОбновлены зависимости.",
+        "pt": "Adaptador requer nodejs 16 agora.\nAdapter foi movido para iobroker-community-adapters oragnization.\nFoi corrigido um erro causando múltiplas mensagens indefinidas. #[23]\nAs dependências foram atualizadas.",
+        "nl": "Adapter vereist nodejs 16 nu.\nAdapter is verhuisd naar iobroker-community-adapters oragnatie.\nEen fout die meerdere onbepaalde berichten veroorzaakt. _\nAfhankelijkheid is geüpdateerd.",
+        "fr": "L'adaptateur nécessite 16 nodejs maintenant.\nL'adaptateur a été déplacé dans l'iobroker-community-adapters oragnization.\nUne erreur causant plusieurs messages indéfinis a été corrigée. #[23]\nLes dépendances ont été mises à jour.",
+        "it": "L'adattatore richiede nodejs 16 ora.\nL'adattatore è stato spostato in iobroker-community-adapters oragnization.\nUn errore che causa più messaggi non definiti è stato risolto. #[23]\nLe dipendenze sono state aggiornate.",
+        "es": "Adaptador requiere nodejs 16 ahora.\nEl adaptador se ha trasladado a la oragnización de ibroker-community-adapters.\nSe ha corregido un error que causa múltiples mensajes indefinidos. #[23]\nSe han actualizado las dependencias.",
+        "pl": "Adapter wymaga węzła 16.\nAdapter został przeniesiony do iobroker-community-adapter.\nUstalono błąd, który powoduje, że wiele nieokreślonych wiadomości zostało ustalonych. (23)\nW zależności zostały zaktualizowane.",
+        "uk": "Адаптер вимагає nodejs 16 тепер.\nПереміщено перехід на iobroker-community-adapters oragnization.\nВиправлено помилку, що викликає декілька невизнаних повідомлень. #[23]\nОновлено залежність.",
+        "zh-cn": "现在需要16秒。.\n已经进入了碘化石-社区的吸收者或种植者。.\n已确定造成多种未界定的信息的错误。 行动[23]\n情况已经更新。."
+      },
       "1.1.0-alpha.0": {
         "en": "Adapter requires nodejs 16 now.\nAdapter has been moved into iobroker-community-adapters organization.\nAn error causing multiple 'undefined' messages has been fixed. [#23]\nDependencies have been updated.",
         "de": "Adapter benötigt jetzt Nodejs 16.\nAdapter wurde in iobroker-community-Adapter Organization bewegt.\nEin Fehler, der mehrere 'undefined' Nachrichten verursacht, wurde behoben. [#23]\nAbhängigkeiten wurden aktualisiert.",
@@ -35,10 +48,6 @@
       "0.1.2": {
         "en": "Added more commands",
         "de": "Mehr Kommandos hinzugefügt"
-      },
-      "0.1.1": {
-        "en": "Added delay if you watch mor episodes",
-        "de": "Verzögerung hinzugefügt wenn man mehrere Folgen anschaut"
       }
     },
     "titleLang": {
