@@ -96,7 +96,7 @@ Please follow the Steps to ensure the Adapter will work correctly and you can se
     ### **WORK IN PROGRESS**
 -->
 
- ### **WORK IN PROGRESS**
+### **WORK IN PROGRESS**
 -   (mcm1957) Adapter requires nodejs 16 now.
 -   (mcm1957) Adapter has been moved into iobroker-community-adapters oragnization.
 -   (thewhobox) An error causing multiple 'undefined' messages has been fixed. [#23]
