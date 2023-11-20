@@ -1,7 +1,7 @@
 {
     "common": {
         "name": "emby",
-        "version": "1.0.3",
+        "version": "1.0.5",
         "news": {
             "1.0.3": {
                 "en": "Added more info for playing item",
