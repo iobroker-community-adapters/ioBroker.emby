@@ -32,7 +32,6 @@
                 "de": "Automatischer Verbindungsversuch nach einer Minute"
             }
         },
-		"title": "Emby",
         "titleLang": {
             "en": "Emby",
             "de": "Emby",
@@ -43,10 +42,11 @@
             "it": "Emby",
             "es": "Emby",
             "pl": "Emby",
+            "uk": "Emby",
             "zh-cn": "Emby"
         },
         "desc": {
-            "en": "Controle and visualise your Emby Server",
+            "en": "Control and visualise your Emby Server",
             "de": "Kontrolliere und visualisiere deinen Emby Server",
             "ru": "Контролируйте и визуализируйте свой Emby Server",
             "pt": "Controle e visualize seu Emby Server",
@@ -55,24 +55,45 @@
             "it": "Controlla e visualizza il tuo server Emby",
             "es": "Controla y visualiza tu servidor Emby.",
             "pl": "Skomponuj i wizualizuj swój serwer Emby",
+            "uk": "Налаштування та налаштування сервера Emby",
             "zh-cn": "控制和可视化您的Emby服务器"
         },
         "authors": [
-            "thewhobox <iobroker@mikegerst.de>"
+            "thewhobox <iobroker@mikegerst.de>",
+            "iobroker-community-adapters <mcm57@gmx.at>"
+
         ],
-        "platform": "Javascript/Node.js",
-        "mode": "daemon",
-        "icon": "emby.png",
-        "materialize": true,
-        "enabled": false,
-        "extIcon": "https://raw.githubusercontent.com/thewhobox/ioBroker.emby/master/admin/emby.png",
-        "keywords": ["emby", "server", "media", "video"],
-        "readme": "https://github.com/thewhobox/ioBroker.emby/blob/master/README.md",
-        "loglevel": "info",
-        "type": "multimedia",
+        "keywords": [
+            "emby", 
+            "server", 
+            "media", 
+            "video"
+        ],
         "license": "MIT",
+        "platform": "Javascript/Node.js",
+        "main": "main.js",
+        "icon": "emby.png",
+        "enabled": false,
+        "extIcon": "https://raw.githubusercontent.com/iobroker-community-adapters/ioBroker.emby/master/admin/emby.png",
+        "readme": "https://github.com/iobroker-community-adapters/ioBroker.emby/blob/master/README.md",
+        "loglevel": "info",
+        "mode": "daemon",
+        "type": "multimedia",
+        "compact": true,
+        "connectionType": "local",
+        "dataSource": "pull",
+        "materialize": true,
         "messagebox": false,
-        "compact": true
+        "dependencies": [
+            {
+              "js-controller": ">=4.0.24"
+            }
+        ],
+        "globalDependencies": [
+            {
+              "admin": ">=5.1.13"
+            }
+        ]      
     },
     "native": {
         "ip": "0.0.0.0:8096",
