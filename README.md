@@ -95,8 +95,7 @@ Please follow the Steps to ensure the Adapter will work correctly and you can se
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
-
-### **WORK IN PROGRESS**
+### 1.1.0-alpha.0 (2023-11-20)
 -   (mcm1957) Adapter requires nodejs 16 now.
 -   (mcm1957) Adapter has been moved into iobroker-community-adapters oragnization.
 -   (thewhobox) An error causing multiple 'undefined' messages has been fixed. [#23]
@@ -126,16 +125,12 @@ Please follow the Steps to ensure the Adapter will work correctly and you can se
 ### 0.0.3
 * added new states, connection state and more improvment
 
-
 ### 0.0.2
 * added more states
 * added DisplayMessage
 
 ### 0.0.1
 * Initial version
-
-
-
 
 ## License
 
