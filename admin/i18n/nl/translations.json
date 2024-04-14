@@ -1,0 +1,9 @@
+{
+    "ApiKey": "API sleutel",
+    "DeviceIds": "Apparaat-ID's die moeten worden genegeerd (door komma's gescheiden)",
+    "IP": "IP/domein van de Emby-server (met poort)",
+    "Timeout": "Vertraging voor pauze/inactief",
+    "TimeoutDesc": "Noodzakelijk als je meerdere afleveringen achter elkaar bekijkt.",
+    "isSSL": "Verbinding vereist SSL",
+    "on save": "Bij het opslaan van de instellingen worden de adapters direct opnieuw opgestart."
+}

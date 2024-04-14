@@ -1,0 +1,9 @@
+{
+    "ApiKey": "Klucz API",
+    "DeviceIds": "Identyfikatory urządzeń, które należy zignorować (oddzielone przecinkami)",
+    "IP": "IP/domena serwera Emby (z portem)",
+    "Timeout": "Opóźnienie pauzy/bezczynności",
+    "TimeoutDesc": "Niezbędne, gdy oglądasz więcej odcinków w jednym rzędzie.",
+    "isSSL": "Połączenie wymaga protokołu SSL",
+    "on save": "Podczas zapisywania ustawień adaptery zostaną natychmiast uruchomione ponownie."
+}

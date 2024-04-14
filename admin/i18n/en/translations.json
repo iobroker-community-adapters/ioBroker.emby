@@ -1,0 +1,9 @@
+{
+    "ApiKey": "API Key",
+    "DeviceIds": "Device Ids to be ignored (comma seperated)",
+    "IP": "IP/Domain of the Emby server (with port)",
+    "Timeout": "Delay for pause/idle",
+    "TimeoutDesc": "Necessary when you watch more episodes in one row.",
+    "isSSL": "Connection requires SSL",
+    "on save": "When saving settings of the adapters will be restarted immediately."
+}

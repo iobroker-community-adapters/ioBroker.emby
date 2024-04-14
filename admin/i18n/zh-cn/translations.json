@@ -1,0 +1,9 @@
+{
+    "ApiKey": "API密钥",
+    "DeviceIds": "要忽略的设备 ID（逗号分隔）",
+    "IP": "Emby 服务器的 IP/域名（带端口）",
+    "Timeout": "暂停/空闲延迟",
+    "TimeoutDesc": "当您连续观看更多剧集时，这是必要的。",
+    "isSSL": "连接需要 SSL",
+    "on save": "保存适配器的设置后将立即重新启动。"
+}

@@ -44,19 +44,55 @@
       },
       "1.0.3": {
         "en": "Added more info for playing item",
-        "de": "Mehr infos über das abgespielte Item hinzugefügt"
+        "de": "Mehr infos über das abgespielte Item hinzugefügt",
+        "ru": "Добавлена ​​дополнительная информация об игровом предмете.",
+        "pt": "Adicionadas mais informações para o item de jogo",
+        "nl": "Meer informatie toegevoegd voor het speelitem",
+        "fr": "Ajout de plus d'informations pour jouer à l'élément",
+        "it": "Aggiunte ulteriori informazioni per l'oggetto da riprodurre",
+        "es": "Se agregó más información para jugar al elemento.",
+        "pl": "Dodano więcej informacji o odtwarzanym przedmiocie",
+        "uk": "Додано більше інформації про відтворюваний предмет",
+        "zh-cn": "添加了有关播放项目的更多信息"
       },
       "1.0.2": {
         "en": "Published to stable",
-        "de": "In Stable veröffentlicht"
+        "de": "In Stable veröffentlicht",
+        "ru": "Опубликовано в стабильной версии",
+        "pt": "Publicado no estável",
+        "nl": "Gepubliceerd naar stabiel",
+        "fr": "Publié dans stable",
+        "it": "Pubblicato su stable",
+        "es": "Publicado en estable",
+        "pl": "Opublikowano w wersji stabilnej",
+        "uk": "Опубліковано в стабільному",
+        "zh-cn": "发布到稳定版"
       },
       "1.0.1": {
         "en": "Fixed bug for states",
-        "de": "Fehler für die States behoben"
+        "de": "Fehler für die States behoben",
+        "ru": "Исправлена ​​ошибка для состояний",
+        "pt": "Bug corrigido para estados",
+        "nl": "Bug voor staten opgelost",
+        "fr": "Correction d'un bug pour les états",
+        "it": "Risolto bug per gli stati",
+        "es": "Error solucionado para estados.",
+        "pl": "Naprawiono błąd dla stanów",
+        "uk": "Виправлена ​​помилка для штатів",
+        "zh-cn": "修复了州的错误"
       },
       "1.0.0": {
         "en": "Added more commands",
-        "de": "Mehr Kommandos hinzugefügt"
+        "de": "Mehr Kommandos hinzugefügt",
+        "ru": "Добавлено больше команд",
+        "pt": "Adicionados mais comandos",
+        "nl": "Meer commando's toegevoegd",
+        "fr": "Ajout de plus de commandes",
+        "it": "Aggiunti più comandi",
+        "es": "Se agregaron más comandos",
+        "pl": "Dodano więcej poleceń",
+        "uk": "Додано більше команд",
+        "zh-cn": "添加了更多命令"
       }
     },
     "titleLang": {

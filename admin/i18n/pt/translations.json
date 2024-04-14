@@ -1,0 +1,9 @@
+{
+    "ApiKey": "Chave API",
+    "DeviceIds": "IDs de dispositivos a serem ignorados (separados por vírgulas)",
+    "IP": "IP/Domínio do servidor Emby (com porta)",
+    "Timeout": "Atraso para pausa/inatividade",
+    "TimeoutDesc": "Necessário quando você assiste mais episódios seguidos.",
+    "isSSL": "A conexão requer SSL",
+    "on save": "Ao salvar as configurações dos adaptadores serão reiniciados imediatamente."
+}

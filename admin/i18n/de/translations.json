@@ -1,0 +1,9 @@
+{
+    "ApiKey": "API Key",
+    "DeviceIds": "Geräte Ids die ignoriert werden sollen (Mit Komma getrennt)",
+    "IP": "IP/ Domain des Emby Servers (mit Port)",
+    "Timeout": "Verzögerung für Pause/Leerlauf",
+    "TimeoutDesc": "Nötig wenn mehrere Folgen hintereinander gespielt werden.",
+    "isSSL": "Verbindung benötigt SSL",
+    "on save": "Beim Speichern von Einstellungen der Adapter wird sofort neu gestartet."
+}
