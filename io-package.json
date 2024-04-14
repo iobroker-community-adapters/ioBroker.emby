@@ -95,14 +95,17 @@
       "media",
       "video"
     ],
-    "license": "MIT",
+    "licenseInformation": {
+      "license": "MIT",
+      "type": "free"
+    },
     "platform": "Javascript/Node.js",
-    "main": "main.js",
     "icon": "emby.png",
     "enabled": false,
     "extIcon": "https://raw.githubusercontent.com/iobroker-community-adapters/ioBroker.emby/master/admin/emby.png",
     "readme": "https://github.com/iobroker-community-adapters/ioBroker.emby/blob/master/README.md",
     "loglevel": "info",
+    "tier": 2,
     "mode": "daemon",
     "type": "multimedia",
     "compact": true,
@@ -112,12 +115,12 @@
     "messagebox": false,
     "dependencies": [
       {
-        "js-controller": ">=4.0.24"
+        "js-controller": ">=5.0.19"
       }
     ],
     "globalDependencies": [
       {
-        "admin": ">=5.1.13"
+        "admin": ">=6.13.16"
       }
     ]
   },
