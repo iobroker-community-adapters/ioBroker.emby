@@ -33,7 +33,7 @@
   },
   "dependencies": {
     "request": "^2.88.0",
-    "websocket": "^1.0.23",
+    "websocket": "^1.0.35",
     "@iobroker/adapter-core": "^3.1.4"
   },
   "devDependencies": {
