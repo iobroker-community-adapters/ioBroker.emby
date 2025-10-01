@@ -75,7 +75,7 @@ jobs:
       - name: Check for existing update issues
         if: steps.version-check.outputs.update_needed == 'true'
         id: issue-check
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         with:
           script: |
             const title = '🤖 ioBroker Copilot Template Update Available';
@@ -100,7 +100,7 @@ jobs:
             
       - name: Create update issue for initialized copilot
         if: steps.version-check.outputs.update_needed == 'true' && steps.version-check.outputs.copilot_initialized == 'true' && steps.issue-check.outputs.existing_issue == ''
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         with:
           script: |
             const currentVersion = '${{ steps.version-check.outputs.current_version }}';
@@ -158,7 +158,7 @@ jobs:
             
       - name: Create initial setup issue for uninitialized copilot
         if: steps.version-check.outputs.current_version == 'none' && steps.issue-check.outputs.existing_issue == ''
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         with:
           script: |
             const latestVersion = '${{ steps.version-check.outputs.latest_version }}';
