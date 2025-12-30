@@ -2,19 +2,10 @@
   "name": "iobroker.emby",
   "version": "1.2.0",
   "description": "Emby",
-  "author": {
-    "name": "thewhobox",
-    "email": "admin@mikegerst.de"
-  },
+  "author": "thewhobox <admin@mikegerst.de>",
   "contributors": [
-    {
-      "name": "thewhobox",
-      "email": "admin@mikegerst.de"
-    },
-    {
-      "name": "iobroker-community-adapters",
-      "email": "iobroker-community-adapters@gmx.de"
-    }
+    "thewhobox <admin@mikegerst.de>",
+    "iobroker-community-adapters <iobroker-community-adapters@gmx.de>"
   ],
   "homepage": "https://github.com/iobroker-community-adapters/ioBroker.emby",
   "license": "MIT",
