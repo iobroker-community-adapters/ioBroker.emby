@@ -149,7 +149,7 @@ Please follow the Steps to ensure the Adapter will work correctly and you can se
 
 MIT License
 
-Copyright (c) 2023-2024 iobroker-community-adapters <iobroker-community-adapters@gmx.de>
+Copyright (c) 2023-2026 iobroker-community-adapters <iobroker-community-adapters@gmx.de>
 Copyright (c) 2020-2023 thewhobox
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
