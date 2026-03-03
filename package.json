@@ -10,6 +10,7 @@
   "homepage": "https://github.com/iobroker-community-adapters/ioBroker.emby",
   "license": "MIT",
   "keywords": [
+    "ioBroker",
     "emby",
     "server",
     "media",
