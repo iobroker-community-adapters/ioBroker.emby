@@ -97,9 +97,10 @@ Please follow the Steps to ensure the Adapter will work correctly and you can se
 -->
 
 ### **WORK IN PROGRESS**
+- (mcm1957) Adapter requires node.js >= 20 now
 - (copilot) Adapter requires admin >= 7.7.22 now
 - (copilot) Adapter requires js-controller >= 6.0.11 now
-- (copilot) Adapter requires admin >= 7.6.17 now
+- (mcm1957) Dependencies have been updated
 
 ### 1.2.0 (2024-04-14)
 
