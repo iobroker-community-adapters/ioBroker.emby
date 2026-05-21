@@ -1,0 +1,62 @@
+{
+    "type": "panel",
+    "items": {
+        "ip": {
+            "type": "text",
+            "label": "IP",
+            "xs": 12,
+            "sm": 12,
+            "md": 6,
+            "lg": 6,
+            "xl": 6
+        },
+        "isSSL": {
+            "type": "checkbox",
+            "label": "isSSL",
+            "xs": 12,
+            "sm": 12,
+            "md": 6,
+            "lg": 6,
+            "xl": 6
+        },
+        "apikey": {
+            "type": "text",
+            "label": "ApiKey",
+            "xs": 12,
+            "sm": 12,
+            "md": 6,
+            "lg": 6,
+            "xl": 6
+        },
+        "deviceIds": {
+            "type": "text",
+            "label": "DeviceIds",
+            "xs": 12,
+            "sm": 12,
+            "md": 12,
+            "lg": 12,
+            "xl": 12
+        },
+        "timeout": {
+            "type": "number",
+            "label": "Timeout",
+            "help": "TimeoutDesc",
+            "min": 0,
+            "xs": 12,
+            "sm": 12,
+            "md": 6,
+            "lg": 6,
+            "xl": 6
+        },
+        "restartInfo": {
+            "type": "staticText",
+            "text": "on save",
+            "newLine": true,
+            "xs": 12,
+            "sm": 12,
+            "md": 12,
+            "lg": 12,
+            "xl": 12
+        }
+    }
+}
