@@ -134,7 +134,6 @@
     "compact": true,
     "connectionType": "local",
     "dataSource": "poll",
-    "materialize": true,
     "messagebox": false,
     "dependencies": [
       {
@@ -145,7 +144,10 @@
       {
         "admin": ">=7.7.22"
       }
-    ]
+    ],
+    "adminUI": {
+      "config": "materialize"
+    }
   },
   "native": {
     "ip": "0.0.0.0:8096",
