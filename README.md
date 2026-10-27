@@ -63,6 +63,7 @@ Note: Emby assigns a new session ID when a client reconnects. The adapter then r
 | x.info.deviceName | Name of the device |  |
 | x.info.userName | Name of the user logged in on the device |  |
 | x.info.supportedCommands | Commands supported by the client (JSON array) |  |
+| x.info.lastActivity | Time of the last activity reported by the server | Timestamp (ms). Emby keeps sessions of closed clients for a while, so this shows whether a client is really in use |
 
 ### Media
 
@@ -126,7 +127,8 @@ Only created for clients that support remote control, and only for commands the 
 - (Schimi1983) Messages and dialogs with quotes or line breaks work now
 - (Schimi1983) Commands use https if SSL is enabled, API key is sent as header and no longer logged
 - (Schimi1983) API key is stored encrypted, an existing key is converted automatically (one restart)
-- (Schimi1983) New state info.online per session; sessions that disappear are reset to idle
+- (Schimi1983) New states info.online and info.lastActivity per session; sessions that disappear are reset to idle
+- (Schimi1983) Current sessions are read via REST right after connecting, the server pushes them only on the next change
 - (Schimi1983) Object types of buttons fixed, empty numbers are written as null, states are only written on change
 - (Schimi1983) Dependencies "request" and "websocket" replaced by native fetch and WebSocket
 - (Schimi1983) API key is entered in a password field

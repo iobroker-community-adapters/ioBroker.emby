@@ -57,6 +57,7 @@ function startAdapter(options) {
     Object.assign(options, {
         name: 'emby',
         stateChange: onStateChange,
+        objectChange: onObjectChange,
         unload: onUnload,
         ready: () => {
             main().catch(e => adapter.log.error(`Startup failed: ${e.message}`));
@@ -114,15 +115,17 @@ function baseUrl() {
 }
 
 /**
- * Sends a POST request to the server. The API key is sent as header, never in the URL,
+ * Sends a request to the server. The API key is sent as header, never in the URL,
  * so it cannot end up in logs.
  *
+ * @param {'GET' | 'POST'} method HTTP method
  * @param {string} path path below the server root, e.g. `Sessions/<id>/Playing/Pause`
  * @param {object} [body] JSON body
+ * @returns {Promise<Response>} response (status 2xx)
  */
-async function apiPost(path, body) {
+async function apiRequest(method, path, body) {
     const res = await fetch(`${baseUrl()}/${path}`, {
-        method: 'POST',
+        method,
         headers: {
             'Content-Type': 'application/json',
             'X-Emby-Token': apiKey,
@@ -135,6 +138,67 @@ async function apiPost(path, body) {
     if (!res.ok) {
         throw new Error(`HTTP ${res.status} ${res.statusText}`);
     }
+    return res;
+}
+
+/**
+ * Sends a POST request to the server.
+ *
+ * @param {string} path path below the server root
+ * @param {object} [body] JSON body
+ */
+async function apiPost(path, body) {
+    await apiRequest('POST', path, body);
+}
+
+/**
+ * Queues a list of sessions for processing (WebSocket push or REST poll).
+ *
+ * @param {unknown} data session list
+ */
+function queueSessions(data) {
+    const list = Array.isArray(data) ? data : [];
+    sessionQueue = sessionQueue
+        .then(() => handleSessions(list))
+        .catch(err => adapter.log.warn(`Error processing sessions: ${err.message}`));
+}
+
+/**
+ * Reads the current sessions via REST. Needs an API key.
+ */
+async function refreshSessions() {
+    if (!apiKey) {
+        return;
+    }
+    try {
+        const res = await apiRequest('GET', 'Sessions');
+        queueSessions(await res.json());
+    } catch (e) {
+        adapter.log.warn(`Could not read sessions: ${e.message}`);
+    }
+}
+
+/**
+ * Forgets sessions whose objects were deleted (e.g. by the user in admin), so they are
+ * recreated completely on the next update instead of writing states without objects.
+ *
+ * @param {string} id full object id
+ * @param {ioBroker.Object | null | undefined} obj new object, null if deleted
+ */
+function onObjectChange(id, obj) {
+    if (obj || !id.startsWith(`${adapter.namespace}.`)) {
+        return;
+    }
+    const sid = id.substring(adapter.namespace.length + 1).split('.')[0];
+    if (sid === 'info') {
+        return;
+    }
+    if (createdSessions.delete(sid)) {
+        adapter.log.debug(`Objects of session ${sid} were deleted`);
+    }
+    // a deleted session that is no longer active must not be recreated by markSessionOffline
+    activeSessions.delete(sid);
+    delete laststates[sid];
 }
 
 /**
@@ -257,6 +321,7 @@ async function main() {
     }
 
     adapter.subscribeStates('*');
+    adapter.subscribeObjects('*');
     tryConnect();
 }
 
@@ -315,6 +380,9 @@ function onSocketOpen() {
     // connection ends in a close event and the normal reconnect.
     connection.send(JSON.stringify({ MessageType: 'SessionsStart', Data: '0,10000' }));
     startKeepAlive(DEFAULT_KEEPALIVE_MS);
+    // the server sends the first "Sessions" message only after the next change, so read the
+    // current state right away (also brings states up to date after a reconnect)
+    void refreshSessions();
 }
 
 /**
@@ -370,13 +438,9 @@ function onSocketMessage(e) {
     adapter.log.silly(JSON.stringify(msg));
 
     switch (msg && msg.MessageType) {
-        case 'Sessions': {
-            const list = Array.isArray(msg.Data) ? msg.Data : [];
-            sessionQueue = sessionQueue
-                .then(() => handleSessions(list))
-                .catch(err => adapter.log.warn(`Error processing sessions: ${err.message}`));
+        case 'Sessions':
+            queueSessions(msg.Data);
             break;
-        }
         case 'ForceKeepAlive': {
             // Data = timeout in seconds after which the server drops the connection; answer at half of it
             const seconds = Number(msg.Data);
@@ -499,6 +563,10 @@ async function updateSession(d) {
     await setValue(`${sid}.info.userName`, d.UserName || '');
     if (Array.isArray(d.SupportedCommands)) {
         await setValue(`${sid}.info.supportedCommands`, JSON.stringify(d.SupportedCommands));
+    }
+    const lastActivity = Date.parse(d.LastActivityDate);
+    if (Number.isFinite(lastActivity)) {
+        await setValue(`${sid}.info.lastActivity`, lastActivity);
     }
 
     const npi = d.NowPlayingItem;
@@ -636,6 +704,10 @@ async function removeSupersededSessions(sid, deviceId) {
  * @param {string} sid session id
  */
 async function markSessionOffline(sid) {
+    if (!(await adapter.getObjectAsync(sid))) {
+        // objects were deleted in the meantime, nothing to update
+        return;
+    }
     adapter.log.debug(`Session ${sid} is no longer active`);
     // objects created by versions <= 1.3.0 have no info.online yet
     await adapter.extendObjectAsync(
@@ -737,6 +809,7 @@ async function createDevice(device) {
         'info.deviceName': roState('Name of the Device now playing', 'string', 'info.name'),
         'info.userName': roState('Logged in User', 'string', 'info.name'),
         'info.supportedCommands': roState('List of supported Commands', 'string', 'json'),
+        'info.lastActivity': roState('Last activity of the client', 'number', 'date'),
         'media.state': {
             type: 'state',
             common: {
