@@ -1,0 +1,83 @@
+{
+    "i18n": true,
+    "type": "panel",
+    "items": {
+        "hdrConnection": {
+            "type": "header",
+            "text": "hdrConnection",
+            "size": 2,
+            "xs": 12,
+            "sm": 12,
+            "md": 12,
+            "lg": 12,
+            "xl": 12
+        },
+        "ip": {
+            "type": "text",
+            "label": "IP",
+            "placeholder": "192.168.0.100:8096",
+            "newLine": true,
+            "xs": 12,
+            "sm": 12,
+            "md": 6,
+            "lg": 6,
+            "xl": 6
+        },
+        "isSSL": {
+            "type": "checkbox",
+            "label": "isSSL",
+            "xs": 12,
+            "sm": 12,
+            "md": 6,
+            "lg": 6,
+            "xl": 6
+        },
+        "apikey": {
+            "type": "password",
+            "label": "ApiKey",
+            "help": "ApiKeyHelp",
+            "visible": true,
+            "newLine": true,
+            "xs": 12,
+            "sm": 12,
+            "md": 6,
+            "lg": 6,
+            "xl": 6
+        },
+        "hdrOptions": {
+            "type": "header",
+            "text": "hdrOptions",
+            "size": 2,
+            "newLine": true,
+            "xs": 12,
+            "sm": 12,
+            "md": 12,
+            "lg": 12,
+            "xl": 12
+        },
+        "deviceIds": {
+            "type": "text",
+            "label": "DeviceIds",
+            "newLine": true,
+            "xs": 12,
+            "sm": 12,
+            "md": 12,
+            "lg": 12,
+            "xl": 12
+        },
+        "timeout": {
+            "type": "number",
+            "label": "Timeout",
+            "help": "TimeoutDesc",
+            "min": 0,
+            "max": 60000,
+            "step": 100,
+            "newLine": true,
+            "xs": 12,
+            "sm": 12,
+            "md": 6,
+            "lg": 6,
+            "xl": 6
+        }
+    }
+}

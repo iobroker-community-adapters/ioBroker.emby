@@ -1,0 +1,11 @@
+{
+    "ApiKey": "API密钥",
+    "ApiKeyHelp": "在 Emby 控制台的“高级 > API 密钥”中创建密钥。没有密钥时只能监视客户端，无法控制。",
+    "DeviceIds": "要忽略的会话或设备 ID（逗号分隔）",
+    "hdrConnection": "连接",
+    "hdrOptions": "选项",
+    "IP": "Emby 服务器的 IP/域名（带端口）",
+    "isSSL": "连接需要 SSL",
+    "Timeout": "暂停/空闲延迟（毫秒）",
+    "TimeoutDesc": "当您连续观看更多剧集时，这是必要的。"
+}

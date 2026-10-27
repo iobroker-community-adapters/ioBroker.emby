@@ -1,0 +1,11 @@
+{
+    "ApiKey": "Chave API",
+    "ApiKeyHelp": "Crie uma chave no painel do Emby em Avançado > Chaves de API. Sem chave, os clientes podem ser monitorados, mas não controlados.",
+    "DeviceIds": "IDs de sessão ou de dispositivo a ignorar (separados por vírgula)",
+    "hdrConnection": "Conexão",
+    "hdrOptions": "Opções",
+    "IP": "IP/Domínio do servidor Emby (com porta)",
+    "isSSL": "A conexão requer SSL",
+    "Timeout": "Atraso para pausa/inatividade (ms)",
+    "TimeoutDesc": "Necessário quando você assiste mais episódios seguidos."
+}

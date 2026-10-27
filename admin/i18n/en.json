@@ -1,0 +1,11 @@
+{
+    "ApiKey": "API Key",
+    "ApiKeyHelp": "Create a key in the Emby dashboard under Advanced > API Keys. Without a key clients can be monitored but not controlled.",
+    "DeviceIds": "Session or device IDs to ignore (comma separated)",
+    "hdrConnection": "Connection",
+    "hdrOptions": "Options",
+    "IP": "IP/Domain of the Emby server (with port)",
+    "isSSL": "Connection requires SSL",
+    "Timeout": "Delay for pause/idle (ms)",
+    "TimeoutDesc": "Necessary when you watch more episodes in one row."
+}

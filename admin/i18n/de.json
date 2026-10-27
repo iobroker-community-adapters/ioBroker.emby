@@ -1,0 +1,11 @@
+{
+    "ApiKey": "API-Schlüssel",
+    "ApiKeyHelp": "Einen Schlüssel im Emby-Dashboard unter Erweitert > API-Schlüssel anlegen. Ohne Schlüssel können Clients nur überwacht, aber nicht gesteuert werden.",
+    "DeviceIds": "Zu ignorierende Session- oder Geräte-IDs (mit Komma getrennt)",
+    "hdrConnection": "Verbindung",
+    "hdrOptions": "Optionen",
+    "IP": "IP/Domain des Emby-Servers (mit Port)",
+    "isSSL": "Verbindung benötigt SSL",
+    "Timeout": "Verzögerung für Pause/Leerlauf (ms)",
+    "TimeoutDesc": "Nötig, wenn mehrere Folgen hintereinander gespielt werden."
+}

@@ -1,0 +1,11 @@
+{
+    "ApiKey": "API sleutel",
+    "ApiKeyHelp": "Maak een sleutel aan in het Emby-dashboard onder Geavanceerd > API-sleutels. Zonder sleutel kunnen clients worden gevolgd maar niet bediend.",
+    "DeviceIds": "Te negeren sessie- of apparaat-ID’s (kommagescheiden)",
+    "hdrConnection": "Verbinding",
+    "hdrOptions": "Opties",
+    "IP": "IP/domein van de Emby-server (met poort)",
+    "isSSL": "Verbinding vereist SSL",
+    "Timeout": "Vertraging voor pauze/inactief (ms)",
+    "TimeoutDesc": "Noodzakelijk als je meerdere afleveringen achter elkaar bekijkt."
+}

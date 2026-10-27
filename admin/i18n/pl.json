@@ -1,0 +1,11 @@
+{
+    "ApiKey": "Klucz API",
+    "ApiKeyHelp": "Utwórz klucz w panelu Emby w sekcji Zaawansowane > Klucze API. Bez klucza klienty można monitorować, ale nie można nimi sterować.",
+    "DeviceIds": "Identyfikatory sesji lub urządzeń do pominięcia (oddzielone przecinkami)",
+    "hdrConnection": "Połączenie",
+    "hdrOptions": "Opcje",
+    "IP": "IP/domena serwera Emby (z portem)",
+    "isSSL": "Połączenie wymaga protokołu SSL",
+    "Timeout": "Opóźnienie dla pauzy/bezczynności (ms)",
+    "TimeoutDesc": "Niezbędne, gdy oglądasz więcej odcinków w jednym rzędzie."
+}

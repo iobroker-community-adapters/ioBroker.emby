@@ -1,0 +1,11 @@
+{
+    "ApiKey": "Clave API",
+    "ApiKeyHelp": "Cree una clave en el panel de Emby en Avanzado > Claves API. Sin clave, los clientes se pueden supervisar pero no controlar.",
+    "DeviceIds": "ID de sesión o de dispositivo a ignorar (separados por comas)",
+    "hdrConnection": "Conexión",
+    "hdrOptions": "Opciones",
+    "IP": "IP/Dominio del servidor Emby (con puerto)",
+    "isSSL": "La conexión requiere SSL",
+    "Timeout": "Retraso para pausa/inactividad (ms)",
+    "TimeoutDesc": "Necesario cuando miras más episodios seguidos."
+}

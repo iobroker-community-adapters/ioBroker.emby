@@ -1,0 +1,11 @@
+{
+    "ApiKey": "clé API",
+    "ApiKeyHelp": "Créez une clé dans le tableau de bord Emby sous Avancé > Clés API. Sans clé, les clients peuvent être surveillés mais pas contrôlés.",
+    "DeviceIds": "ID de session ou d’appareil à ignorer (séparés par des virgules)",
+    "hdrConnection": "Connexion",
+    "hdrOptions": "Options",
+    "IP": "IP/Domaine du serveur Emby (avec port)",
+    "isSSL": "La connexion nécessite SSL",
+    "Timeout": "Délai pour pause/inactivité (ms)",
+    "TimeoutDesc": "Nécessaire lorsque vous regardez plusieurs épisodes d’affilée."
+}

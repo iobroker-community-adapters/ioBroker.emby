@@ -97,6 +97,7 @@ Please follow the Steps to ensure the Adapter will work correctly and you can se
 -->
 ### **WORK IN PROGRESS**
 - (copilot) Adapter requires node.js >= 22 now
+- (Schimi1983) Admin UI migrated to jsonConfig (based on #275), API key is entered in a password field, short-form i18n files
 
 ### 1.3.0 (2026-03-03)
 - (mcm1957) Adapter requires node.js >= 20 now
