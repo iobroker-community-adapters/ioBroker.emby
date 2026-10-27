@@ -2,8 +2,13 @@
     "ApiKey": "clé API",
     "DeviceIds": "ID de périphérique à ignorer (séparés par des virgules)",
     "IP": "IP/Domaine du serveur Emby (avec port)",
-    "Timeout": "Délai pour pause/inactivité",
-    "TimeoutDesc": "Nécessaire lorsque vous regardez plusieurs épisodes d’affilée.",
     "isSSL": "La connexion nécessite SSL",
-    "on save": "Lors de l'enregistrement, les paramètres des adaptateurs seront redémarrés immédiatement."
+    "on save": "Lors de l'enregistrement, les paramètres des adaptateurs seront redémarrés immédiatement.",
+    "PollInterval": "Intervalle d’interrogation des sessions (s, 0 = désactivé)",
+    "PollIntervalDesc": "Emby n’envoie que les changements. L’interrogation maintient la dernière activité à jour et est nécessaire au nettoyage.",
+    "RemoveDeletedDevices": "Supprimer les objets des clients supprimés dans Emby (Tableau de bord > Appareils)",
+    "RemoveInactiveDays": "Supprimer les objets des clients inactifs après (jours, 0 = désactivé)",
+    "RemoveInactiveDaysDesc": "Uniquement les clients que le serveur ne signale plus. Les scripts et réglages d’historique de ces objets sont perdus.",
+    "Timeout": "Délai pour pause/inactivité",
+    "TimeoutDesc": "Nécessaire lorsque vous regardez plusieurs épisodes d’affilée."
 }

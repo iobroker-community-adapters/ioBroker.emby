@@ -2,8 +2,13 @@
     "ApiKey": "API sleutel",
     "DeviceIds": "Apparaat-ID's die moeten worden genegeerd (door komma's gescheiden)",
     "IP": "IP/domein van de Emby-server (met poort)",
-    "Timeout": "Vertraging voor pauze/inactief",
-    "TimeoutDesc": "Noodzakelijk als je meerdere afleveringen achter elkaar bekijkt.",
     "isSSL": "Verbinding vereist SSL",
-    "on save": "Bij het opslaan van de instellingen worden de adapters direct opnieuw opgestart."
+    "on save": "Bij het opslaan van de instellingen worden de adapters direct opnieuw opgestart.",
+    "PollInterval": "Pollinginterval voor sessies (s, 0 = uit)",
+    "PollIntervalDesc": "Emby meldt alleen wijzigingen. De polling houdt de laatste activiteit actueel en is nodig voor het opruimen.",
+    "RemoveDeletedDevices": "Objecten verwijderen van clients die in Emby zijn verwijderd (Dashboard > Apparaten)",
+    "RemoveInactiveDays": "Objecten van inactieve clients verwijderen na (dagen, 0 = uit)",
+    "RemoveInactiveDaysDesc": "Alleen clients die de server niet meer meldt. Scripts en historie-instellingen van deze objecten gaan verloren.",
+    "Timeout": "Vertraging voor pauze/inactief",
+    "TimeoutDesc": "Noodzakelijk als je meerdere afleveringen achter elkaar bekijkt."
 }

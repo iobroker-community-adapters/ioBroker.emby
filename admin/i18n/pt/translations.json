@@ -2,8 +2,13 @@
     "ApiKey": "Chave API",
     "DeviceIds": "IDs de dispositivos a serem ignorados (separados por vírgulas)",
     "IP": "IP/Domínio do servidor Emby (com porta)",
-    "Timeout": "Atraso para pausa/inatividade",
-    "TimeoutDesc": "Necessário quando você assiste mais episódios seguidos.",
     "isSSL": "A conexão requer SSL",
-    "on save": "Ao salvar as configurações dos adaptadores serão reiniciados imediatamente."
+    "on save": "Ao salvar as configurações dos adaptadores serão reiniciados imediatamente.",
+    "PollInterval": "Intervalo de consulta das sessões (s, 0 = desligado)",
+    "PollIntervalDesc": "O Emby só envia alterações. A consulta mantém a última atividade atualizada e é necessária para a limpeza.",
+    "RemoveDeletedDevices": "Remover os objetos de clientes excluídos no Emby (Painel > Dispositivos)",
+    "RemoveInactiveDays": "Remover os objetos de clientes inativos após (dias, 0 = desligado)",
+    "RemoveInactiveDaysDesc": "Apenas clientes que o servidor já não informa. Scripts e configurações de histórico desses objetos são perdidos.",
+    "Timeout": "Atraso para pausa/inatividade",
+    "TimeoutDesc": "Necessário quando você assiste mais episódios seguidos."
 }

@@ -2,8 +2,13 @@
     "ApiKey": "API Key",
     "DeviceIds": "Device Ids to be ignored (comma seperated)",
     "IP": "IP/Domain of the Emby server (with port)",
-    "Timeout": "Delay for pause/idle",
-    "TimeoutDesc": "Necessary when you watch more episodes in one row.",
     "isSSL": "Connection requires SSL",
-    "on save": "When saving settings of the adapters will be restarted immediately."
+    "on save": "When saving settings of the adapters will be restarted immediately.",
+    "PollInterval": "Poll interval for sessions (s, 0 = off)",
+    "PollIntervalDesc": "Emby only pushes changes. The poll keeps the last activity up to date and is needed for the cleanup.",
+    "RemoveDeletedDevices": "Remove objects of clients deleted in Emby (Dashboard > Devices)",
+    "RemoveInactiveDays": "Remove objects of inactive clients after (days, 0 = off)",
+    "RemoveInactiveDaysDesc": "Only clients the server no longer reports. Scripts and history settings on these objects are lost.",
+    "Timeout": "Delay for pause/idle",
+    "TimeoutDesc": "Necessary when you watch more episodes in one row."
 }

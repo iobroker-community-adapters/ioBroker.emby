@@ -154,7 +154,10 @@
     "isSSL": false,
     "apikey": "",
     "deviceIds": "",
-    "timeout": 500
+    "timeout": 500,
+    "pollInterval": 60,
+    "removeDeletedDevices": true,
+    "removeInactiveDays": 0
   },
   "protectedNative": [
     "apikey"

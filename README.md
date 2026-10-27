@@ -42,10 +42,13 @@ This adapter would not have been possible without the great work of @thewhobox <
 | API Key | Key from the Emby dashboard. Stored encrypted. Without a key the adapter only receives data and cannot control clients. |
 | Session or device IDs to ignore | Comma separated list. Matches the session ID (object name below `emby.0`) or the Emby device ID. |
 | Delay for pause/idle | Time in ms before `media.state` changes from `playing` to `paused`/`idle`. Prevents flickering between two episodes. |
+| Poll interval for sessions | Seconds between REST queries of the sessions (default 60, 0 = off). Emby pushes only changes, the poll keeps `info.lastActivity` current and runs the cleanup. Requires the API key. |
+| Remove objects of clients deleted in Emby | Default on. When a client is removed in the Emby dashboard (Devices), its objects are deleted as soon as the server no longer reports its session. |
+| Remove objects of inactive clients after | Days without activity after which the objects of a client the server no longer reports are deleted (default 0 = off). Scripts and history settings on these objects are lost. |
 
 The adapter creates a device for every session the server reports. The object ID is the Emby session ID, the object name is the device name shown in Emby (it can be changed in the Emby dashboard under Devices). Emby only reports a session while the client is connected, so open an Emby app or the web client once to see the first device.
 
-Note: Emby assigns a new session ID when a client reconnects. The adapter then removes the objects of the old session of the same client automatically, so only one device per client remains. Scripts that use the session ID in the object path have to be adjusted in that case. Devices of clients that are not seen again (e.g. a removed app) are kept with `info.online = false` and can be deleted manually.
+Note: Emby assigns a new session ID when a client reconnects. The adapter then removes the objects of the old session of the same client automatically, so only one device per client remains. Scripts that use the session ID in the object path have to be adjusted in that case. Devices of clients that are not seen again are kept with `info.online = false`; they are removed when the client is deleted in the Emby dashboard or after the configured number of inactive days (see Configuration), or can be deleted manually.
 
 ## Objects
 
@@ -129,6 +132,8 @@ Only created for clients that support remote control, and only for commands the 
 - (Schimi1983) API key is stored encrypted, an existing key is converted automatically (one restart)
 - (Schimi1983) New states info.online and info.lastActivity per session; sessions that disappear are reset to idle
 - (Schimi1983) Current sessions are read via REST right after connecting, the server pushes them only on the next change
+- (Schimi1983) Sessions are polled every 60 s (configurable) to keep info.lastActivity current
+- (Schimi1983) Optional cleanup: objects of clients deleted in Emby (default on) or inactive for a configurable number of days (default off) are removed
 - (Schimi1983) Object types of buttons fixed, empty numbers are written as null, states are only written on change
 - (Schimi1983) Dependencies "request" and "websocket" replaced by native fetch and WebSocket
 - (Schimi1983) API key is entered in a password field

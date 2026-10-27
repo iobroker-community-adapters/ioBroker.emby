@@ -6,6 +6,10 @@ const utils = require('@iobroker/adapter-core');
 const RECONNECT_DELAY_MS = 60_000;
 /** Interval for client KeepAlive messages if the server does not request one. */
 const DEFAULT_KEEPALIVE_MS = 30_000;
+/** Lower limit for the poll interval. */
+const MIN_POLL_SECONDS = 5;
+/** One day in ms. */
+const DAY_MS = 24 * 60 * 60 * 1000;
 /** Timeout for REST calls to the server. */
 const HTTP_TIMEOUT_MS = 10_000;
 
@@ -30,6 +34,7 @@ let connection = null;
 let stopping = false;
 let retryTimer = null;
 let keepAliveTimer = null;
+let pollTimer = null;
 /** Serialises processing of Sessions messages so slow object creation cannot overlap. */
 let sessionQueue = Promise.resolve();
 
@@ -103,6 +108,10 @@ function stopTimers() {
         adapter.clearInterval(keepAliveTimer);
         keepAliveTimer = null;
     }
+    if (pollTimer) {
+        adapter.clearInterval(pollTimer);
+        pollTimer = null;
+    }
 }
 
 /**
@@ -164,18 +173,105 @@ function queueSessions(data) {
 }
 
 /**
- * Reads the current sessions via REST. Needs an API key.
+ * Reads the current sessions via REST and runs the device cleanup afterwards. Needs an API key.
+ *
+ * @param {boolean} [quiet] log failures only on debug level (periodic poll)
  */
-async function refreshSessions() {
+async function refreshSessions(quiet = false) {
     if (!apiKey) {
         return;
     }
     try {
         const res = await apiRequest('GET', 'Sessions');
         queueSessions(await res.json());
+        sessionQueue = sessionQueue
+            .then(() => cleanupDevices())
+            .catch(err => adapter.log.warn(`Error during device cleanup: ${err.message}`));
     } catch (e) {
-        adapter.log.warn(`Could not read sessions: ${e.message}`);
+        adapter.log[quiet ? 'debug' : 'warn'](`Could not read sessions: ${e.message}`);
     }
+}
+
+/**
+ * Reads the device ids registered on the server (Dashboard > Devices).
+ *
+ * @returns {Promise<Set<string> | null>} device ids, null if unknown (request failed or empty list)
+ */
+async function getRegisteredDeviceIds() {
+    try {
+        const res = await apiRequest('GET', 'Devices');
+        const data = await res.json();
+        const items = Array.isArray(data) ? data : data && Array.isArray(data.Items) ? data.Items : [];
+        const ids = new Set();
+        for (const item of items) {
+            // Emby: ReportedDeviceId = DeviceId of the session, Id = internal number; Jellyfin: Id
+            for (const id of [item.ReportedDeviceId, item.Id]) {
+                if (id !== undefined && id !== null && id !== '') {
+                    ids.add(String(id));
+                }
+            }
+        }
+        // an empty list is treated as unknown so a server problem can never wipe all devices
+        return ids.size > 0 ? ids : null;
+    } catch (e) {
+        adapter.log.debug(`Could not read devices: ${e.message}`);
+        return null;
+    }
+}
+
+/**
+ * Removes the objects of inactive clients according to the cleanup settings:
+ * clients deleted in the Emby dashboard and/or clients without activity for the configured days.
+ * Sessions the server currently reports are never touched.
+ */
+async function cleanupDevices() {
+    const removeDeleted = adapter.config.removeDeletedDevices !== false;
+    const days = Number(adapter.config.removeInactiveDays) || 0;
+    if (!removeDeleted && days <= 0) {
+        return;
+    }
+    const registered = removeDeleted ? await getRegisteredDeviceIds() : null;
+    const view = await adapter.getObjectViewAsync('system', 'device', {
+        startkey: `${adapter.namespace}.`,
+        endkey: `${adapter.namespace}.\u9999`,
+    });
+    for (const row of view.rows) {
+        const sid = row.id.substring(adapter.namespace.length + 1);
+        if (activeSessions.has(sid)) {
+            continue;
+        }
+        const deviceId = row.value && row.value.native ? row.value.native.deviceId : '';
+        const name = row.value && row.value.common ? row.value.common.name : sid;
+        let reason = '';
+        if (registered && deviceId && !registered.has(deviceId)) {
+            reason = 'it was removed in Emby';
+        } else if (days > 0) {
+            const last = await getLastActivity(sid);
+            if (last > 0 && Date.now() - last > days * DAY_MS) {
+                reason = `it was inactive for more than ${days} days`;
+            }
+        }
+        if (reason) {
+            adapter.log.info(`Removing objects of client "${name}" (${sid}) because ${reason}`);
+            await deleteSessionObjects(sid);
+        }
+    }
+}
+
+/**
+ * Time of the last activity of a session from its states.
+ *
+ * @param {string} sid session id
+ * @returns {Promise<number>} timestamp in ms, 0 if unknown
+ */
+async function getLastActivity(sid) {
+    const last = await adapter.getStateAsync(`${sid}.info.lastActivity`);
+    if (last && typeof last.val === 'number' && last.val > 0) {
+        return last.val;
+    }
+    // objects of older versions: time the session went offline
+    const online = await adapter.getStateAsync(`${sid}.info.online`);
+    return online && online.val === false ? online.lc || online.ts || 0 : 0;
 }
 
 /**
@@ -323,6 +419,28 @@ async function main() {
     adapter.subscribeStates('*');
     adapter.subscribeObjects('*');
     tryConnect();
+    startPolling();
+}
+
+/**
+ * Starts the periodic REST poll of the sessions and the device cleanup.
+ */
+function startPolling() {
+    // undefined for instances created by older versions: use the defaults from io-package
+    const seconds = adapter.config.pollInterval === undefined ? 60 : Number(adapter.config.pollInterval) || 0;
+    if (seconds <= 0 || !apiKey) {
+        return;
+    }
+    // @KI_HINWEIS: Emby pushes "Sessions" only on changes (start, stop, pause). The poll keeps
+    // info.lastActivity current, catches missed pushes and drives the optional device cleanup.
+    pollTimer = adapter.setInterval(
+        () => {
+            if (connection && connection.readyState === WebSocket.OPEN) {
+                void refreshSessions(true);
+            }
+        },
+        Math.max(MIN_POLL_SECONDS, seconds) * 1000,
+    );
 }
 
 /**
@@ -685,17 +803,26 @@ async function removeSupersededSessions(sid, deviceId) {
         adapter.log.info(
             `Removing objects of old session ${oldSid}, client "${row.value.common.name}" now uses ${sid}`,
         );
-        activeSessions.delete(oldSid);
-        createdSessions.delete(oldSid);
-        if (timeoutplays[oldSid]) {
-            adapter.clearTimeout(timeoutplays[oldSid]);
-        }
-        delete timeoutplays[oldSid];
-        delete timeoutstates[oldSid];
-        delete timeoutstarted[oldSid];
-        delete laststates[oldSid];
-        await adapter.delObjectAsync(oldSid, { recursive: true });
+        await deleteSessionObjects(oldSid);
     }
+}
+
+/**
+ * Deletes all objects of a session and forgets its runtime state.
+ *
+ * @param {string} sid session id
+ */
+async function deleteSessionObjects(sid) {
+    activeSessions.delete(sid);
+    createdSessions.delete(sid);
+    if (timeoutplays[sid]) {
+        adapter.clearTimeout(timeoutplays[sid]);
+    }
+    delete timeoutplays[sid];
+    delete timeoutstates[sid];
+    delete timeoutstarted[sid];
+    delete laststates[sid];
+    await adapter.delObjectAsync(sid, { recursive: true });
 }
 
 /**
