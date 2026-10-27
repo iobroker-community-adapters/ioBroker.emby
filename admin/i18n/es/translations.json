@@ -1,6 +1,6 @@
 {
     "ApiKey": "Clave API",
-    "DeviceIds": "ID de dispositivos que se ignorarán (separados por comas)",
+    "DeviceIds": "ID de sesión o de dispositivo a ignorar (separados por comas)",
     "IP": "IP/Dominio del servidor Emby (con puerto)",
     "isSSL": "La conexión requiere SSL",
     "on save": "Al guardar la configuración de los adaptadores se reiniciará inmediatamente.",
@@ -9,6 +9,6 @@
     "RemoveDeletedDevices": "Eliminar los objetos de clientes borrados en Emby (Panel > Dispositivos)",
     "RemoveInactiveDays": "Eliminar los objetos de clientes inactivos después de (días, 0 = desactivado)",
     "RemoveInactiveDaysDesc": "Solo clientes que el servidor ya no informa. Se pierden los scripts y la configuración del historial de estos objetos.",
-    "Timeout": "Retraso para pausa/inactivo",
+    "Timeout": "Retraso para pausa/inactividad (ms)",
     "TimeoutDesc": "Necesario cuando miras más episodios seguidos."
 }

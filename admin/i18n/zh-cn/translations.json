@@ -1,6 +1,6 @@
 {
     "ApiKey": "API密钥",
-    "DeviceIds": "要忽略的设备 ID（逗号分隔）",
+    "DeviceIds": "要忽略的会话或设备 ID（逗号分隔）",
     "IP": "Emby 服务器的 IP/域名（带端口）",
     "isSSL": "连接需要 SSL",
     "on save": "保存适配器的设置后将立即重新启动。",
@@ -9,6 +9,6 @@
     "RemoveDeletedDevices": "删除在 Emby 中已删除的客户端的对象（控制台 > 设备）",
     "RemoveInactiveDays": "在以下天数后删除不活动客户端的对象（天，0 = 关闭）",
     "RemoveInactiveDaysDesc": "仅限服务器不再报告的客户端。这些对象上的脚本和历史记录设置将丢失。",
-    "Timeout": "暂停/空闲延迟",
+    "Timeout": "暂停/空闲延迟（毫秒）",
     "TimeoutDesc": "当您连续观看更多剧集时，这是必要的。"
 }
