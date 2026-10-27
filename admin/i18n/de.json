@@ -2,10 +2,16 @@
     "ApiKey": "API-Schlüssel",
     "ApiKeyHelp": "Einen Schlüssel im Emby-Dashboard unter Erweitert > API-Schlüssel anlegen. Ohne Schlüssel können Clients nur überwacht, aber nicht gesteuert werden.",
     "DeviceIds": "Zu ignorierende Session- oder Geräte-IDs (mit Komma getrennt)",
+    "hdrCleanup": "Aufräumen",
     "hdrConnection": "Verbindung",
     "hdrOptions": "Optionen",
     "IP": "IP/Domain des Emby-Servers (mit Port)",
     "isSSL": "Verbindung benötigt SSL",
+    "PollInterval": "Abfrageintervall für Sessions (s, 0 = aus)",
+    "PollIntervalDesc": "Emby meldet nur Änderungen. Die Abfrage hält die letzte Aktivität aktuell und wird für das Aufräumen benötigt.",
+    "RemoveDeletedDevices": "Objekte von Clients entfernen, die in Emby gelöscht wurden (Dashboard > Geräte)",
+    "RemoveInactiveDays": "Objekte inaktiver Clients entfernen nach (Tage, 0 = aus)",
+    "RemoveInactiveDaysDesc": "Nur Clients, die der Server nicht mehr meldet. Skripte und History-Einstellungen an diesen Objekten gehen verloren.",
     "Timeout": "Verzögerung für Pause/Leerlauf (ms)",
     "TimeoutDesc": "Nötig, wenn mehrere Folgen hintereinander gespielt werden."
 }

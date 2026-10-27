@@ -2,10 +2,16 @@
     "ApiKey": "Chave API",
     "ApiKeyHelp": "Crie uma chave no painel do Emby em Avançado > Chaves de API. Sem chave, os clientes podem ser monitorados, mas não controlados.",
     "DeviceIds": "IDs de sessão ou de dispositivo a ignorar (separados por vírgula)",
+    "hdrCleanup": "Limpeza",
     "hdrConnection": "Conexão",
     "hdrOptions": "Opções",
     "IP": "IP/Domínio do servidor Emby (com porta)",
     "isSSL": "A conexão requer SSL",
+    "PollInterval": "Intervalo de consulta das sessões (s, 0 = desligado)",
+    "PollIntervalDesc": "O Emby só envia alterações. A consulta mantém a última atividade atualizada e é necessária para a limpeza.",
+    "RemoveDeletedDevices": "Remover os objetos de clientes excluídos no Emby (Painel > Dispositivos)",
+    "RemoveInactiveDays": "Remover os objetos de clientes inativos após (dias, 0 = desligado)",
+    "RemoveInactiveDaysDesc": "Apenas clientes que o servidor já não informa. Scripts e configurações de histórico desses objetos são perdidos.",
     "Timeout": "Atraso para pausa/inatividade (ms)",
     "TimeoutDesc": "Necessário quando você assiste mais episódios seguidos."
 }

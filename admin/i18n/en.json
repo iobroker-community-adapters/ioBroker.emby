@@ -2,10 +2,16 @@
     "ApiKey": "API Key",
     "ApiKeyHelp": "Create a key in the Emby dashboard under Advanced > API Keys. Without a key clients can be monitored but not controlled.",
     "DeviceIds": "Session or device IDs to ignore (comma separated)",
+    "hdrCleanup": "Cleanup",
     "hdrConnection": "Connection",
     "hdrOptions": "Options",
     "IP": "IP/Domain of the Emby server (with port)",
     "isSSL": "Connection requires SSL",
+    "PollInterval": "Poll interval for sessions (s, 0 = off)",
+    "PollIntervalDesc": "Emby only pushes changes. The poll keeps the last activity up to date and is needed for the cleanup.",
+    "RemoveDeletedDevices": "Remove objects of clients deleted in Emby (Dashboard > Devices)",
+    "RemoveInactiveDays": "Remove objects of inactive clients after (days, 0 = off)",
+    "RemoveInactiveDaysDesc": "Only clients the server no longer reports. Scripts and history settings on these objects are lost.",
     "Timeout": "Delay for pause/idle (ms)",
     "TimeoutDesc": "Necessary when you watch more episodes in one row."
 }

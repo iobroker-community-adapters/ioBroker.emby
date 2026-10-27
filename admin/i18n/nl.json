@@ -2,10 +2,16 @@
     "ApiKey": "API sleutel",
     "ApiKeyHelp": "Maak een sleutel aan in het Emby-dashboard onder Geavanceerd > API-sleutels. Zonder sleutel kunnen clients worden gevolgd maar niet bediend.",
     "DeviceIds": "Te negeren sessie- of apparaat-ID’s (kommagescheiden)",
+    "hdrCleanup": "Opruimen",
     "hdrConnection": "Verbinding",
     "hdrOptions": "Opties",
     "IP": "IP/domein van de Emby-server (met poort)",
     "isSSL": "Verbinding vereist SSL",
+    "PollInterval": "Pollinginterval voor sessies (s, 0 = uit)",
+    "PollIntervalDesc": "Emby meldt alleen wijzigingen. De polling houdt de laatste activiteit actueel en is nodig voor het opruimen.",
+    "RemoveDeletedDevices": "Objecten verwijderen van clients die in Emby zijn verwijderd (Dashboard > Apparaten)",
+    "RemoveInactiveDays": "Objecten van inactieve clients verwijderen na (dagen, 0 = uit)",
+    "RemoveInactiveDaysDesc": "Alleen clients die de server niet meer meldt. Scripts en historie-instellingen van deze objecten gaan verloren.",
     "Timeout": "Vertraging voor pauze/inactief (ms)",
     "TimeoutDesc": "Noodzakelijk als je meerdere afleveringen achter elkaar bekijkt."
 }

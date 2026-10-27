@@ -78,6 +78,53 @@
             "md": 6,
             "lg": 6,
             "xl": 6
+        },
+        "pollInterval": {
+            "type": "number",
+            "label": "PollInterval",
+            "help": "PollIntervalDesc",
+            "min": 0,
+            "max": 3600,
+            "newLine": true,
+            "xs": 12,
+            "sm": 12,
+            "md": 6,
+            "lg": 6,
+            "xl": 6
+        },
+        "hdrCleanup": {
+            "type": "header",
+            "text": "hdrCleanup",
+            "size": 2,
+            "newLine": true,
+            "xs": 12,
+            "sm": 12,
+            "md": 12,
+            "lg": 12,
+            "xl": 12
+        },
+        "removeDeletedDevices": {
+            "type": "checkbox",
+            "label": "RemoveDeletedDevices",
+            "newLine": true,
+            "xs": 12,
+            "sm": 12,
+            "md": 12,
+            "lg": 12,
+            "xl": 12
+        },
+        "removeInactiveDays": {
+            "type": "number",
+            "label": "RemoveInactiveDays",
+            "help": "RemoveInactiveDaysDesc",
+            "min": 0,
+            "max": 3650,
+            "newLine": true,
+            "xs": 12,
+            "sm": 12,
+            "md": 6,
+            "lg": 6,
+            "xl": 6
         }
     }
 }
