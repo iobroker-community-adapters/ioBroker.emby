@@ -46,9 +46,13 @@ This adapter would not have been possible without the great work of @thewhobox <
 | Remove objects of clients deleted in Emby | Default on. When a client is removed in the Emby dashboard (Devices), its objects are deleted as soon as the server no longer reports its session. |
 | Remove objects of inactive clients after | Days without activity after which the objects of a client the server no longer reports are deleted (default 0 = off). Scripts and history settings on these objects are lost. |
 
-The adapter creates a device for every session the server reports. The object ID is the Emby session ID, the object name is the device name shown in Emby (it can be changed in the Emby dashboard under Devices). Emby only reports a session while the client is connected, so open an Emby app or the web client once to see the first device.
+The adapter creates a device for every client the server reports. The object ID is derived from the Emby device ID, so it stays the same when the client reconnects (device IDs with only letters, digits, `-` and `_` up to 40 characters are used as they are, longer ones such as those of web browsers are shortened to a 16 character hash). The object name is the device name shown in Emby (it can be changed in the Emby dashboard under Devices). Emby only reports a session while the client is connected, so open an Emby app or the web client once to see the first device.
 
-Note: Emby assigns a new session ID when a client reconnects. The adapter then removes the objects of the old session of the same client automatically, so only one device per client remains. Scripts that use the session ID in the object path have to be adjusted in that case. Devices of clients that are not seen again are kept with `info.online = false`; they are removed when the client is deleted in the Emby dashboard or after the configured number of inactive days (see Configuration), or can be deleted manually.
+If a client has several sessions at the same time (e.g. two browser tabs), the session that is playing, supports remote control or was active last is shown. Devices of clients that are not seen again are kept with `info.online = false`; they are removed when the client is deleted in the Emby dashboard or after the configured number of inactive days (see Configuration), or can be deleted manually.
+
+### Upgrade from 2.x to 3.0.0
+
+Up to version 2.x the object IDs were the Emby session IDs, which change when a client reconnects. From 3.0.0 on the object ID is derived from the device ID. Existing objects are migrated automatically on the first start (version 2.x) or as soon as the client is reported again (version 1.3.0), including values, history settings and room/function assignments. Scripts, visualisations and aliases that use the old IDs have to be adjusted, the log shows `Migrated objects of "…" from <old id> to <new id>` for every client. History data already recorded stays under the old IDs.
 
 ## Objects
 
@@ -63,6 +67,8 @@ Note: Emby assigns a new session ID when a client reconnects. The adapter then r
 | Object | Description | Info |
 | ------------- | ------------- | ------------- |
 | x.info.online | Session is currently reported by the server | `false` after the client was closed or switched off |
+| x.info.deviceId | Emby device ID of the client | |
+| x.info.sessionId | Current Emby session ID | Changes when the client reconnects |
 | x.info.deviceName | Name of the device |  |
 | x.info.userName | Name of the user logged in on the device |  |
 | x.info.supportedCommands | Commands supported by the client (JSON array) |  |
@@ -122,6 +128,11 @@ Only created for clients that support remote control, and only for commands the 
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+- (Schimi1983) **BREAKING:** Clients are identified by the Emby device ID instead of the session ID, so the object IDs no longer change when a client reconnects. Existing objects including values, history settings and room/function assignments are migrated automatically; scripts and visualisations using the old IDs have to be adjusted (see README)
+- (Schimi1983) New states info.deviceId and info.sessionId; several sessions of one client (e.g. browser tabs) are shown as one device
+- (Schimi1983) Integration test against a mock Emby server added
+
 ### 2.0.0 (2026-10-29)
 - (copilot) Adapter requires node.js >= 22.19.0 now
 - (Schimi1983) Connection is re-established after the server closes it (e.g. server restart), KeepAlive is sent, info.connection reflects the real state

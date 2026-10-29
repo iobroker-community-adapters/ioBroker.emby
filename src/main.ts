@@ -1,3 +1,5 @@
+import { createHash } from 'node:crypto';
+
 import * as utils from '@iobroker/adapter-core';
 
 import type { EmbyDevicesResponse, EmbySession, EmbySocketMessage } from './lib/types';
@@ -12,6 +14,10 @@ const MIN_POLL_SECONDS = 5;
 const DAY_MS = 24 * 60 * 60 * 1000;
 /** Timeout for REST calls to the server. */
 const HTTP_TIMEOUT_MS = 10_000;
+/** Device ids matching this pattern are used as object id directly, all others are hashed. */
+const PLAIN_DEVICE_ID = /^[A-Za-z0-9_-]{1,40}$/;
+/** Ids of the adapter's own channels; a device must never get one of them. */
+const RESERVED_IDS = new Set(['info', 'server']);
 
 /**
  * Simple remote commands: state id below `<session>.` → REST path below `/Sessions/<session>/`.
@@ -78,10 +84,12 @@ class EmbyAdapter extends utils.Adapter {
     /** Serialises processing of Sessions messages so slow object creation cannot overlap. */
     private sessionQueue: Promise<void> = Promise.resolve();
 
-    /** Session id → signature (name, remote control, supported commands) of the objects created during this run. */
-    private readonly createdSessions = new Map<string, string>();
-    /** Session ids reported by the server in the last Sessions message. */
-    private activeSessions = new Set<string>();
+    /** Device key → signature (name, remote control, supported commands) of the objects created during this run. */
+    private readonly createdDevices = new Map<string, string>();
+    /** Device keys reported by the server in the last Sessions message. */
+    private activeDevices = new Set<string>();
+    /** Device key → current Emby session id (needed for the REST commands). */
+    private readonly sessionOf = new Map<string, string>();
     private initialSessionsLoaded = false;
     /** API key, resolved once at start (see migratePlainApiKey). */
     private apiKey = '';
@@ -109,6 +117,7 @@ class EmbyAdapter extends utils.Adapter {
         // the key is copied once, this.config.apikey is not read again (see migratePlainApiKey)
         this.apiKey = this.config.apikey || '';
         await this.migratePlainApiKey();
+        await this.migrateStoredDevices();
         if (!this.config.ip || this.config.ip === '0.0.0.0:8096') {
             this.log.error('No server address configured (IP:Port).');
             return;
@@ -287,7 +296,7 @@ class EmbyAdapter extends utils.Adapter {
         }
         const registered = removeDeleted ? await this.getRegisteredDeviceIds() : null;
         for (const { sid, obj } of await this.getSessionDevices()) {
-            if (this.activeSessions.has(sid)) {
+            if (this.activeDevices.has(sid)) {
                 continue;
             }
             const deviceId: string = obj?.native?.deviceId || '';
@@ -303,7 +312,7 @@ class EmbyAdapter extends utils.Adapter {
             }
             if (reason) {
                 this.log.info(`Removing objects of client "${nameOf(name)}" (${sid}) because ${reason}`);
-                await this.deleteSessionObjects(sid);
+                await this.deleteDeviceObjects(sid);
             }
         }
     }
@@ -339,11 +348,11 @@ class EmbyAdapter extends utils.Adapter {
         if (sid === 'info') {
             return;
         }
-        if (this.createdSessions.delete(sid)) {
-            this.log.debug(`Objects of session ${sid} were deleted`);
+        if (this.createdDevices.delete(sid)) {
+            this.log.debug(`Objects of device ${sid} were deleted`);
         }
-        // a deleted session that is no longer active must not be recreated by markSessionOffline
-        this.activeSessions.delete(sid);
+        // a deleted device that is no longer active must not be recreated by markDeviceOffline
+        this.activeDevices.delete(sid);
         delete this.laststates[sid];
     }
 
@@ -363,7 +372,7 @@ class EmbyAdapter extends utils.Adapter {
     }
 
     /**
-     * Executes a command for a session.
+     * Executes a command for a client.
      *
      * @param id state id without namespace
      * @param state new state
@@ -375,14 +384,19 @@ class EmbyAdapter extends utils.Adapter {
             return;
         }
 
-        const sessionId = id.substring(0, id.indexOf('.'));
-        const cmd = id.substring(sessionId.length + 1);
-        if (!sessionId || !cmd.startsWith('command.')) {
+        const key = id.substring(0, id.indexOf('.'));
+        const cmd = id.substring(key.length + 1);
+        if (!key || !cmd.startsWith('command.')) {
             this.log.info(`Not supported command: ${id}`);
             return;
         }
         if (!this.apiKey) {
             this.log.warn('No API key configured, commands cannot be sent.');
+            return;
+        }
+        const sessionId = this.sessionOf.get(key);
+        if (!sessionId) {
+            this.log.warn(`Command ${cmd} not sent: client ${key} is not connected to the server`);
             return;
         }
         const base = `Sessions/${encodeURIComponent(sessionId)}`;
@@ -621,7 +635,31 @@ class EmbyAdapter extends utils.Adapter {
             .split(/[\s,;]+/)
             .map(s => s.trim())
             .filter(Boolean);
-        return list.includes(d.Id) || (!!d.DeviceId && list.includes(d.DeviceId));
+        return (
+            list.includes(d.Id) ||
+            (!!d.DeviceId && list.includes(d.DeviceId)) ||
+            list.includes(this.deviceKey(d.DeviceId, d.Id))
+        );
+    }
+
+    /**
+     * Object id of a client. Derived from the Emby device id, which stays the same across reconnects,
+     * unlike the session id.
+     *
+     * @param deviceId Emby device id
+     * @param sessionId session id, used only if the server reports no device id
+     */
+    private deviceKey(deviceId: string | undefined, sessionId: string): string {
+        // @KI_HINWEIS: Emby device ids are hex strings, UUIDs or (web clients) long base64 strings of the
+        // user agent. Short ids with safe characters are used as they are, all others are hashed, so the
+        // object id is always short, stable and free of forbidden characters.
+        if (!deviceId) {
+            return sessionId.replace(this.FORBIDDEN_CHARS, '_');
+        }
+        if (PLAIN_DEVICE_ID.test(deviceId) && !RESERVED_IDS.has(deviceId)) {
+            return deviceId;
+        }
+        return createHash('sha1').update(deviceId).digest('hex').substring(0, 16);
     }
 
     /**
@@ -642,14 +680,15 @@ class EmbyAdapter extends utils.Adapter {
      */
     private async handleSessions(list: EmbySession[]): Promise<void> {
         if (!this.initialSessionsLoaded) {
-            // sessions left over from before an adapter restart are marked offline on the first message
+            // devices left over from before an adapter restart are marked offline on the first message
             for (const { sid } of await this.getSessionDevices()) {
-                this.activeSessions.add(sid);
+                this.activeDevices.add(sid);
             }
             this.initialSessionsLoaded = true;
         }
-        const seen = new Set<string>();
 
+        // one entry per client; a client can have several sessions (e.g. two browser tabs)
+        const byKey = new Map<string, EmbySession>();
         for (const d of list) {
             if (!d || typeof d.Id !== 'string' || d.Id === '') {
                 continue;
@@ -662,33 +701,66 @@ class EmbyAdapter extends utils.Adapter {
                 this.log.debug(`Device skipped: ${d.DeviceName}`);
                 continue;
             }
-            seen.add(d.Id);
+            const key = this.deviceKey(d.DeviceId, d.Id);
+            const other = byKey.get(key);
+            if (!other || this.preferSession(d, other)) {
+                byKey.set(key, d);
+            }
+        }
+
+        for (const [key, d] of byKey) {
+            if (key !== d.Id && !this.createdDevices.has(key) && (await this.getObjectAsync(d.Id))) {
+                // objects of versions <= 2.x use the session id
+                await this.migrateDevice(d.Id, key);
+            }
+            this.sessionOf.set(key, d.Id);
             // @KI_HINWEIS: a web client reports SupportsRemoteControl=false while its page is in the
             // background or reconnecting, so the objects are rebuilt whenever this signature changes.
             const signature = JSON.stringify([d.DeviceName, !!d.SupportsRemoteControl, d.SupportedCommands || []]);
-            if (this.createdSessions.get(d.Id) !== signature) {
-                await this.createSessionObjects(d);
-                this.createdSessions.set(d.Id, signature);
+            if (this.createdDevices.get(key) !== signature) {
+                await this.createDeviceObjects(key, d);
+                this.createdDevices.set(key, signature);
             }
-            await this.updateSession(d);
+            await this.updateSession(key, d);
         }
 
-        for (const id of this.activeSessions) {
-            if (!seen.has(id)) {
-                await this.markSessionOffline(id);
+        for (const key of this.activeDevices) {
+            if (!byKey.has(key)) {
+                this.sessionOf.delete(key);
+                await this.markDeviceOffline(key);
             }
         }
-        this.activeSessions = seen;
+        this.activeDevices = new Set(byKey.keys());
     }
 
     /**
-     * Updates the states of one session.
+     * Chooses between two sessions of the same client: playing before idle, remote control before
+     * none, then the most recent activity.
      *
+     * @param a candidate
+     * @param b session chosen so far
+     * @returns true if a is the better choice
+     */
+    private preferSession(a: EmbySession, b: EmbySession): boolean {
+        if (!!a.NowPlayingItem !== !!b.NowPlayingItem) {
+            return !!a.NowPlayingItem;
+        }
+        if (!!a.SupportsRemoteControl !== !!b.SupportsRemoteControl) {
+            return !!a.SupportsRemoteControl;
+        }
+        return (Date.parse(a.LastActivityDate || '') || 0) > (Date.parse(b.LastActivityDate || '') || 0);
+    }
+
+    /**
+     * Updates the states of one client.
+     *
+     * @param sid object id of the client (device key)
      * @param d session from the server
      */
-    private async updateSession(d: EmbySession): Promise<void> {
-        const sid = d.Id;
+    private async updateSession(sid: string, d: EmbySession): Promise<void> {
         await this.setValue(`${sid}.info.online`, true);
+        await this.setValue(`${sid}.info.sessionId`, d.Id);
+        await this.setValue(`${sid}.info.deviceId`, d.DeviceId || '');
         await this.setValue(`${sid}.info.deviceName`, d.DeviceName || '');
         await this.setValue(`${sid}.info.userName`, d.UserName || '');
         if (Array.isArray(d.SupportedCommands)) {
@@ -793,35 +865,93 @@ class EmbyAdapter extends utils.Adapter {
     }
 
     /**
-     * Deletes the objects of older sessions of the same client.
-     *
-     * Emby assigns a new session id whenever a client reconnects, so without this every app restart
-     * would leave another device below the adapter namespace. The old objects cannot receive data any
-     * more, scripts pointing at them were already broken by the id change.
-     *
-     * @param sid id of the current session
-     * @param deviceId Emby device id of the client
+     * Moves the objects of version 2.x (device object stored the device id in native.deviceId, but the
+     * object id was the session id) to the device key, once on start.
      */
-    private async removeSupersededSessions(sid: string, deviceId: string): Promise<void> {
-        for (const { sid: oldSid, obj } of await this.getSessionDevices()) {
-            if (oldSid === sid || !obj?.native || obj.native.deviceId !== deviceId) {
+    private async migrateStoredDevices(): Promise<void> {
+        for (const { sid, obj } of await this.getSessionDevices()) {
+            const deviceId: string = obj?.native?.deviceId || '';
+            if (!deviceId) {
+                // versions <= 1.3.0: migrated as soon as the server reports the session again
                 continue;
             }
-            this.log.info(
-                `Removing objects of old session ${oldSid}, client "${nameOf(obj.common.name)}" now uses ${sid}`,
-            );
-            await this.deleteSessionObjects(oldSid);
+            const key = this.deviceKey(deviceId, sid);
+            if (key === sid) {
+                continue;
+            }
+            if (await this.getObjectAsync(key)) {
+                // an older session of a client that was already migrated
+                this.log.info(`Removing objects of old session ${sid} of client "${nameOf(obj!.common.name)}"`);
+                await this.delObjectAsync(sid, { recursive: true });
+                continue;
+            }
+            await this.migrateDevice(sid, key);
         }
     }
 
     /**
-     * Deletes all objects of a session and forgets its runtime state.
+     * Moves all objects and states of a client to a new object id: objects including common.custom
+     * (history settings), current values and the membership in rooms and functions. The old objects are
+     * deleted afterwards.
      *
-     * @param sid session id
+     * @param oldId old object id (session id)
+     * @param newId new object id (device key)
      */
-    private async deleteSessionObjects(sid: string): Promise<void> {
-        this.activeSessions.delete(sid);
-        this.createdSessions.delete(sid);
+    private async migrateDevice(oldId: string, newId: string): Promise<void> {
+        const oldPrefix = `${this.namespace}.${oldId}`;
+        const newPrefix = `${this.namespace}.${newId}`;
+        const objects = await this.getForeignObjectsAsync(`${oldPrefix}.*`);
+        const device = await this.getForeignObjectAsync(oldPrefix);
+        if (device) {
+            objects[oldPrefix] = device;
+        }
+        const ids = Object.keys(objects)
+            .filter(id => id === oldPrefix || id.startsWith(`${oldPrefix}.`))
+            .sort((a, b) => a.length - b.length);
+        if (!ids.length) {
+            return;
+        }
+        // @KI_HINWEIS: ioBroker has no rename. Objects are copied with common.custom, so history adapters
+        // continue on the new id; the data already recorded stays under the old id in the database.
+        for (const id of ids) {
+            const obj = objects[id];
+            const target = newPrefix + id.substring(oldPrefix.length);
+            await this.setForeignObjectAsync(target, {
+                type: obj.type,
+                common: obj.common,
+                native: obj.native || {},
+            } as ioBroker.SettableObject);
+            if (obj.type === 'state') {
+                const st = await this.getForeignStateAsync(id);
+                if (st) {
+                    await this.setForeignStateAsync(target, { val: st.val, ack: true, ts: st.ts, q: st.q });
+                }
+            }
+        }
+        const enums = await this.getForeignObjectsAsync('enum.*', 'enum');
+        for (const [enumId, enumObj] of Object.entries(enums)) {
+            const members: string[] = Array.isArray(enumObj?.common?.members) ? enumObj.common.members : [];
+            if (!members.some(m => ids.includes(m))) {
+                continue;
+            }
+            const updated = members.map(m => (ids.includes(m) ? newPrefix + m.substring(oldPrefix.length) : m));
+            await this.extendForeignObjectAsync(enumId, { common: { members: updated } });
+        }
+        this.log.info(
+            `Migrated objects of "${nameOf(device?.common?.name ?? oldId)}" from ${oldId} to ${newId}. Scripts and visualisations using the old id have to be adjusted.`,
+        );
+        await this.deleteDeviceObjects(oldId);
+    }
+
+    /**
+     * Deletes all objects of a client and forgets its runtime state.
+     *
+     * @param sid object id of the client
+     */
+    private async deleteDeviceObjects(sid: string): Promise<void> {
+        this.activeDevices.delete(sid);
+        this.createdDevices.delete(sid);
+        this.sessionOf.delete(sid);
         if (this.timeoutplays[sid]) {
             this.clearTimeout(this.timeoutplays[sid]);
         }
@@ -833,16 +963,16 @@ class EmbyAdapter extends utils.Adapter {
     }
 
     /**
-     * Marks a session the server no longer reports (client closed, TV switched off).
+     * Marks a client the server no longer reports (client closed, TV switched off).
      *
-     * @param sid session id
+     * @param sid object id of the client
      */
-    private async markSessionOffline(sid: string): Promise<void> {
+    private async markDeviceOffline(sid: string): Promise<void> {
         if (!(await this.getObjectAsync(sid))) {
             // objects were deleted in the meantime, nothing to update
             return;
         }
-        this.log.debug(`Session ${sid} is no longer active`);
+        this.log.debug(`Client ${sid} is no longer active`);
         // objects created by versions <= 1.3.0 have no info.online yet
         await this.extendObjectAsync(
             `${sid}.info.online`,
@@ -891,13 +1021,13 @@ class EmbyAdapter extends utils.Adapter {
     }
 
     /**
-     * Creates or updates the objects of a session. Uses extendObject so objects created by older
+     * Creates or updates the objects of a client. Uses extendObject so objects created by older
      * versions with invalid types (e.g. common.type "button") are corrected.
      *
+     * @param sid object id of the client (device key)
      * @param device session from the server
      */
-    private async createSessionObjects(device: EmbySession): Promise<void> {
-        const sid = device.Id;
+    private async createDeviceObjects(sid: string, device: EmbySession): Promise<void> {
         await this.setObjectNotExistsAsync(sid, {
             type: 'device',
             common: { name: device.DeviceName || sid },
@@ -908,15 +1038,14 @@ class EmbyAdapter extends utils.Adapter {
             common: { name: device.DeviceName || sid },
             native: { deviceId: device.DeviceId || '' },
         });
-        if (device.DeviceId) {
-            await this.removeSupersededSessions(sid, device.DeviceId);
-        }
 
         const objs: Record<string, ioBroker.SettableObject> = {
             info: { type: 'channel', common: { name: 'Info' }, native: {} },
             media: { type: 'channel', common: { name: 'Media Info' }, native: {} },
             posters: { type: 'channel', common: { name: 'Media Posters' }, native: {} },
             'info.online': roState('Session is active on the server', 'boolean', 'indicator.reachable'),
+            'info.deviceId': roState('Emby device id', 'string', 'text'),
+            'info.sessionId': roState('Current Emby session id', 'string', 'text'),
             'info.deviceName': roState('Name of the Device now playing', 'string', 'info.name'),
             'info.userName': roState('Logged in User', 'string', 'info.name'),
             'info.supportedCommands': roState('List of supported Commands', 'string', 'json'),

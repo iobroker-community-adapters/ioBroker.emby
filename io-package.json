@@ -161,7 +161,49 @@
     "adminUI": {
       "config": "json"
     },
-    "nogit": true
+    "nogit": true,
+    "messages": [
+      {
+        "condition": {
+          "operand": "and",
+          "rules": [
+            "oldVersion<3.0.0",
+            "newVersion>=3.0.0"
+          ]
+        },
+        "title": {
+          "en": "Devices are identified by the Emby device ID",
+          "de": "Geräte werden über die Emby-Geräte-ID identifiziert",
+          "ru": "Устройства определяются по ID устройства Emby",
+          "pt": "Os dispositivos são identificados pelo ID do dispositivo Emby",
+          "nl": "Apparaten worden geïdentificeerd aan de hand van de Emby-apparaat-ID",
+          "fr": "Les appareils sont identifiés par l’ID d’appareil Emby",
+          "it": "I dispositivi sono identificati tramite l’ID dispositivo di Emby",
+          "es": "Los dispositivos se identifican por el ID de dispositivo de Emby",
+          "pl": "Urządzenia są identyfikowane za pomocą identyfikatora urządzenia Emby",
+          "uk": "Пристрої визначаються за ID пристрою Emby",
+          "zh-cn": "设备现在通过 Emby 设备 ID 识别"
+        },
+        "text": {
+          "en": "The object IDs of the clients change from the Emby session ID to the device ID, which no longer changes when a client reconnects. Existing objects including their values, history settings and room/function assignments are migrated automatically. Scripts, visualisations and aliases that use the old IDs have to be adjusted; history data already recorded stays under the old IDs.",
+          "de": "Die Objekt-IDs der Clients wechseln von der Emby-Session-ID zur Geräte-ID, die sich bei einer neuen Verbindung des Clients nicht mehr ändert. Bestehende Objekte werden inklusive Werten, History-Einstellungen und Raum-/Funktionszuordnung automatisch übernommen. Skripte, Visualisierungen und Aliase mit den alten IDs müssen angepasst werden; bereits aufgezeichnete History-Daten bleiben unter den alten IDs.",
+          "ru": "Идентификаторы объектов клиентов меняются с ID сеанса Emby на ID устройства, который больше не меняется при повторном подключении клиента. Существующие объекты, включая значения, настройки истории и привязку к комнатам/функциям, переносятся автоматически. Скрипты, визуализации и алиасы со старыми ID необходимо изменить; уже записанные данные истории остаются под старыми ID.",
+          "pt": "Os IDs de objeto dos clientes mudam do ID de sessão do Emby para o ID do dispositivo, que já não muda quando um cliente se reconecta. Os objetos existentes, incluindo valores, configurações de histórico e atribuições de cômodos/funções, são migrados automaticamente. Scripts, visualizações e aliases que usam os IDs antigos precisam ser ajustados; os dados de histórico já registrados permanecem nos IDs antigos.",
+          "nl": "De object-ID’s van de clients veranderen van de Emby-sessie-ID naar de apparaat-ID, die niet meer verandert wanneer een client opnieuw verbinding maakt. Bestaande objecten inclusief waarden, historie-instellingen en ruimte-/functietoewijzingen worden automatisch overgenomen. Scripts, visualisaties en aliassen met de oude ID’s moeten worden aangepast; reeds vastgelegde historiegegevens blijven onder de oude ID’s.",
+          "fr": "Les ID d’objet des clients passent de l’ID de session Emby à l’ID d’appareil, qui ne change plus lorsqu’un client se reconnecte. Les objets existants, y compris leurs valeurs, réglages d’historique et affectations de pièces/fonctions, sont migrés automatiquement. Les scripts, visualisations et alias utilisant les anciens ID doivent être adaptés ; les données d’historique déjà enregistrées restent sous les anciens ID.",
+          "it": "Gli ID oggetto dei client passano dall’ID sessione di Emby all’ID dispositivo, che non cambia più quando un client si riconnette. Gli oggetti esistenti, inclusi valori, impostazioni della cronologia e assegnazioni a stanze/funzioni, vengono migrati automaticamente. Script, visualizzazioni e alias che usano i vecchi ID devono essere adattati; i dati di cronologia già registrati restano sotto i vecchi ID.",
+          "es": "Los ID de objeto de los clientes cambian del ID de sesión de Emby al ID de dispositivo, que ya no cambia cuando un cliente se vuelve a conectar. Los objetos existentes, incluidos sus valores, la configuración del historial y la asignación a habitaciones/funciones, se migran automáticamente. Los scripts, visualizaciones y alias que usan los ID antiguos deben ajustarse; los datos de historial ya registrados permanecen en los ID antiguos.",
+          "pl": "Identyfikatory obiektów klientów zmieniają się z identyfikatora sesji Emby na identyfikator urządzenia, który nie zmienia się już przy ponownym połączeniu klienta. Istniejące obiekty wraz z wartościami, ustawieniami historii i przypisaniem do pomieszczeń/funkcji są przenoszone automatycznie. Skrypty, wizualizacje i aliasy korzystające ze starych identyfikatorów należy dostosować; zapisane już dane historii pozostają pod starymi identyfikatorami.",
+          "uk": "Ідентифікатори об’єктів клієнтів змінюються з ID сеансу Emby на ID пристрою, який більше не змінюється під час повторного підключення клієнта. Наявні об’єкти разом зі значеннями, налаштуваннями історії та прив’язкою до кімнат/функцій переносяться автоматично. Скрипти, візуалізації та аліаси зі старими ID потрібно змінити; уже записані дані історії залишаються під старими ID.",
+          "zh-cn": "客户端的对象 ID 由 Emby 会话 ID 改为设备 ID，客户端重新连接时不再改变。现有对象（包括数值、历史记录设置以及房间/功能分配）会自动迁移。使用旧 ID 的脚本、可视化和别名需要调整；已记录的历史数据保留在旧 ID 下。"
+        },
+        "level": "warn",
+        "buttons": [
+          "agree",
+          "cancel"
+        ]
+      }
+    ]
   },
   "native": {
     "ip": "0.0.0.0:8096",
