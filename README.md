@@ -28,7 +28,7 @@ This adapter would not have been possible without the great work of @thewhobox <
 
 ## Requirements
 
-- Node.js >= 22
+- Node.js >= 22.19.0
 - js-controller >= 6.0.11, admin >= 7.7.22
 - Emby Server (tested with 4.10) reachable from the ioBroker host
 - An Emby API key for controlling clients (Emby dashboard > Advanced > API Keys)
@@ -123,7 +123,7 @@ Only created for clients that support remote control, and only for commands the 
     ### **WORK IN PROGRESS**
 -->
 ### **WORK IN PROGRESS**
-- (copilot) Adapter requires node.js >= 22 now
+- (copilot) Adapter requires node.js >= 22.19.0 now
 - (Schimi1983) Connection is re-established after the server closes it (e.g. server restart), KeepAlive is sent, info.connection reflects the real state
 - (Schimi1983) Only "Sessions" messages are processed as sessions, invalid messages no longer cause errors
 - (Schimi1983) Fixed command.volume (always failed), command.unmute is created for clients reporting "Unmute"
