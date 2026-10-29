@@ -1,9 +1,14 @@
 {
-    "ApiKey": "API Key",
-    "DeviceIds": "Geräte Ids die ignoriert werden sollen (Mit Komma getrennt)",
-    "IP": "IP/ Domain des Emby Servers (mit Port)",
-    "Timeout": "Verzögerung für Pause/Leerlauf",
-    "TimeoutDesc": "Nötig wenn mehrere Folgen hintereinander gespielt werden.",
+    "ApiKey": "API-Schlüssel",
+    "DeviceIds": "Zu ignorierende Session- oder Geräte-IDs (mit Komma getrennt)",
+    "IP": "IP/Domain des Emby-Servers (mit Port)",
     "isSSL": "Verbindung benötigt SSL",
-    "on save": "Beim Speichern von Einstellungen der Adapter wird sofort neu gestartet."
+    "on save": "Beim Speichern von Einstellungen der Adapter wird sofort neu gestartet.",
+    "PollInterval": "Abfrageintervall für Sessions (s, 0 = aus)",
+    "PollIntervalDesc": "Emby meldet nur Änderungen. Die Abfrage hält die letzte Aktivität aktuell und wird für das Aufräumen benötigt.",
+    "RemoveDeletedDevices": "Objekte von Clients entfernen, die in Emby gelöscht wurden (Dashboard > Geräte)",
+    "RemoveInactiveDays": "Objekte inaktiver Clients entfernen nach (Tage, 0 = aus)",
+    "RemoveInactiveDaysDesc": "Nur Clients, die der Server nicht mehr meldet. Skripte und History-Einstellungen an diesen Objekten gehen verloren.",
+    "Timeout": "Verzögerung für Pause/Leerlauf (ms)",
+    "TimeoutDesc": "Nötig, wenn mehrere Folgen hintereinander gespielt werden."
 }
