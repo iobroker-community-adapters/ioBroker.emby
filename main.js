@@ -69,7 +69,7 @@ function startAdapter(options) {
         },
     });
 
-    adapter = new utils.Adapter(options);
+    adapter = new utils.Adapter(/** @type {utils.AdapterOptions} */ (options));
     return adapter;
 }
 
@@ -200,6 +200,7 @@ async function refreshSessions(quiet = false) {
 async function getRegisteredDeviceIds() {
     try {
         const res = await apiRequest('GET', 'Devices');
+        /** @type {any} */
         const data = await res.json();
         const items = Array.isArray(data) ? data : data && Array.isArray(data.Items) ? data.Items : [];
         const ids = new Set();
@@ -887,7 +888,7 @@ function changeState(id, state) {
  * Builds a read-only state definition.
  *
  * @param {string} name name
- * @param {string} type common.type
+ * @param {ioBroker.CommonType} type common.type
  * @param {string} [role] role
  * @returns {ioBroker.SettableStateObject} object
  */

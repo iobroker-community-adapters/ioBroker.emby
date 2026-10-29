@@ -143,6 +143,8 @@ Only created for clients that support remote control, and only for commands the 
 - (Schimi1983) Device names follow the display name set in the Emby dashboard; REST calls use the adapter's device ID so they do not appear as an extra client
 - (Schimi1983) README updated: configuration, all objects, broken CodeQL badge removed
 - (Schimi1983) Admin UI migrated to jsonConfig (based on #275), API key is entered in a password field, short-form i18n files
+- (GermanBluefox) Dependencies updated (@iobroker/adapter-core 3.4.3)
+- (GermanBluefox) Package content defined via "files" in package.json, tsconfig added for type checking
 
 ### 1.3.0 (2026-03-03)
 - (mcm1957) Adapter requires node.js >= 20 now
