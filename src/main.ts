@@ -18,6 +18,8 @@ const HTTP_TIMEOUT_MS = 10_000;
 const PLAIN_DEVICE_ID = /^[A-Za-z0-9_-]{1,40}$/;
 /** Ids of the adapter's own channels; a device must never get one of them. */
 const RESERVED_IDS = new Set(['info', 'server']);
+/** Valid values of common.type; versions <= 1.3.0 created buttons with type "button" */
+const STATE_TYPES = new Set(['number', 'string', 'boolean', 'array', 'object', 'mixed', 'json']);
 
 /**
  * Simple remote commands: state id below `<session>.` → REST path below `/Sessions/<session>/`.
@@ -90,6 +92,8 @@ class EmbyAdapter extends utils.Adapter {
     private activeDevices = new Set<string>();
     /** Device key → current Emby session id (needed for the REST commands). */
     private readonly sessionOf = new Map<string, string>();
+    /** Sessions of ioBroker connections already checked for objects created by versions <= 2.x */
+    private readonly checkedOwnSessions = new Set<string>();
     private initialSessionsLoaded = false;
     /** API key, resolved once at start (see migratePlainApiKey). */
     private apiKey = '';
@@ -643,6 +647,35 @@ class EmbyAdapter extends utils.Adapter {
     }
 
     /**
+     * Whether a session is a connection of this adapter (this or another instance) and not a client.
+     *
+     * @param deviceId Emby device id of the session
+     */
+    private isIoBrokerConnection(deviceId: string | undefined): boolean {
+        // 00001 = fixed id used by versions <= 1.3.0, ioBroker-emby.N = id of every instance since 2.0.0
+        return deviceId === '00001' || (!!deviceId && deviceId.startsWith(`ioBroker-${this.name}.`));
+    }
+
+    /**
+     * Removes the objects that versions <= 2.x created for an ioBroker connection, once per session.
+     *
+     * @param sessionId session id of the ioBroker connection
+     */
+    private async removeIoBrokerDevice(sessionId: string): Promise<void> {
+        if (this.checkedOwnSessions.has(sessionId)) {
+            return;
+        }
+        this.checkedOwnSessions.add(sessionId);
+        const sid = sessionId.replace(this.FORBIDDEN_CHARS, '_');
+        const obj = await this.getObjectAsync(sid);
+        // only objects without stored device id, so a client with this session id is never touched
+        if (obj?.type === 'device' && !obj.native?.deviceId) {
+            this.log.info(`Removed objects ${sid} that an older version created for an ioBroker connection`);
+            await this.deleteDeviceObjects(sid);
+        }
+    }
+
+    /**
      * Object id of a client. Derived from the Emby device id, which stays the same across reconnects,
      * unlike the session id.
      *
@@ -693,8 +726,8 @@ class EmbyAdapter extends utils.Adapter {
             if (!d || typeof d.Id !== 'string' || d.Id === '') {
                 continue;
             }
-            if (d.DeviceId === this.ownDeviceId() || d.DeviceId === '00001') {
-                // the adapter's own connection (00001 = fixed id used by versions <= 1.3.0)
+            if (this.isIoBrokerConnection(d.DeviceId)) {
+                await this.removeIoBrokerDevice(d.Id);
                 continue;
             }
             if (this.isIgnored(d)) {
@@ -916,9 +949,14 @@ class EmbyAdapter extends utils.Adapter {
         for (const id of ids) {
             const obj = objects[id];
             const target = newPrefix + id.substring(oldPrefix.length);
+            const common = { ...obj.common } as Record<string, unknown>;
+            if (obj.type === 'state' && !STATE_TYPES.has(String(common.type))) {
+                // corrected by createDeviceObjects afterwards, set here to avoid warnings of the js-controller
+                common.type = common.role === 'button' ? 'boolean' : 'mixed';
+            }
             await this.setForeignObjectAsync(target, {
                 type: obj.type,
-                common: obj.common,
+                common,
                 native: obj.native || {},
             } as ioBroker.SettableObject);
             if (obj.type === 'state') {

@@ -131,6 +131,7 @@ Only created for clients that support remote control, and only for commands the 
 ### **WORK IN PROGRESS**
 - (Schimi1983) **BREAKING:** Clients are identified by the Emby device ID instead of the session ID, so the object IDs no longer change when a client reconnects. Existing objects including values, history settings and room/function assignments are migrated automatically; scripts and visualisations using the old IDs have to be adjusted (see README)
 - (Schimi1983) New states info.deviceId and info.sessionId; several sessions of one client (e.g. browser tabs) are shown as one device
+- (Schimi1983) Objects that older versions created for ioBroker connections (other instances, version 1.3.0) are removed and no longer created
 - (Schimi1983) Integration test against a mock Emby server added
 
 ### 2.0.0 (2026-10-29)

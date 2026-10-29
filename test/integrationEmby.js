@@ -122,13 +122,16 @@ wss.on('connection', (socket, req) => {
             SupportsRemoteControl: false,
             LastActivityDate: new Date().toISOString(),
         };
+        // connections of another instance and of version 1.3.0 (fixed device id)
+        const otherInstance = { Id: 'other1', DeviceId: 'ioBroker-emby.5', DeviceName: 'ioBroker', Client: 'ioBroker' };
+        const oldSelf = { Id: 'oldself1', DeviceId: '00001', DeviceName: 'ioBroker', Client: 'ioBroker' };
         // two browser tabs of the same client, only the second one plays
         const tabs = [webSession('web-a', false), webSession('web-b', true)];
         // web clients first report SupportsRemoteControl=false, then true
-        currentSessions = [tvSession(true, false), self, pc, old, recent, ...tabs];
+        currentSessions = [tvSession(true, false), self, otherInstance, oldSelf, pc, old, recent, ...tabs];
         socket.send(JSON.stringify({ MessageType: 'Sessions', Data: currentSessions }));
         setTimeout(() => {
-            currentSessions = [tvSession(true, true), self, pc, old, recent, ...tabs];
+            currentSessions = [tvSession(true, true), self, otherInstance, oldSelf, pc, old, recent, ...tabs];
             socket.send(JSON.stringify({ MessageType: 'Sessions', Data: currentSessions }));
         }, 1000);
     } else {
@@ -168,6 +171,13 @@ async function seedLegacyDevice(harness, sid, deviceId) {
         native: {},
     });
     await harness.states.setStateAsync(`${base}.media.title`, { val: `old title ${sid}`, ack: true });
+    await harness.objects.setObjectAsync(`${base}.command`, { type: 'channel', common: { name: 'Command' }, native: {} });
+    // versions <= 1.3.0 used the invalid type "button"
+    await harness.objects.setObjectAsync(`${base}.command.play`, {
+        type: 'state',
+        common: { name: 'Play', type: 'button', role: 'button', read: false, write: true },
+        native: {},
+    });
 }
 
 tests.integration(path.join(__dirname, '..'), {
@@ -200,6 +210,9 @@ tests.integration(path.join(__dirname, '..'), {
                 // objects of version 2.x (device id known) and 1.3.0 (no device id)
                 await seedLegacyDevice(harness, 'sess-legacy', 'dev-tv');
                 await seedLegacyDevice(harness, 'pc1', undefined);
+                // objects 1.3.0 and 2.x created for ioBroker connections
+                await seedLegacyDevice(harness, 'other1', undefined);
+                await seedLegacyDevice(harness, 'oldself1', undefined);
                 await harness.objects.setObjectAsync('enum.rooms.living', {
                     type: 'enum',
                     common: { name: 'Living room', members: ['emby.0.sess-legacy.media.title'] },
@@ -237,6 +250,15 @@ tests.integration(path.join(__dirname, '..'), {
             it('migrates objects of version 1.3.0 when the session is reported', async () => {
                 assert.equal(await obj('pc1.media.title'), null);
                 assert.equal((await obj('dev-pc')).native.deviceId, 'dev-pc');
+                assert.equal((await obj('dev-pc.command.play')).common.type, 'boolean');
+            });
+
+            it('removes objects of ioBroker connections created by older versions', async () => {
+                assert.equal(await obj('other1'), null);
+                assert.equal(await obj('other1.media.title'), null);
+                assert.equal(await obj('oldself1'), null);
+                assert.equal(await obj('ioBroker-emby_5'), null);
+                assert.equal(await obj('00001'), null);
             });
 
             it('creates one device per client with correct states', async () => {
