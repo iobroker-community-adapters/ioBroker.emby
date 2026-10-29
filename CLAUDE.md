@@ -26,7 +26,8 @@ There is no `tasks.ts`: the admin is pure JsonConfig, so nothing is left to do b
 ## Architecture
 
 - `src/main.ts` — `EmbyAdapter extends utils.Adapter`, compact-mode export at the end.
-  - `onReady`: migrates a plain-text API key (`migratePlainApiKey`), opens the WebSocket (`tryConnect`) and starts
+  - `onReady`: moves objects of 2.x (`migrateStoredDevices`), migrates a plain-text API key (`migratePlainApiKey`;
+    `updateConfig()` restarts the instance, so `onReady` stops there), opens the WebSocket (`tryConnect`) and starts
     the REST poll (`startPolling`, `pollInterval` s, default 60, 0 = off).
   - WebSocket (native `WebSocket`, Node >= 22): `ws(s)://<ip>?api_key=…&deviceId=ioBroker-<namespace>`.
     On open: `SessionsStart`, KeepAlive every 30 s (or half of `ForceKeepAlive`), `refreshSessions()`.

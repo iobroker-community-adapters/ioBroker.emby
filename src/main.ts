@@ -120,8 +120,12 @@ class EmbyAdapter extends utils.Adapter {
 
         // the key is copied once, this.config.apikey is not read again (see migratePlainApiKey)
         this.apiKey = this.config.apikey || '';
-        await this.migratePlainApiKey();
         await this.migrateStoredDevices();
+        if (await this.migratePlainApiKey()) {
+            // @KI_HINWEIS: updateConfig() makes the js-controller restart the instance right away; a
+            // connection started now would be cut off, and its timers would be created while stopping.
+            return;
+        }
         if (!this.config.ip || this.config.ip === '0.0.0.0:8096') {
             this.log.error('No server address configured (IP:Port).');
             return;
@@ -449,7 +453,7 @@ class EmbyAdapter extends utils.Adapter {
     /**
      * Converts a plain-text API key stored by older versions into an encrypted value.
      *
-     * @returns true if the instance object was rewritten
+     * @returns true if the instance object was rewritten (the instance is restarted then)
      */
     private async migratePlainApiKey(): Promise<boolean> {
         // @KI_HINWEIS: Since `apikey` is listed in encryptedNative, js-controller decrypts it on start.

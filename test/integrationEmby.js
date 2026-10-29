@@ -1,7 +1,7 @@
 'use strict';
 
 // Integration test against a mock Emby server (HTTP + WebSocket on 127.0.0.1).
-// Covers: API key migration, keepalive, invalid messages, commands, reconnect, offline marking,
+// Covers: API key migration (separate suite), keepalive, invalid messages, commands, reconnect, offline marking,
 // device ids as object ids, migration of objects of version 2.x / 1.3.0, cleanup.
 
 const assert = require('node:assert/strict');
@@ -142,6 +142,39 @@ wss.on('connection', (socket, req) => {
 });
 
 const sleep = ms => new Promise(r => setTimeout(r, ms));
+const listening = new Promise(r => server.listen(PORT, '127.0.0.1', r));
+
+const CONFIG = {
+    ip: `127.0.0.1:${PORT}`,
+    apikey: 'placeholder',
+    isSSL: false,
+    deviceIds: '',
+    timeout: 500,
+    pollInterval: 5,
+    removeDeletedDevices: true,
+    removeInactiveDays: 30,
+};
+
+/**
+ * Stores the API key in the instance object, either in plain text like version 1.3.0 or encrypted
+ * like the js-controller does for encryptedNative.
+ *
+ * @param harness test harness
+ * @param encrypted encrypt the key with the system secret
+ */
+async function storeApiKey(harness, encrypted) {
+    const inst = await harness.objects.getObjectAsync('system.adapter.emby.0');
+    if (encrypted) {
+        const secret = (await harness.objects.getObjectAsync('system.config')).native.secret;
+        const iv = crypto.randomBytes(16);
+        const cipher = crypto.createCipheriv('aes-192-cbc', Buffer.from(secret, 'hex'), iv);
+        const enc = Buffer.concat([cipher.update(KEY), cipher.final()]);
+        inst.native.apikey = `$/aes-192-cbc:${iv.toString('hex')}:${enc.toString('hex')}`;
+    } else {
+        inst.native.apikey = KEY;
+    }
+    await harness.objects.setObjectAsync('system.adapter.emby.0', inst);
+}
 
 /**
  * Creates objects like an older version did.
@@ -182,6 +215,25 @@ async function seedLegacyDevice(harness, sid, deviceId) {
 
 tests.integration(path.join(__dirname, '..'), {
     defineAdditionalTests({ suite }) {
+        suite('API key stored in plain text by version 1.3.0', getHarness => {
+            let harness;
+            before(async function () {
+                this.timeout(60_000);
+                await listening;
+                harness = getHarness();
+                await harness.changeAdapterConfig('emby', { native: CONFIG });
+                await storeApiKey(harness, false);
+                await harness.startAdapterAndWait();
+                await sleep(3000);
+            });
+
+            it('encrypts the key and waits for the restart instead of connecting', async () => {
+                const inst = await harness.objects.getObjectAsync('system.adapter.emby.0');
+                assert.match(inst.native.apikey, /^\$\/aes-192-cbc:/);
+                assert.equal(connections, 0);
+            });
+        });
+
         suite('against a mock Emby server', getHarness => {
             let harness;
             const st = async id => (await harness.states.getStateAsync(`emby.0.${id}`))?.val;
@@ -189,24 +241,10 @@ tests.integration(path.join(__dirname, '..'), {
 
             before(async function () {
                 this.timeout(60_000);
-                await new Promise(r => server.listen(PORT, '127.0.0.1', r));
+                await listening;
                 harness = getHarness();
-                await harness.changeAdapterConfig('emby', {
-                    native: {
-                        ip: `127.0.0.1:${PORT}`,
-                        apikey: 'placeholder',
-                        isSSL: false,
-                        deviceIds: '',
-                        timeout: 500,
-                        pollInterval: 5,
-                        removeDeletedDevices: true,
-                        removeInactiveDays: 30,
-                    },
-                });
-                // simulate a key stored in plain text by version 1.3.0
-                const inst = await harness.objects.getObjectAsync('system.adapter.emby.0');
-                inst.native.apikey = KEY;
-                await harness.objects.setObjectAsync('system.adapter.emby.0', inst);
+                await harness.changeAdapterConfig('emby', { native: CONFIG });
+                await storeApiKey(harness, true);
                 // objects of version 2.x (device id known) and 1.3.0 (no device id)
                 await seedLegacyDevice(harness, 'sess-legacy', 'dev-tv');
                 await seedLegacyDevice(harness, 'pc1', undefined);
@@ -225,11 +263,6 @@ tests.integration(path.join(__dirname, '..'), {
             after(() => {
                 wss.close();
                 server.close();
-            });
-
-            it('stores the api key encrypted', async () => {
-                const inst = await harness.objects.getObjectAsync('system.adapter.emby.0');
-                assert.match(inst.native.apikey, /^\$\/aes-192-cbc:/);
             });
 
             it('connects with key and per-instance device id and subscribes', () => {
