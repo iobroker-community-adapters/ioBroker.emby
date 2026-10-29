@@ -145,6 +145,7 @@ Only created for clients that support remote control, and only for commands the 
 - (Schimi1983) Admin UI migrated to jsonConfig (based on #275), API key is entered in a password field, short-form i18n files
 - (GermanBluefox) Dependencies updated (@iobroker/adapter-core 3.4.3)
 - (GermanBluefox) Package content defined via "files" in package.json, tsconfig added for type checking
+- (GermanBluefox) The adapter was refactored to TypeScript
 
 ### 1.3.0 (2026-03-03)
 - (mcm1957) Adapter requires node.js >= 20 now
