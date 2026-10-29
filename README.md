@@ -122,7 +122,7 @@ Only created for clients that support remote control, and only for commands the 
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
-### **WORK IN PROGRESS**
+### 2.0.0 (2026-10-29)
 - (copilot) Adapter requires node.js >= 22.19.0 now
 - (Schimi1983) Connection is re-established after the server closes it (e.g. server restart), KeepAlive is sent, info.connection reflects the real state
 - (Schimi1983) Only "Sessions" messages are processed as sessions, invalid messages no longer cause errors
@@ -166,9 +166,6 @@ Only created for clients that support remote control, and only for commands the 
 -   (mcm1957) Adapter has been moved into iobroker-community-adapters oragnization.
 -   (thewhobox) An error causing multiple 'undefined' messages has been fixed. [#23]
 -   (mcm1957) Dependencies have been updated.
-
-### 1.0.3
-* Added more info for playing item
 
 [Older changelogs can be found there](CHANGELOG_OLD.md)
 

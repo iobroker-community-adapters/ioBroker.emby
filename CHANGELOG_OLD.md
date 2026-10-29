@@ -1,4 +1,8 @@
 # Older changes
+## 1.0.3
+* Added more info for playing item
+
+
 ## 1.0.0
 * First stable public release
 * Added support for Https and Http
