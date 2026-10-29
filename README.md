@@ -18,6 +18,9 @@
 **Tests:** </br>
 [![Test and Release](https://github.com/iobroker-community-adapters/ioBroker.emby/actions/workflows/test-and-release.yml/badge.svg)](https://github.com/iobroker-community-adapters/ioBroker.emby/actions/workflows/test-and-release.yml)
 
+> [!IMPORTANT]
+> This adapter cannot be installed from github
+
 ## Emby adapter for ioBroker
 
 Connects ioBroker to an [Emby](https://emby.media) media server. The adapter receives the active client sessions via WebSocket (what is playing, playback state, user) and can control clients that support remote control (play/pause, mute, volume, messages, navigation).
