@@ -147,7 +147,8 @@
     ],
     "adminUI": {
       "config": "json"
-    }
+    },
+    "nogit": true
   },
   "native": {
     "ip": "0.0.0.0:8096",
