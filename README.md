@@ -128,7 +128,7 @@ Only created for clients that support remote control, and only for commands the 
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
-### **WORK IN PROGRESS**
+### 3.0.0 (2026-10-29)
 - (Schimi1983) **BREAKING:** Clients are identified by the Emby device ID instead of the session ID, so the object IDs no longer change when a client reconnects. Existing objects including values, history settings and room/function assignments are migrated automatically; scripts and visualisations using the old IDs have to be adjusted (see README)
 - (Schimi1983) New states info.deviceId and info.sessionId; several sessions of one client (e.g. browser tabs) are shown as one device
 - (Schimi1983) Objects that older versions created for ioBroker connections (other instances, version 1.3.0) are removed and no longer created
@@ -171,12 +171,6 @@ Only created for clients that support remote control, and only for commands the 
 * (mcm1957) Dependencies have been updated
 
 ### 1.1.1 (2023-11-20)
--   (mcm1957) Dependencies have been updated.
-
-### 1.1.0 (2023-11-20)
--   (mcm1957) Adapter requires nodejs 16 now.
--   (mcm1957) Adapter has been moved into iobroker-community-adapters oragnization.
--   (thewhobox) An error causing multiple 'undefined' messages has been fixed. [#23]
 -   (mcm1957) Dependencies have been updated.
 
 [Older changelogs can be found there](CHANGELOG_OLD.md)
