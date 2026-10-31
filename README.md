@@ -64,6 +64,13 @@ Up to version 2.x the object IDs were the Emby session IDs, which change when a 
 | Object | Description |
 | ------------- | ------------- |
 | info.connection | `true` while the WebSocket connection to the server is open |
+| server.name | Name of the Emby server |
+| server.version | Version of the Emby server |
+| server.updateAvailable | `true` if a server update is available |
+| server.restartPending | `true` if the server has to be restarted (e.g. after a plugin update) |
+| server.refreshLibrary | Button: scans all libraries |
+
+The server states are read every 10 minutes and need the API key.
 
 ### Info
 
@@ -89,6 +96,8 @@ Up to version 2.x the object IDs were the Emby session IDs, which change when a 
 | x.media.seriesName | Name of the series | Only for episodes, otherwise empty |
 | x.media.seasonName | Name of the season | Only for episodes, otherwise empty |
 | x.media.endtime | Expected end of playback | `HH:MM` |
+| x.media.elapsed | Playback position in seconds | `null` if unknown. Emby reports the position only on changes (start, pause, seek) and with the session poll |
+| x.media.duration | Duration of the item in seconds | `null` if unknown |
 | x.media.rating | Community rating | `null` if unknown |
 | x.media.agerating | Official age rating |  |
 | x.media.year | Production year | `null` if unknown |
@@ -115,15 +124,51 @@ Only created for clients that support remote control, and only for commands the 
 | x.command.play | Resume playback | Button |
 | x.command.pause | Pause playback | Button |
 | x.command.toggleplay | Toggle play/pause | Button |
+| x.command.stop | Stop playback | Button |
+| x.command.next | Next item (episode, track) | Button |
+| x.command.previous | Previous item | Button. The iOS app goes back reliably only after the item has played for a few minutes (see [Tested clients](#tested-clients)) |
+| x.command.seek | Playback position in % | Also shows the current position; write a value 0-100 to jump there |
+| x.command.generalCommand | Send any general command of the Emby API | JSON, e.g. `{"Name": "SetSubtitleStreamIndex", "Arguments": {"Index": 2}}`. The names the client supports are in `info.supportedCommands` |
 | x.command.mute | Mute | Button |
 | x.command.unmute | Unmute | Button |
 | x.command.togglemute | Toggle mute | Button |
 | x.command.goHome | Go to the home screen | Button |
 | x.command.goToSearch | Open the search | Button |
 | x.command.back | Navigate back | Button |
-| x.command.volume | Volume 0-100 | Also shows the current volume reported by the client. Many clients (e.g. TV apps) do not control the TV volume. |
-| x.command.message | Show a message for 5 seconds | Text |
+| x.command.volume | Volume 0-100 | Also shows the current volume reported by the client. The Android TV apps do not change the volume (see [Tested clients](#tested-clients)) |
+| x.command.message | Show a short message | Text. The apps show it only for about 2-3 seconds. For important messages use `command.dialog` |
 | x.command.dialog | Show a dialog that stays until it is closed | `Header\|Text`, without `\|` the header is "ioBroker" |
+
+## Messages from scripts (sendTo)
+
+Shows a message on a client, e.g. when the doorbell rings:
+
+```js
+sendTo('emby.0', 'message', {
+    text: 'Someone is at the door',
+    header: 'Doorbell', // optional, default "ioBroker"
+    timeoutMs: 10000, // optional; without it the message stays until it is closed (recommended)
+    device: 'Living room TV', // optional: device name, object ID, device ID or session ID; without it all connected clients that can show messages
+}, result => log(JSON.stringify(result))); // { result: 'ok', sent: ['<object id>', ...] } or { error: '...' }
+```
+
+A plain string is accepted too: `sendTo('emby.0', 'message', 'Hello')`.
+
+How long a message stays is decided by the app: with `timeoutMs` all tested apps showed it only for about 2-3 seconds, whatever the value. Without `timeoutMs` the message stays until it is closed (in the web client as a popup). For a doorbell, leave out `timeoutMs`.
+
+## Tested clients
+
+The adapter sends the same commands to every client; what happens depends on the Emby app. Tested with Emby Server 4.10.2:
+
+| | Web client (Firefox) | Android phone | iPad (iOS) | Android TV (NVIDIA Shield, Fire TV) |
+| --- | --- | --- | --- | --- |
+| Play, pause, stop, seek, next | ✓ | ✓ | ✓ | ✓ |
+| Previous | ✓ | ✓ | only after a few minutes of playback, otherwise the app restarts the item or skips forward | ✓ (tested after a few minutes of playback) |
+| Volume, mute | ✓ | ✓ | ✓ | – (no effect) |
+| Message with display time (`command.message`, `timeoutMs`) | about 2-3 s | about 2-3 s | about 2-3 s | about 2-3 s |
+| Dialog (`command.dialog`, message without `timeoutMs`) | ✓ (popup) | ✓ | ✓ | ✓ |
+
+Web browsers may block playback that is started without a click in the tab (autoplay).
 
 ## Changelog
 
@@ -133,6 +178,9 @@ Only created for clients that support remote control, and only for commands the 
 -->
 ### **WORK IN PROGRESS**
 - (GermanBluefox) Repository maintenance: added email to copyright line in README and LICENSE (#330)
+- (Schimi1983) New commands stop, next, previous, seek (in %) and generalCommand; new states media.elapsed and media.duration
+- (Schimi1983) New server states (name, version, update available, restart pending) and button to scan all libraries
+- (Schimi1983) Messages can be sent from scripts with sendTo('emby.0', 'message', {...})
 
 ### 3.0.0 (2026-10-29)
 - (Schimi1983) **BREAKING:** Clients are identified by the Emby device ID instead of the session ID, so the object IDs no longer change when a client reconnects. Existing objects including values, history settings and room/function assignments are migrated automatically; scripts and visualisations using the old IDs have to be adjusted (see README)

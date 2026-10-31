@@ -46,6 +46,11 @@ const server = http.createServer((req, res) => {
             );
             return;
         }
+        if (req.method === 'GET' && req.url === '/System/Info') {
+            res.writeHead(200, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ ServerName: 'Mock', Version: '4.10.2.0', HasUpdateAvailable: true, HasPendingRestart: false }));
+            return;
+        }
         if (req.method === 'GET' && req.url === '/Sessions') {
             res.writeHead(200, { 'Content-Type': 'application/json' });
             res.end(JSON.stringify(currentSessions));
@@ -67,7 +72,7 @@ function tvSession(playing, remote = true, id = 'tv1') {
         SupportsRemoteControl: remote,
         SupportedCommands: ['DisplayMessage', 'SetVolume', 'Mute', 'Unmute', 'ToggleMute', 'GoHome', 'Back'],
         PlayState: playing
-            ? { MediaSourceId: 'x', IsPaused: false, IsMuted: false, VolumeLevel: 30, PositionTicks: 0 }
+            ? { MediaSourceId: 'x', IsPaused: false, IsMuted: false, VolumeLevel: 30, PositionTicks: 9000000000 }
             : {},
         NowPlayingItem: playing
             ? {
@@ -256,6 +261,7 @@ tests.integration(path.join(__dirname, '..'), {
                     common: { name: 'Living room', members: ['emby.0.sess-legacy.media.title'] },
                     native: {},
                 });
+                await harness.enableSendTo();
                 await harness.startAdapterAndWait();
                 await sleep(8000);
             });
@@ -336,6 +342,55 @@ tests.integration(path.join(__dirname, '..'), {
                 assert.ok(requests.every(r => !r.url.includes('api_key')));
             });
 
+            it('reports position, duration and server information', async () => {
+                assert.equal(await st('dev-tv.media.elapsed'), 900);
+                assert.equal(await st('dev-tv.media.duration'), 3600);
+                assert.equal(await st('dev-tv.command.seek'), 25);
+                assert.equal(await st('server.name'), 'Mock');
+                assert.equal(await st('server.version'), '4.10.2.0');
+                assert.equal(await st('server.updateAvailable'), true);
+                assert.equal(await st('server.restartPending'), false);
+            });
+
+            it('sends playback, seek, general and server commands', async function () {
+                this.timeout(30_000);
+                assert.equal((await obj('dev-tv.command.next')).common.role, 'button.next');
+                assert.equal((await obj('dev-tv.command.previous')).common.role, 'button.prev');
+                assert.equal((await obj('dev-tv.command.stop')).common.role, 'button.stop');
+                await harness.states.setStateAsync('emby.0.dev-tv.command.next', { val: true, ack: false });
+                await harness.states.setStateAsync('emby.0.dev-tv.command.stop', { val: true, ack: false });
+                await harness.states.setStateAsync('emby.0.dev-tv.command.seek', { val: 50, ack: false });
+                await harness.states.setStateAsync('emby.0.dev-tv.command.generalCommand', {
+                    val: '{"Name": "SetSubtitleStreamIndex", "Arguments": {"Index": 2}}',
+                    ack: false,
+                });
+                await harness.states.setStateAsync('emby.0.server.refreshLibrary', { val: true, ack: false });
+                await sleep(2000);
+                assert.ok(requests.some(r => r.url === '/Sessions/tv1/Playing/NextTrack'));
+                assert.ok(requests.some(r => r.url === '/Sessions/tv1/Playing/Stop'));
+                const seek = requests.find(r => r.url.startsWith('/Sessions/tv1/Playing/Seek'));
+                assert.equal(seek.url, '/Sessions/tv1/Playing/Seek?SeekPositionTicks=18000000000');
+                assert.deepEqual(JSON.parse(seek.body), { Command: 'Seek', SeekPositionTicks: 18000000000 });
+                const general = requests.filter(r => r.url === '/Sessions/tv1/Command').pop();
+                assert.deepEqual(JSON.parse(general.body), { Name: 'SetSubtitleStreamIndex', Arguments: { Index: '2' } });
+                assert.ok(requests.some(r => r.method === 'POST' && r.url === '/Library/Refresh'));
+            });
+
+            it('sends messages via sendTo', async function () {
+                this.timeout(30_000);
+                const inst = await harness.objects.getObjectAsync('system.adapter.emby.0');
+                assert.equal(inst.common.messagebox, true);
+                const send = message => new Promise(resolve => harness.sendTo('emby.0', 'message', message, resolve));
+                const one = await send({ text: 'Doorbell', header: 'Door', timeoutMs: 8000, device: 'Test TV' });
+                assert.deepEqual(one, { result: 'ok', sent: ['dev-tv'] });
+                const msg = requests.filter(r => r.url === '/Sessions/tv1/Message').pop();
+                assert.deepEqual(JSON.parse(msg.body), { Header: 'Door', Text: 'Doorbell', TimeoutMs: 8000 });
+                const all = await send('Hello all');
+                assert.deepEqual(all.sent.sort(), ['dev-tv', WEB_KEY].sort());
+                const none = await send({ text: 'x', device: 'unknown' });
+                assert.ok(none.error);
+            });
+
             it('reconnects, keeps the device id across session changes and cleans up', async function () {
                 this.timeout(120_000);
                 currentSocket.close();
@@ -348,6 +403,8 @@ tests.integration(path.join(__dirname, '..'), {
                 assert.equal(await st('dev-tv.info.sessionId'), 'tv2');
                 assert.equal(await st('dev-tv.info.online'), true);
                 assert.equal(await st('dev-tv.media.state'), 'idle');
+                assert.equal(await st('dev-tv.command.seek'), null);
+                assert.equal(await st('dev-tv.media.elapsed'), null);
                 // dev-pc: removed in Emby, dev-old: inactive since 2020 -> both removed by the poll
                 await sleep(7000);
                 assert.equal(await obj('dev-pc'), null);

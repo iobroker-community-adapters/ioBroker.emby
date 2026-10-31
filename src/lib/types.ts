@@ -66,3 +66,21 @@ export interface EmbySocketMessage {
     MessageType?: string;
     Data?: unknown;
 }
+
+/** Answer of `GET /System/Info` (only the fields the adapter reads) */
+export interface EmbySystemInfo {
+    ServerName?: string;
+    Version?: string;
+    HasUpdateAvailable?: boolean;
+    HasPendingRestart?: boolean;
+}
+
+/** Message of `sendTo('emby.0', 'message', ...)` */
+export interface SendMessagePayload {
+    text?: string;
+    header?: string;
+    /** Display duration in ms; without it the client shows a dialog that stays until it is closed */
+    timeoutMs?: number;
+    /** Device key, session id, device id or device name; all connected clients if empty */
+    device?: string;
+}
