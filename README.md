@@ -126,7 +126,7 @@ Only created for clients that support remote control, and only for commands the 
 | x.command.toggleplay | Toggle play/pause | Button |
 | x.command.stop | Stop playback | Button |
 | x.command.next | Next item (episode, track) | Button |
-| x.command.previous | Previous item | Button |
+| x.command.previous | Previous item | Button. The iOS app goes back reliably only after the item has played for a few minutes (see [Tested clients](#tested-clients)) |
 | x.command.seek | Playback position in % | Also shows the current position; write a value 0-100 to jump there |
 | x.command.generalCommand | Send any general command of the Emby API | JSON, e.g. `{"Name": "SetSubtitleStreamIndex", "Arguments": {"Index": 2}}`. The names the client supports are in `info.supportedCommands` |
 | x.command.mute | Mute | Button |
@@ -135,8 +135,8 @@ Only created for clients that support remote control, and only for commands the 
 | x.command.goHome | Go to the home screen | Button |
 | x.command.goToSearch | Open the search | Button |
 | x.command.back | Navigate back | Button |
-| x.command.volume | Volume 0-100 | Also shows the current volume reported by the client. Many clients (e.g. TV apps) do not control the TV volume. |
-| x.command.message | Show a message for 5 seconds | Text. Not shown by the Android TV apps (tested: NVIDIA Shield, Fire TV), use `command.dialog` there |
+| x.command.volume | Volume 0-100 | Also shows the current volume reported by the client. The Android TV apps do not change the volume (see [Tested clients](#tested-clients)) |
+| x.command.message | Show a short message | Text. The apps show it only for about 2-3 seconds. For important messages use `command.dialog` |
 | x.command.dialog | Show a dialog that stays until it is closed | `Header\|Text`, without `\|` the header is "ioBroker" |
 
 ## Messages from scripts (sendTo)
@@ -147,14 +147,28 @@ Shows a message on a client, e.g. when the doorbell rings:
 sendTo('emby.0', 'message', {
     text: 'Someone is at the door',
     header: 'Doorbell', // optional, default "ioBroker"
-    timeoutMs: 10000, // optional; without it the message stays until it is closed
+    timeoutMs: 10000, // optional; without it the message stays until it is closed (recommended)
     device: 'Living room TV', // optional: device name, object ID, device ID or session ID; without it all connected clients that can show messages
 }, result => log(JSON.stringify(result))); // { result: 'ok', sent: ['<object id>', ...] } or { error: '...' }
 ```
 
 A plain string is accepted too: `sendTo('emby.0', 'message', 'Hello')`.
 
-Note: the Android TV apps (tested: Emby for Android on NVIDIA Shield and Fire TV) show only messages without `timeoutMs` (as dialog); messages with a display duration are accepted by the server but not shown. The phone app and the web client show both; the phone app shows messages with a display duration only briefly (tested: about 2 s with `timeoutMs: 5000`).
+How long a message stays is decided by the app: with `timeoutMs` all tested apps showed it only for about 2-3 seconds, whatever the value. Without `timeoutMs` the message stays until it is closed (in the web client as a popup). For a doorbell, leave out `timeoutMs`.
+
+## Tested clients
+
+The adapter sends the same commands to every client; what happens depends on the Emby app. Tested with Emby Server 4.10.2:
+
+| | Web client (Firefox) | Android phone | iPad (iOS) | Android TV (NVIDIA Shield, Fire TV) |
+| --- | --- | --- | --- | --- |
+| Play, pause, stop, seek, next | ✓ | ✓ | ✓ | ✓ |
+| Previous | ✓ | ✓ | only after a few minutes of playback, otherwise the app restarts the item or skips forward | ✓ (tested after a few minutes of playback) |
+| Volume, mute | ✓ | ✓ | ✓ | – (no effect) |
+| Message with display time (`command.message`, `timeoutMs`) | about 2-3 s | about 2-3 s | about 2-3 s | about 2-3 s |
+| Dialog (`command.dialog`, message without `timeoutMs`) | ✓ (popup) | ✓ | ✓ | ✓ |
+
+Web browsers may block playback that is started without a click in the tab (autoplay).
 
 ## Changelog
 
