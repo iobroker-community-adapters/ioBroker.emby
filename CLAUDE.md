@@ -49,6 +49,10 @@ There is no `tasks.ts`: the admin is pure JsonConfig, so nothing is left to do b
     `migrateDevice()` copies objects incl. `common.custom`, the current values and enum memberships, then deletes
     the old objects.
   - `onStateChange`: writes to `<sid>.command.*` are sent to the server; writes to info/media/posters are acked.
+  - `server.*` (instanceObjects): `refreshServerInfo()` reads `GET /System/Info` on connect and every 10 min;
+    `server.refreshLibrary` → `POST /Library/Refresh`.
+  - `command.seek` is in % (role `media.seek`); `durationOf` keeps the duration of the current item per device.
+  - `onMessage`: `sendTo(..., 'message', { text, header?, timeoutMs?, device? })` → `sendMessageToClients()`.
 - `src/lib/types.ts` — Emby payloads (sessions, devices, socket messages).
 - `src/lib/adapter-config.d.ts` — typed `this.config`; must match `native` in `io-package.json` and
   `admin/jsonConfig.json`.

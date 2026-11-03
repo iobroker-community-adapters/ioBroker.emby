@@ -2,7 +2,13 @@ import { createHash } from 'node:crypto';
 
 import * as utils from '@iobroker/adapter-core';
 
-import type { EmbyDevicesResponse, EmbySession, EmbySocketMessage } from './lib/types';
+import type {
+    EmbyDevicesResponse,
+    EmbySession,
+    EmbySocketMessage,
+    EmbySystemInfo,
+    SendMessagePayload,
+} from './lib/types';
 
 /** Delay before a new connection attempt after the socket closed. */
 const RECONNECT_DELAY_MS = 60_000;
@@ -14,6 +20,10 @@ const MIN_POLL_SECONDS = 5;
 const DAY_MS = 24 * 60 * 60 * 1000;
 /** Timeout for REST calls to the server. */
 const HTTP_TIMEOUT_MS = 10_000;
+/** Interval for reading the server information (version, update, restart). */
+const SERVER_INFO_INTERVAL_MS = 10 * 60_000;
+/** 1 s in Emby ticks (1 tick = 100 ns). */
+const TICKS_PER_SECOND = 10_000_000;
 /** Device ids matching this pattern are used as object id directly, all others are hashed. */
 const PLAIN_DEVICE_ID = /^[A-Za-z0-9_-]{1,40}$/;
 /** Ids of the adapter's own channels; a device must never get one of them. */
@@ -34,6 +44,9 @@ const SIMPLE_COMMANDS: Record<string, string> = {
     'command.goHome': 'Command/GoHome',
     'command.goToSearch': 'Command/GoToSearch',
     'command.back': 'Command/Back',
+    'command.stop': 'Playing/Stop',
+    'command.next': 'Playing/NextTrack',
+    'command.previous': 'Playing/PreviousTrack',
 };
 
 type MediaState = 'idle' | 'paused' | 'playing';
@@ -53,9 +66,10 @@ function roState(name: string, type: ioBroker.CommonType, role = 'state'): ioBro
  * Builds a button definition.
  *
  * @param name name
+ * @param role button role (see ioBroker state roles, e.g. button.stop)
  */
-function button(name: string): ioBroker.SettableStateObject {
-    return { type: 'state', common: { name, role: 'button', type: 'boolean', read: false, write: true }, native: {} };
+function button(name: string, role = 'button'): ioBroker.SettableStateObject {
+    return { type: 'state', common: { name, role, type: 'boolean', read: false, write: true }, native: {} };
 }
 
 /**
@@ -83,6 +97,9 @@ class EmbyAdapter extends utils.Adapter {
     private retryTimer: ioBroker.Timeout | undefined | null = null;
     private keepAliveTimer: ioBroker.Interval | undefined | null = null;
     private pollTimer: ioBroker.Interval | undefined | null = null;
+    private serverInfoTimer: ioBroker.Interval | undefined | null = null;
+    /** Device key → duration of the current item in ticks (needed for command.seek in %). */
+    private readonly durationOf = new Map<string, number>();
     /** Serialises processing of Sessions messages so slow object creation cannot overlap. */
     private sessionQueue: Promise<void> = Promise.resolve();
 
@@ -112,6 +129,7 @@ class EmbyAdapter extends utils.Adapter {
         this.on('stateChange', (id, state) => this.onStateChange(id, state));
         this.on('objectChange', (id, obj) => this.onObjectChange(id, obj));
         this.on('unload', callback => this.onUnload(callback));
+        this.on('message', obj => this.onMessage(obj));
     }
 
     /** Adapter start. */
@@ -178,6 +196,10 @@ class EmbyAdapter extends utils.Adapter {
         if (this.pollTimer) {
             this.clearInterval(this.pollTimer);
             this.pollTimer = null;
+        }
+        if (this.serverInfoTimer) {
+            this.clearInterval(this.serverInfoTimer);
+            this.serverInfoTimer = null;
         }
     }
 
@@ -392,6 +414,20 @@ class EmbyAdapter extends utils.Adapter {
             return;
         }
 
+        if (id === 'server.refreshLibrary') {
+            if (!this.apiKey) {
+                this.log.warn('No API key configured, commands cannot be sent.');
+                return;
+            }
+            await this.apiPost('Library/Refresh');
+            await this.setStateAsync(id, state.val, true);
+            return;
+        }
+        if (id.startsWith('server.')) {
+            await this.setStateAsync(id, state.val, true);
+            return;
+        }
+
         const key = id.substring(0, id.indexOf('.'));
         const cmd = id.substring(key.length + 1);
         if (!key || !cmd.startsWith('command.')) {
@@ -429,6 +465,50 @@ class EmbyAdapter extends utils.Adapter {
                         ? { Header: text.substring(0, sep), Text: text.substring(sep + 1) }
                         : { Header: 'ioBroker', Text: text };
                 await this.apiPost(`${base}/Message`, body);
+                await this.setStateAsync(id, '', true);
+                break;
+            }
+
+            case 'command.seek': {
+                const percent = Number(state.val);
+                const duration = this.durationOf.get(key) || 0;
+                if (!Number.isFinite(percent) || percent < 0 || percent > 100) {
+                    this.log.warn(`Invalid position "${String(state.val)}", expected 0-100 %`);
+                    return;
+                }
+                if (!duration) {
+                    this.log.warn(`Command seek not sent: nothing with a known duration is playing on ${key}`);
+                    return;
+                }
+                const ticks = Math.round((duration * percent) / 100);
+                // Emby reads the position from the body, Jellyfin from the query
+                await this.apiPost(`${base}/Playing/Seek?SeekPositionTicks=${ticks}`, {
+                    Command: 'Seek',
+                    SeekPositionTicks: ticks,
+                });
+                await this.setStateAsync(id, Math.round(percent * 10) / 10, true);
+                break;
+            }
+
+            case 'command.generalCommand': {
+                let command: { Name?: unknown; Arguments?: unknown };
+                try {
+                    command = JSON.parse(text) as { Name?: unknown; Arguments?: unknown };
+                } catch {
+                    this.log.warn(`Invalid JSON for generalCommand: ${text}`);
+                    return;
+                }
+                if (!command || typeof command.Name !== 'string' || !command.Name) {
+                    this.log.warn('generalCommand needs at least {"Name": "..."}');
+                    return;
+                }
+                const args: Record<string, string> = {};
+                if (command.Arguments && typeof command.Arguments === 'object') {
+                    for (const [k, v] of Object.entries(command.Arguments as Record<string, unknown>)) {
+                        args[k] = String(v);
+                    }
+                }
+                await this.apiPost(`${base}/Command`, { Name: command.Name, Arguments: args });
                 await this.setStateAsync(id, '', true);
                 break;
             }
@@ -551,6 +631,10 @@ class EmbyAdapter extends utils.Adapter {
         // the server sends the first "Sessions" message only after the next change, so read the
         // current state right away (also brings states up to date after a reconnect)
         void this.refreshSessions();
+        void this.refreshServerInfo();
+        if (!this.serverInfoTimer && this.apiKey) {
+            this.serverInfoTimer = this.setInterval(() => void this.refreshServerInfo(), SERVER_INFO_INTERVAL_MS);
+        }
     }
 
     /**
@@ -648,6 +732,90 @@ class EmbyAdapter extends utils.Adapter {
             (!!d.DeviceId && list.includes(d.DeviceId)) ||
             list.includes(this.deviceKey(d.DeviceId, d.Id))
         );
+    }
+
+    /** Reads version, update and restart information of the server (needs the API key). */
+    private async refreshServerInfo(): Promise<void> {
+        if (!this.apiKey) {
+            return;
+        }
+        try {
+            const res = await this.apiRequest('GET', 'System/Info');
+            const info = (await res.json()) as EmbySystemInfo;
+            await this.setValue('server.name', info.ServerName || '');
+            await this.setValue('server.version', info.Version || '');
+            await this.setValue('server.updateAvailable', info.HasUpdateAvailable === true);
+            await this.setValue('server.restartPending', info.HasPendingRestart === true);
+        } catch (e) {
+            this.log.debug(`Could not read server info: ${(e as Error).message}`);
+        }
+    }
+
+    /**
+     * Handles sendTo commands.
+     *
+     * `sendTo('emby.0', 'message', { text, header?, timeoutMs?, device? })` shows a message on one client
+     * (device key, session id, device id or device name) or, without `device`, on all connected clients
+     * that can display messages.
+     *
+     * @param obj message from sendTo
+     */
+    private onMessage(obj: ioBroker.Message): void {
+        if (!obj || typeof obj !== 'object' || !obj.command) {
+            return;
+        }
+        const reply = (result: Record<string, unknown>): void => {
+            if (obj.callback) {
+                this.sendTo(obj.from, obj.command, result, obj.callback);
+            }
+        };
+        if (obj.command !== 'message' && obj.command !== 'send') {
+            reply({ error: `Unknown command ${obj.command}` });
+            return;
+        }
+        this.sendMessageToClients(obj.message as SendMessagePayload | string)
+            .then(sent => reply(sent.length ? { result: 'ok', sent } : { error: 'No matching client connected' }))
+            .catch(e => reply({ error: (e as Error).message }));
+    }
+
+    /**
+     * Shows a message on the matching connected clients.
+     *
+     * @param payload message text or object with text, header, timeoutMs and device
+     * @returns device keys the message was sent to
+     */
+    private async sendMessageToClients(payload: SendMessagePayload | string): Promise<string[]> {
+        const p: SendMessagePayload = typeof payload === 'string' ? { text: payload } : payload || {};
+        const text = p.text === undefined || p.text === null ? '' : String(p.text);
+        if (!text) {
+            throw new Error('Parameter "text" is missing');
+        }
+        if (!this.apiKey) {
+            throw new Error('No API key configured');
+        }
+        const timeoutMs = Number(p.timeoutMs);
+        const body: Record<string, unknown> = { Header: p.header ? String(p.header) : 'ioBroker', Text: text };
+        if (Number.isFinite(timeoutMs) && timeoutMs > 0) {
+            body.TimeoutMs = Math.round(timeoutMs);
+        }
+        const wanted = p.device === undefined || p.device === null ? '' : String(p.device);
+        const sent: string[] = [];
+        for (const [key, sessionId] of this.sessionOf) {
+            const commands = await this.getStateAsync(`${key}.info.supportedCommands`);
+            if (!String(commands?.val || '').includes('DisplayMessage')) {
+                continue;
+            }
+            if (wanted) {
+                const name = await this.getStateAsync(`${key}.info.deviceName`);
+                const deviceId = await this.getStateAsync(`${key}.info.deviceId`);
+                if (![key, sessionId, String(deviceId?.val || ''), String(name?.val || '')].includes(wanted)) {
+                    continue;
+                }
+            }
+            await this.apiPost(`Sessions/${encodeURIComponent(sessionId)}/Message`, body);
+            sent.push(key);
+        }
+        return sent;
     }
 
     /**
@@ -811,6 +979,7 @@ class EmbyAdapter extends utils.Adapter {
         const npi = d.NowPlayingItem;
         const ps = d.PlayState || {};
         if (!npi) {
+            this.durationOf.delete(sid);
             await this.clearMedia(sid);
             this.changeState(sid, 'idle');
             return;
@@ -847,6 +1016,17 @@ class EmbyAdapter extends utils.Adapter {
             d.SupportedCommands.includes('SetVolume')
         ) {
             await this.setValue(`${sid}.command.volume`, ps.VolumeLevel);
+        }
+        const duration = typeof npi.RunTimeTicks === 'number' && npi.RunTimeTicks > 0 ? npi.RunTimeTicks : 0;
+        const position = typeof ps.PositionTicks === 'number' && ps.PositionTicks >= 0 ? ps.PositionTicks : null;
+        this.durationOf.set(sid, duration);
+        await this.setValue(`${sid}.media.duration`, duration ? Math.round(duration / TICKS_PER_SECOND) : null);
+        await this.setValue(`${sid}.media.elapsed`, position !== null ? Math.round(position / TICKS_PER_SECOND) : null);
+        if (d.SupportsRemoteControl) {
+            await this.setValue(
+                `${sid}.command.seek`,
+                duration && position !== null ? Math.round((position / duration) * 1000) / 10 : null,
+            );
         }
 
         const basePoster = `${this.baseUrl()}/Items/`;
@@ -893,6 +1073,15 @@ class EmbyAdapter extends utils.Adapter {
         }
         for (const s of ['rating', 'year', 'ratio']) {
             await this.setValue(`${sid}.media.${s}`, null);
+        }
+        // clients last seen by an older version (marked offline at start) have no elapsed/duration yet
+        if (await this.getObjectAsync(`${sid}.media.elapsed`)) {
+            await this.setValue(`${sid}.media.elapsed`, null);
+            await this.setValue(`${sid}.media.duration`, null);
+        }
+        // only clients with remote control have command.seek
+        if (await this.getObjectAsync(`${sid}.command.seek`)) {
+            await this.setValue(`${sid}.command.seek`, null);
         }
         await this.setValue(`${sid}.media.type`, 'None');
         await this.setValue(`${sid}.media.isMuted`, false);
@@ -1001,6 +1190,7 @@ class EmbyAdapter extends utils.Adapter {
         delete this.timeoutstates[sid];
         delete this.timeoutstarted[sid];
         delete this.laststates[sid];
+        this.durationOf.delete(sid);
         await this.delObjectAsync(sid, { recursive: true });
     }
 
@@ -1119,6 +1309,30 @@ class EmbyAdapter extends utils.Adapter {
             'media.ratio': roState('Ratio', 'number'),
             'media.agerating': roState('Age Rating', 'string'),
             'media.originaltitle': roState('Original Title', 'string'),
+            'media.elapsed': {
+                type: 'state',
+                common: {
+                    name: 'Playback position',
+                    role: 'media.elapsed',
+                    type: 'number',
+                    unit: 's',
+                    read: true,
+                    write: false,
+                },
+                native: {},
+            },
+            'media.duration': {
+                type: 'state',
+                common: {
+                    name: 'Duration',
+                    role: 'media.duration',
+                    type: 'number',
+                    unit: 's',
+                    read: true,
+                    write: false,
+                },
+                native: {},
+            },
             'posters.main': roState('Main Poster', 'string', 'url'),
             'posters.episode': roState('Episode Poster', 'string', 'url'),
             'posters.season': roState('Season Poster', 'string', 'url'),
@@ -1129,6 +1343,34 @@ class EmbyAdapter extends utils.Adapter {
             objs['command.pause'] = button('Pause');
             objs['command.play'] = button('Play');
             objs['command.toggleplay'] = button('Toggle Play');
+            objs['command.stop'] = button('Stop', 'button.stop');
+            objs['command.next'] = button('Next', 'button.next');
+            objs['command.previous'] = button('Previous', 'button.prev');
+            objs['command.seek'] = {
+                type: 'state',
+                common: {
+                    name: 'Playback position (set to seek)',
+                    role: 'media.seek',
+                    type: 'number',
+                    unit: '%',
+                    min: 0,
+                    max: 100,
+                    read: true,
+                    write: true,
+                },
+                native: {},
+            };
+            objs['command.generalCommand'] = {
+                type: 'state',
+                common: {
+                    name: 'Send a general command (JSON: {"Name": "...", "Arguments": {...}})',
+                    role: 'json',
+                    type: 'string',
+                    read: false,
+                    write: true,
+                },
+                native: {},
+            };
 
             const supported = Array.isArray(device.SupportedCommands) ? device.SupportedCommands : [];
             for (const c of supported) {

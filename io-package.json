@@ -147,7 +147,7 @@
     "compact": true,
     "connectionType": "local",
     "dataSource": "push",
-    "messagebox": false,
+    "messagebox": true,
     "dependencies": [
       {
         "js-controller": ">=6.0.11"
@@ -241,6 +241,92 @@
         "read": true,
         "write": false,
         "def": false
+      },
+      "native": {}
+    },
+    {
+      "_id": "server",
+      "type": "channel",
+      "common": {
+        "name": {
+          "en": "Emby server",
+          "de": "Emby-Server"
+        }
+      },
+      "native": {}
+    },
+    {
+      "_id": "server.name",
+      "type": "state",
+      "common": {
+        "name": {
+          "en": "Server name",
+          "de": "Servername"
+        },
+        "type": "string",
+        "role": "info.name",
+        "read": true,
+        "write": false
+      },
+      "native": {}
+    },
+    {
+      "_id": "server.version",
+      "type": "state",
+      "common": {
+        "name": {
+          "en": "Server version",
+          "de": "Serverversion"
+        },
+        "type": "string",
+        "role": "info.firmware",
+        "read": true,
+        "write": false
+      },
+      "native": {}
+    },
+    {
+      "_id": "server.updateAvailable",
+      "type": "state",
+      "common": {
+        "name": {
+          "en": "Update available",
+          "de": "Update verfügbar"
+        },
+        "type": "boolean",
+        "role": "indicator",
+        "read": true,
+        "write": false
+      },
+      "native": {}
+    },
+    {
+      "_id": "server.restartPending",
+      "type": "state",
+      "common": {
+        "name": {
+          "en": "Restart pending",
+          "de": "Neustart ausstehend"
+        },
+        "type": "boolean",
+        "role": "indicator",
+        "read": true,
+        "write": false
+      },
+      "native": {}
+    },
+    {
+      "_id": "server.refreshLibrary",
+      "type": "state",
+      "common": {
+        "name": {
+          "en": "Scan all libraries",
+          "de": "Alle Bibliotheken scannen"
+        },
+        "type": "boolean",
+        "role": "button",
+        "read": false,
+        "write": true
       },
       "native": {}
     }
