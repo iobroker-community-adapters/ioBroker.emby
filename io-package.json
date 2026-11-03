@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "emby",
-    "version": "3.0.0",
+    "version": "3.1.0",
     "news": {
+      "3.1.0": {
+        "en": "Repository maintenance: added email to copyright line in README and LICENSE (#330)\nNew commands stop, next, previous, seek (in %) and generalCommand; new states media.elapsed and media.duration\nNew server states (name, version, update available, restart pending) and button to scan all libraries\nMessages can be sent from scripts with sendTo('emby.0', 'message', {...})",
+        "de": "Repository-Wartung: E-Mail zum Copyright in README und LICENSE hinzugefügt (#330)\nNeue Befehle stop, next, previous, seek (in %) und generalCommand; neue States media.elapsed und media.duration\nNeue Server-States (Name, Version, Update verfügbar, Neustart ausstehend) und Button zum Scannen aller Bibliotheken\nNachrichten können aus Skripten mit sendTo('emby.0', 'message', {...}) gesendet werden",
+        "ru": "Обслуживание репозитория: добавлено электронное письмо в строку авторских прав в README и LICENSE (#330)\nНовые команды stop, next, previous, seek (в%) и generalCommand; новые состояния media.elapsed и media.duration\nНовые состояния сервера (имя, версия, доступное обновление, ожидание перезапуска) и кнопка для сканирования всех библиотек\nСообщения можно отправлять из скриптов с помощью sendTo ('emby.0', 'message', {...})",
+        "pt": "Manutenção do repositório: e-mail adicionado à linha README e LICENSE (#330)\nNovos comandos stop, next, previous, seek (em%) e GeneralCommand; novos estados media.elapsed e media.duration\nNovos estados do servidor (nome, versão, atualização pendente) e botão para escanear todas as bibliotecas\nEnvie mensagens de scripts com sendTo ('emby.0', 'message', {...})",
+        "nl": "Onderhoud van de repository: e-mail toegevoegd aan de copyrightregel in README en LICENSE (#330)\nNieuwe opdrachten stop, next, previous, seek (in%) en GeneralCommand; nieuwe staten media.elapsed en media.duration\nNieuwe serverstatussen (naam, versie, update beschikbaar, herstarten is in behandeling) en knop om alle bibliotheken te scannen\nBerichten kunnen worden verzonden vanuit scripts met SendTo ('emby.0', 'message', {...})",
+        "fr": "Gestion du dépôt : ajout d'un e-mail à la ligne de copyright dans README et LICENSE (#330)\nLes nouvelles commandes stop, next, previous, seek (en %) et GeneralCommand ; les nouveaux états media.elapsed et media.duration\nNouvel état du serveur (nom, version, mise à jour, redémarrage en attente) et bouton pour scanner toutes les librairies\nSendTo permet d'envoyer des messages via SendTo (« emby.0 », « message », {...})",
+        "it": "Gestione archivio: aggiunta email al copyright in README e LICENSE (#330)\nNuovi comandi stop, next, previous, seek (in%) e GeneralCommand; nuovi stati media.elapsed e media.duration\nNuovi stati del server (nome, versione, aggiornamento in sospeso) e pulsante\nPuò inviare messaggi da script con sendTo ('emby.0', 'message', {...})",
+        "es": "Mantenimiento del repositorio: se añadió el correo a la línea de copyright de README y LICENSE (#330)\nNuevos comandos stop, next, previous, seek (in%) y GeneralCommand; nuevos estados media.elapsed y media.duration\nNuevos estados del servidor (nombre, versión, actualización pendiente) y botón para escanear todas las bibliotecas\nLos mensajes se envían desde guiones con sendTo ('emby.0', 'message', {...})",
+        "pl": "Konserwacja repozytorium: dodano e-mail do linii praw autorskich w README i LICENSE (#330)\nNowe polecenia stop, next, previous, seek (w%) i GeneralCommand; nowe stany media.elapsed i media.length\nNowe stany serwera (nazwa, wersja, aktualizacja dostępna, ponowne uruchomienie oczekujące) i przycisk skanowania wszystkich bibliotek\nWiadomości mogą być wysyłane ze skryptów za pomocą sendTo ('emby.0', 'message', {...})",
+        "uk": "Обслуговування сховища: додано електронну пошту до рядка авторських прав у README та LICENSE (#330)\nНові команди stop, next, anterior, seek (у%) та generalCommand; нові стани media.elapsed та media.varighed\nНові стани сервера (ім'я, версія, доступне оновлення, перезавантаження очікує) та кнопка сканування всіх бібліотек\nПовідомлення можна надсилати зі скриптів за допомогою sendTo ('emby.0', 'message', {...})",
+        "zh-cn": "存储库维护：在 README 和 LICENSE 中的版权行中添加了电子邮件 (#330)\n新命令停止、下一步、上一个命令、seek（以% 为单位）和 GeneralCommand；新状态 media.elapsed 和 media.duration\n新的服务器状态（名称、版本、更新可用、待重启）和用于扫描所有库的按钮\n可以使用 sendTo（'emby.0'、'message'、{...}）从脚本中发送消息"
+      },
       "3.0.0": {
         "en": "**BREAKING:** Clients are identified by the Emby device ID instead of the session ID, so the object IDs no longer change when a client reconnects. Existing objects including values, history settings and room/function assignments are migrated automatically; scripts and visualisations using the old IDs have to be adjusted (see README)\nNew states info.deviceId and info.sessionId; several sessions of one client (e.g. browser tabs) are shown as one device\nObjects that older versions created for ioBroker connections (other instances, version 1.3.0) are removed and no longer created\nIntegration test against a mock Emby server added",
         "de": "**AKTUELL: ** Kunden sehen die Emby-Geräte-ID statt der Sitzungs-ID, sodass sich die Objekt-IDs nicht mehr ändern. Bestehende Objekte wie Werte, Historie und Raum-/Funktionszuweisungen werden automatisch migriert; Skripte und Visualisierungen mit alten IDs müssen angepasst werden (siehe README)\nNeue Status info.deviceId und info.sessionId; mehrere Sitzungen eines Clients (z. B. Browser-Tabs) werden als Gerät angezeigt\nObjekte, die ältere Versionen für ioBroker-Verbindungen (andere Instanzen, Version 1.3.0) entfernt und nicht mehr erstellt\nIntegrationstest mit Emby-Server hinzugefügt",
@@ -80,19 +93,6 @@
         "pl": "Adapter wymaga węzła 16.\nAdapter został przeniesiony do iobroker-community-adapter.\nUstalono błąd, który powoduje, że wiele nieokreślonych wiadomości zostało ustalonych. (23)\nW zależności zostały zaktualizowane.",
         "uk": "Адаптер вимагає nodejs 16 тепер.\nПереміщено перехід на iobroker-community-adapters oragnization.\nВиправлено помилку, що викликає декілька невизнаних повідомлень. #[23]\nОновлено залежність.",
         "zh-cn": "现在需要16秒。.\n已经进入了碘化石-社区的吸收者或种植者。.\n已确定造成多种未界定的信息的错误。 行动[23]\n情况已经更新。."
-      },
-      "1.0.2": {
-        "en": "Published to stable",
-        "de": "In Stable veröffentlicht",
-        "ru": "Опубликовано в стабильной версии",
-        "pt": "Publicado no estável",
-        "nl": "Gepubliceerd naar stabiel",
-        "fr": "Publié dans stable",
-        "it": "Pubblicato su stable",
-        "es": "Publicado en estable",
-        "pl": "Opublikowano w wersji stabilnej",
-        "uk": "Опубліковано в стабільному",
-        "zh-cn": "发布到稳定版"
       }
     },
     "titleLang": {

@@ -176,7 +176,7 @@ Web browsers may block playback that is started without a click in the tab (auto
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
-### **WORK IN PROGRESS**
+### 3.1.0 (2026-11-03)
 - (GermanBluefox) Repository maintenance: added email to copyright line in README and LICENSE (#330)
 - (Schimi1983) New commands stop, next, previous, seek (in %) and generalCommand; new states media.elapsed and media.duration
 - (Schimi1983) New server states (name, version, update available, restart pending) and button to scan all libraries
@@ -223,9 +223,6 @@ Web browsers may block playback that is started without a click in the tab (auto
 
 * (mcm1957) Adapter requires node.js 18 and js-controller >= 5 now
 * (mcm1957) Dependencies have been updated
-
-### 1.1.1 (2023-11-20)
--   (mcm1957) Dependencies have been updated.
 
 [Older changelogs can be found there](CHANGELOG_OLD.md)
 
