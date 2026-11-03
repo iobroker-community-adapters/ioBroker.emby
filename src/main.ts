@@ -28,6 +28,28 @@ const TICKS_PER_SECOND = 10_000_000;
 const PLAIN_DEVICE_ID = /^[A-Za-z0-9_-]{1,40}$/;
 /** Ids of the adapter's own channels; a device must never get one of them. */
 const RESERVED_IDS = new Set(['info', 'server']);
+/**
+ * Roles corrected in 3.1.0 to the official ioBroker state roles, by state id below the device. Objects of clients
+ * that are not connected at start are updated by updateStoredRoles(), the others by createDeviceObjects().
+ */
+const ROLE_UPDATES: Record<string, string> = {
+    'command.play': 'button.play',
+    'command.pause': 'button.pause',
+    'media.genres': 'media.genre',
+    'media.year': 'media.date',
+    'media.type': 'text',
+    'media.description': 'text',
+    'media.endtime': 'text',
+    'media.tags': 'text',
+    'media.agerating': 'text',
+    'media.originaltitle': 'text',
+    'media.backdropimage': 'text',
+    'media.rating': 'value',
+    'media.ratio': 'value',
+    'posters.main': 'media.cover',
+    'posters.season': 'text.url',
+    'posters.episode': 'text.url',
+};
 /** Valid values of common.type; versions <= 1.3.0 created buttons with type "button" */
 const STATE_TYPES = new Set(['number', 'string', 'boolean', 'array', 'object', 'mixed', 'json']);
 
@@ -50,6 +72,19 @@ const SIMPLE_COMMANDS: Record<string, string> = {
 };
 
 type MediaState = 'idle' | 'paused' | 'playing';
+
+/**
+ * Valid common.type for an object written by an older version: versions <= 1.3.0 used the type "button".
+ *
+ * @param type current common.type
+ * @param role common.role
+ */
+function validType(type: unknown, role: unknown): ioBroker.CommonType {
+    if (STATE_TYPES.has(String(type))) {
+        return type as ioBroker.CommonType;
+    }
+    return String(role).startsWith('button') ? 'boolean' : 'mixed';
+}
 
 /**
  * Builds a read-only state definition.
@@ -139,6 +174,7 @@ class EmbyAdapter extends utils.Adapter {
         // the key is copied once, this.config.apikey is not read again (see migratePlainApiKey)
         this.apiKey = this.config.apikey || '';
         await this.migrateStoredDevices();
+        await this.updateStoredRoles();
         if (await this.migratePlainApiKey()) {
             // @KI_HINWEIS: updateConfig() makes the js-controller restart the instance right away; a
             // connection started now would be cut off, and its timers would be created while stopping.
@@ -1116,6 +1152,32 @@ class EmbyAdapter extends utils.Adapter {
     }
 
     /**
+     * Sets the roles of ROLE_UPDATES on the objects of all clients, also of clients that are not connected and
+     * therefore not recreated by createDeviceObjects(). Only objects with a different role are written.
+     */
+    private async updateStoredRoles(): Promise<void> {
+        const objects = await this.getAdapterObjectsAsync();
+        const depth = this.namespace.split('.').length + 3;
+        let count = 0;
+        for (const [id, obj] of Object.entries(objects)) {
+            const parts = id.split('.');
+            if (obj?.type !== 'state' || parts.length !== depth) {
+                continue;
+            }
+            const role = ROLE_UPDATES[parts.slice(-2).join('.')];
+            if (role && obj.common?.role !== role) {
+                // objects of versions <= 1.3.0 also have an invalid type, the js-controller warns on every write
+                const type = validType(obj.common?.type, role);
+                await this.extendForeignObjectAsync(id, { common: { role, type } });
+                count++;
+            }
+        }
+        if (count) {
+            this.log.info(`Updated the role of ${count} states to the official ioBroker state roles`);
+        }
+    }
+
+    /**
      * Moves all objects and states of a client to a new object id: objects including common.custom
      * (history settings), current values and the membership in rooms and functions. The old objects are
      * deleted afterwards.
@@ -1145,7 +1207,7 @@ class EmbyAdapter extends utils.Adapter {
             const common = { ...obj.common } as Record<string, unknown>;
             if (obj.type === 'state' && !STATE_TYPES.has(String(common.type))) {
                 // corrected by createDeviceObjects afterwards, set here to avoid warnings of the js-controller
-                common.type = common.role === 'button' ? 'boolean' : 'mixed';
+                common.type = validType(common.type, common.role);
             }
             await this.setForeignObjectAsync(target, {
                 type: obj.type,
@@ -1298,17 +1360,17 @@ class EmbyAdapter extends utils.Adapter {
             'media.title': roState('Title of file playing', 'string', 'media.title'),
             'media.seriesName': roState('Name of serie now playing', 'string', 'media.title'),
             'media.seasonName': roState('Name of season now playing', 'string', 'media.season'),
-            'media.type': roState('Type of file playing', 'string'),
-            'media.description': roState('Description of file playing', 'string'),
-            'media.endtime': roState('Endtime of playing video/audio', 'string'),
-            'media.rating': roState('Community Rating', 'number'),
-            'media.year': roState('Production Year', 'number'),
-            'media.tags': roState('Tags', 'string'),
-            'media.genres': roState('Genres', 'string'),
-            'media.backdropimage': roState('BackdropImageTags', 'string'),
-            'media.ratio': roState('Ratio', 'number'),
-            'media.agerating': roState('Age Rating', 'string'),
-            'media.originaltitle': roState('Original Title', 'string'),
+            'media.type': roState('Type of file playing', 'string', 'text'),
+            'media.description': roState('Description of file playing', 'string', 'text'),
+            'media.endtime': roState('Endtime of playing video/audio', 'string', 'text'),
+            'media.rating': roState('Community Rating', 'number', 'value'),
+            'media.year': roState('Production Year', 'number', 'media.date'),
+            'media.tags': roState('Tags', 'string', 'text'),
+            'media.genres': roState('Genres', 'string', 'media.genre'),
+            'media.backdropimage': roState('BackdropImageTags', 'string', 'text'),
+            'media.ratio': roState('Ratio', 'number', 'value'),
+            'media.agerating': roState('Age Rating', 'string', 'text'),
+            'media.originaltitle': roState('Original Title', 'string', 'text'),
             'media.elapsed': {
                 type: 'state',
                 common: {
@@ -1333,15 +1395,15 @@ class EmbyAdapter extends utils.Adapter {
                 },
                 native: {},
             },
-            'posters.main': roState('Main Poster', 'string', 'url'),
-            'posters.episode': roState('Episode Poster', 'string', 'url'),
-            'posters.season': roState('Season Poster', 'string', 'url'),
+            'posters.main': roState('Main Poster', 'string', 'media.cover'),
+            'posters.episode': roState('Episode Poster', 'string', 'text.url'),
+            'posters.season': roState('Season Poster', 'string', 'text.url'),
         };
 
         if (device.SupportsRemoteControl) {
             objs.command = { type: 'channel', common: { name: 'Control Client' }, native: {} };
-            objs['command.pause'] = button('Pause');
-            objs['command.play'] = button('Play');
+            objs['command.pause'] = button('Pause', 'button.pause');
+            objs['command.play'] = button('Play', 'button.play');
             objs['command.toggleplay'] = button('Toggle Play');
             objs['command.stop'] = button('Stop', 'button.stop');
             objs['command.next'] = button('Next', 'button.next');

@@ -181,6 +181,7 @@ Web browsers may block playback that is started without a click in the tab (auto
 - (Schimi1983) New commands stop, next, previous, seek (in %) and generalCommand; new states media.elapsed and media.duration
 - (Schimi1983) New server states (name, version, update available, restart pending) and button to scan all libraries
 - (Schimi1983) Messages can be sent from scripts with sendTo('emby.0', 'message', {...})
+- (Schimi1983) Roles of existing states corrected to the official ioBroker state roles (e.g. button.play, media.genre, media.cover, text); object IDs and values are unchanged
 
 ### 3.0.0 (2026-10-29)
 - (Schimi1983) **BREAKING:** Clients are identified by the Emby device ID instead of the session ID, so the object IDs no longer change when a client reconnects. Existing objects including values, history settings and room/function assignments are migrated automatically; scripts and visualisations using the old IDs have to be adjusted (see README)
