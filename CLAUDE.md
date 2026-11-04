@@ -59,9 +59,12 @@ There is no `tasks.ts`: the admin is pure JsonConfig, so nothing is left to do b
 
 ## Conventions
 
-- Object IDs, roles, `native` keys and defaults must not change — existing installations depend on them. The
+- Object IDs, value formats, `native` keys and defaults must not change — existing installations depend on them. The
   exception was the switch to device keys in 3.0.0, which comes with `migrateDevice()` and the upgrade message in
   `common.messages`.
+- Roles follow the official list (https://github.com/ioBroker/ioBroker.docs/blob/master/docs/en/dev/stateroles.md).
+  A role may be corrected (scripts keep working, `extendObject` updates existing objects); the values of `media.state`
+  (`idle`/`paused`/`playing`) stay as they are, even though the list uses `play`/`stop`/`pause`.
 - Do not name methods like `utils.Adapter` methods (`createDevice`, `createState`, …): a private method with the
   same name overrides the adapter API.
 - Timers only via `this.setTimeout` / `this.setInterval` so they are cleared on unload.

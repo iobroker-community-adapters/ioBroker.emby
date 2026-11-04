@@ -286,6 +286,14 @@ tests.integration(path.join(__dirname, '..'), {
                 assert.deepEqual(room.common.members, ['emby.0.dev-tv.media.title']);
             });
 
+            it('updates the roles of clients that are not connected', async () => {
+                // pc1 (1.3.0, not connected at start) had role "button"; it is corrected at start
+                const title = await obj('dev-tv.media.title');
+                assert.equal(title.common.role, 'media.title');
+                const play = await obj('dev-pc.command.play');
+                assert.equal(play.common.role, 'button.play');
+            });
+
             it('migrates objects of version 1.3.0 when the session is reported', async () => {
                 assert.equal(await obj('pc1.media.title'), null);
                 assert.equal((await obj('dev-pc')).native.deviceId, 'dev-pc');
@@ -355,6 +363,10 @@ tests.integration(path.join(__dirname, '..'), {
             it('sends playback, seek, general and server commands', async function () {
                 this.timeout(30_000);
                 assert.equal((await obj('dev-tv.command.next')).common.role, 'button.next');
+                assert.equal((await obj('dev-tv.command.play')).common.role, 'button.play');
+                assert.equal((await obj('dev-tv.command.pause')).common.role, 'button.pause');
+                assert.equal((await obj('dev-tv.media.genres')).common.role, 'media.genre');
+                assert.equal((await obj('dev-tv.posters.main')).common.role, 'media.cover');
                 assert.equal((await obj('dev-tv.command.previous')).common.role, 'button.prev');
                 assert.equal((await obj('dev-tv.command.stop')).common.role, 'button.stop');
                 await harness.states.setStateAsync('emby.0.dev-tv.command.next', { val: true, ack: false });
