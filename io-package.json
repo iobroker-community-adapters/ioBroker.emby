@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "emby",
-    "version": "3.1.0",
+    "version": "3.1.1",
     "news": {
+      "3.1.1": {
+        "en": "Roles of existing states corrected to the official ioBroker state roles (e.g. button.play, media.genre, media.cover, text); object IDs and values are unchanged",
+        "de": "Rollen bestehender States an die offiziellen ioBroker-State-Rollen angepasst (z. B. button.play, media.genre, media.cover, text); Objekt-IDs und Werte bleiben unverändert",
+        "ru": "Роли существующих государств скорректированы до официальных ролей в IOBroker (например, button.play, media.genre, media.cover, text); идентификаторы и значения объектов остались без изменений",
+        "pt": "Funções de estados existentes corrigidas para as funções oficiais do IOBroker (ex. button.play, media.genre, media.cover, text); IDs e valores de objetos permanecem inalterados",
+        "nl": "De rollen van bestaande staten zijn gecorrigeerd naar de officiële staatsrollen van IOBroker (bijv. button.play, media.genre, media.cover, text); object-ID's en -waarden blijven ongewijzigd",
+        "fr": "Rôles des états existants remplacés par ceux officiels d'IOBroker (par exemple button.play, media.genre, media.cover, text) ; les ID et valeurs des objets sont inchangés",
+        "it": "Ruoli degli stati esistenti corretti a quelli ufficiali di IOBroker (ad es. button.play, media.genre, media.cover, text); ID e valori degli oggetti invariati",
+        "es": "Los roles de los estados actuales se corrigieron a los roles estatales oficiales de ioBroker (por ejemplo, button.play, media.genre, media.cover, text); los ID y valores de los objetos no cambian",
+        "pl": "Role istniejących stanów skorygowane do oficjalnych ról stanu ioBroker (np. button.play, media.genre, media.cover, text); identyfikatory obiektów i wartości pozostają niezmienione",
+        "uk": "Ролі існуючих станів виправлено до офіційних ролей стану IObroker (наприклад button.play, media.genre, media.cover, text); ідентифікатори об'єктів та значення не змінюються",
+        "zh-cn": "现有状态的角色更正为 ioBroker 的官方状态角色（例如 button.play、media.genre、media.cover、文本）；对象 ID 和值保持不变"
+      },
       "3.1.0": {
         "en": "Repository maintenance: added email to copyright line in README and LICENSE (#330)\nNew commands stop, next, previous, seek (in %) and generalCommand; new states media.elapsed and media.duration\nNew server states (name, version, update available, restart pending) and button to scan all libraries\nMessages can be sent from scripts with sendTo('emby.0', 'message', {...})",
         "de": "Repository-Wartung: E-Mail zum Copyright in README und LICENSE hinzugefügt (#330)\nNeue Befehle stop, next, previous, seek (in %) und generalCommand; neue States media.elapsed und media.duration\nNeue Server-States (Name, Version, Update verfügbar, Neustart ausstehend) und Button zum Scannen aller Bibliotheken\nNachrichten können aus Skripten mit sendTo('emby.0', 'message', {...}) gesendet werden",
@@ -80,19 +93,6 @@
         "pl": "W zależności zostały zaktualizowane.",
         "uk": "Оновлено залежність.",
         "zh-cn": "情况已经更新。."
-      },
-      "1.1.0": {
-        "en": "Adapter requires nodejs 16 now.\nAdapter has been moved into iobroker-community-adapters organization.\nAn error causing multiple 'undefined' messages has been fixed. [#23]\nDependencies have been updated.",
-        "de": "Adapter benötigt jetzt Nodejs 16.\nAdapter wurde in die Iobroker-Community-Adapter Organization verschoben.\nEin Fehler, der mehrere 'undefined' Nachrichten verursachte, wurde behoben. [#23]\nAbhängigkeiten wurden aktualisiert.",
-        "ru": "Адаптер требует nodejs 16 сейчас.\nАдаптер переехал в iobroker-community-adapters oragnization.\nИсправлена ошибка, вызывающая несколько неопределенных сообщений. #[23]\nОбновлены зависимости.",
-        "pt": "Adaptador requer nodejs 16 agora.\nAdapter foi movido para iobroker-community-adapters oragnization.\nFoi corrigido um erro causando múltiplas mensagens indefinidas. #[23]\nAs dependências foram atualizadas.",
-        "nl": "Adapter vereist nodejs 16 nu.\nAdapter is verhuisd naar iobroker-community-adapters oragnatie.\nEen fout die meerdere onbepaalde berichten veroorzaakt. _\nAfhankelijkheid is geüpdateerd.",
-        "fr": "L'adaptateur nécessite 16 nodejs maintenant.\nL'adaptateur a été déplacé dans l'iobroker-community-adapters oragnization.\nUne erreur causant plusieurs messages indéfinis a été corrigée. #[23]\nLes dépendances ont été mises à jour.",
-        "it": "L'adattatore richiede nodejs 16 ora.\nL'adattatore è stato spostato in iobroker-community-adapters oragnization.\nUn errore che causa più messaggi non definiti è stato risolto. #[23]\nLe dipendenze sono state aggiornate.",
-        "es": "Adaptador requiere nodejs 16 ahora.\nEl adaptador se ha trasladado a la oragnización de ibroker-community-adapters.\nSe ha corregido un error que causa múltiples mensajes indefinidos. #[23]\nSe han actualizado las dependencias.",
-        "pl": "Adapter wymaga węzła 16.\nAdapter został przeniesiony do iobroker-community-adapter.\nUstalono błąd, który powoduje, że wiele nieokreślonych wiadomości zostało ustalonych. (23)\nW zależności zostały zaktualizowane.",
-        "uk": "Адаптер вимагає nodejs 16 тепер.\nПереміщено перехід на iobroker-community-adapters oragnization.\nВиправлено помилку, що викликає декілька невизнаних повідомлень. #[23]\nОновлено залежність.",
-        "zh-cn": "现在需要16秒。.\n已经进入了碘化石-社区的吸收者或种植者。.\n已确定造成多种未界定的信息的错误。 行动[23]\n情况已经更新。."
       }
     },
     "titleLang": {

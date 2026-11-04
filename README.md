@@ -176,7 +176,7 @@ Web browsers may block playback that is started without a click in the tab (auto
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
-### **WORK IN PROGRESS**
+### 3.1.1 (2026-11-04)
 - (Schimi1983) Roles of existing states corrected to the official ioBroker state roles (e.g. button.play, media.genre, media.cover, text); object IDs and values are unchanged
 
 ### 3.1.0 (2026-11-03)
@@ -221,11 +221,6 @@ Web browsers may block playback that is started without a click in the tab (auto
 - (copilot) Adapter requires admin >= 7.7.22 now
 - (copilot) Adapter requires js-controller >= 6.0.11 now
 - (mcm1957) Dependencies have been updated
-
-### 1.2.0 (2024-04-14)
-
-* (mcm1957) Adapter requires node.js 18 and js-controller >= 5 now
-* (mcm1957) Dependencies have been updated
 
 [Older changelogs can be found there](CHANGELOG_OLD.md)
 
