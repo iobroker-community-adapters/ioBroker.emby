@@ -206,7 +206,7 @@ Web browsers may block playback that is started without a click in the tab (auto
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
-### **WORK IN PROGRESS**
+### 3.1.2 (2026-11-17)
 - (Schimi1983) Repository checker suggestions: @iobroker/testing updated to 6.3.2, .vscode/settings.json with JSON schemas added
 - (Schimi1983) README rewritten for users without technical background (quick start, settings with recommendations, problem solving); texts of the settings page made clearer in all languages
 
@@ -249,12 +249,6 @@ Web browsers may block playback that is started without a click in the tab (auto
 - (GermanBluefox) Dependencies updated (@iobroker/adapter-core 3.4.3)
 - (GermanBluefox) Package content defined via "files" in package.json, tsconfig added for type checking
 - (GermanBluefox) The adapter was refactored to TypeScript
-
-### 1.3.0 (2026-03-03)
-- (mcm1957) Adapter requires node.js >= 20 now
-- (copilot) Adapter requires admin >= 7.7.22 now
-- (copilot) Adapter requires js-controller >= 6.0.11 now
-- (mcm1957) Dependencies have been updated
 
 [Older changelogs can be found there](CHANGELOG_OLD.md)
 

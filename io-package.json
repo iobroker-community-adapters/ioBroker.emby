@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "emby",
-    "version": "3.1.1",
+    "version": "3.1.2",
     "news": {
+      "3.1.2": {
+        "en": "Repository checker suggestions: @iobroker/testing updated to 6.3.2, .vscode/settings.json with JSON schemas added\nREADME rewritten for users without technical background (quick start, settings with recommendations, problem solving); texts of the settings page made clearer in all languages",
+        "de": "Vorschläge für Repository-Checker: @iobroker /testing auf 6.3.2, .vscode/settings.json mit JSON-Schemas\nREADME für Nutzer ohne technischen Hintergrund neu geschrieben (Schnellstart, Empfehlungen, Problemlösung); Texte der Einstellungsseite in allen Sprachen",
+        "ru": "Рекомендации по проверке репозитория: @iobroker /testing обновлено до 6.3.2, .vscode/settings.json с добавлением схем JSON\nREADME переписан для пользователей без технического образования (быстрый запуск, настройки с рекомендациями, решение проблем); тексты страницы настроек стали понятнее на всех языках",
+        "pt": "Sugestões do Repository Checker: @iobroker /testing atualizado para 6.3.2, .vscode/settings.json com esquemas JSON\nREADME reescrito para usuários sem formação técnica (início rápido, recomendações, solução de problemas); textos da página mais claros em todos os idiomas",
+        "nl": "Suggesties voor het controleren van de repository: @iobroker /testing bijgewerkt naar 6.3.2, .vscode/settings.json met JSON-schema's toegevoegd\nREADME herschreven voor gebruikers zonder technische achtergrond (snelle start, instellingen met aanbevelingen, probleemoplossing); teksten van de instellingenpagina duidelijker gemaakt in alle talen",
+        "fr": "Suggestions du vérificateur de dépôt : @iobroker /testing mis à jour en 6.3.2, .vscode/settings.json avec des schémas JSON ajoutés\nREADME réécrit pour les utilisateurs sans connaissances techniques (démarrage rapide, recommandations, résolution de problèmes) ; textes de la page des paramètres plus clairs dans toutes les langues",
+        "it": "Suggerimenti per il Repository Checker: @iobroker /testing aggiornato alla 6.3.2, .vscode/settings.json con schemi JSON\nREADME riscritto per utenti senza esperienza tecnica (avvio rapido, impostazioni con consigli, risoluzione dei problemi); testi più chiari in tutte le lingue",
+        "es": "Sugerencias de repositorios: @iobroker /testing actualizado a 6.3.2, .vscode/settings.json con esquemas JSON añadidos\nREADME reescrito para usuarios sin conocimientos técnicos (inicio rápido, ajustes con recomendaciones, resolución de problemas); los textos de la página de ajustes son más claros en todos los idiomas",
+        "pl": "Sugestie sprawdzania repozytorium: @iobroker /testing zaktualizowano do wersji 6.3.2, .vscode/settings.json z dodanymi schematami JSON\nREADME przepisany dla użytkowników bez zaplecza technicznego (szybki start, ustawienia z zaleceniami, rozwiązywanie problemów); teksty strony ustawień są jaśniejsze we wszystkich językach",
+        "uk": "Пропозиції перевірки сховища: @iobroker /testing оновлено до 6.3.2, .vscode/settings.json з доданими схемами JSON\nREADME переписаний для користувачів без технічного досвіду (швидкий запуск, налаштування з рекомендаціями, вирішення проблем); тексти сторінки налаштувань зрозуміліші на всіх мовах",
+        "zh-cn": "存储库检查器建议：@iobroker /testing 已更新至 6.3.2，添加了 JSON 架构的 .vscode/settings.json\n为没有技术背景（快速入门、带建议的设置、问题解决）的用户重写了自述文件；所有语言的设置页面的文本都更加清晰"
+      },
       "3.1.1": {
         "en": "Roles of existing states corrected to the official ioBroker state roles (e.g. button.play, media.genre, media.cover, text); object IDs and values are unchanged",
         "de": "Rollen bestehender States an die offiziellen ioBroker-State-Rollen angepasst (z. B. button.play, media.genre, media.cover, text); Objekt-IDs und Werte bleiben unverändert",
@@ -80,19 +93,6 @@
         "pl": "Adapter wymaga node.js 18 i sterownika js- > = 5 teraz\nZaktualizowano zależności",
         "uk": "Адаптер вимагає node.js 18 і js-controller >= 5 тепер\nЗалежність було оновлено",
         "zh-cn": "适配器需要节点.js 18和js控制器 QQ 现在5号\n依赖关系已更新"
-      },
-      "1.1.1": {
-        "en": "Dependencies have been updated.",
-        "de": "Abhängigkeiten wurden aktualisiert.",
-        "ru": "Обновлены зависимости.",
-        "pt": "As dependências foram atualizadas.",
-        "nl": "Afhankelijkheid is geüpdateerd.",
-        "fr": "Les dépendances ont été mises à jour.",
-        "it": "Le dipendenze sono state aggiornate.",
-        "es": "Se han actualizado las dependencias.",
-        "pl": "W zależności zostały zaktualizowane.",
-        "uk": "Оновлено залежність.",
-        "zh-cn": "情况已经更新。."
       }
     },
     "titleLang": {
