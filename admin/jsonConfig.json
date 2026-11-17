@@ -12,6 +12,16 @@
             "lg": 12,
             "xl": 12
         },
+        "intro": {
+            "type": "staticText",
+            "text": "IntroText",
+            "newLine": true,
+            "xs": 12,
+            "sm": 12,
+            "md": 12,
+            "lg": 12,
+            "xl": 12
+        },
         "ip": {
             "type": "text",
             "label": "IP",
@@ -30,7 +40,8 @@
             "sm": 12,
             "md": 6,
             "lg": 6,
-            "xl": 6
+            "xl": 6,
+            "help": "isSSLHelp"
         },
         "apikey": {
             "type": "password",
@@ -63,7 +74,8 @@
             "sm": 12,
             "md": 12,
             "lg": 12,
-            "xl": 12
+            "xl": 12,
+            "help": "DeviceIdsHelp"
         },
         "timeout": {
             "type": "number",
