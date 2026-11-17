@@ -19,7 +19,7 @@
 [![Test and Release](https://github.com/iobroker-community-adapters/ioBroker.emby/actions/workflows/test-and-release.yml/badge.svg)](https://github.com/iobroker-community-adapters/ioBroker.emby/actions/workflows/test-and-release.yml)
 
 > [!IMPORTANT]
-> This adapter cannot be installed from github
+> This adapter cannot be installed from GitHub. Install it from the adapter list in ioBroker Admin. The files on GitHub are only the source code, the program files are created when a release is published to npm.
 
 ## Emby adapter for ioBroker
 
