@@ -9,9 +9,7 @@
 [![License](https://img.shields.io/github/license/iobroker-community-adapters/ioBroker.emby)](https://github.com/iobroker-community-adapters/ioBroker.emby/blob/master/LICENSE)
 
 > [!IMPORTANT]
-> This adapter cannot be installed from GitHub. Install it from the adapter list in ioBroker Admin. The files on GitHub are only the source code, the program files are created when a release is published to npm.
-
-## Emby adapter for ioBroker
+> This adapter cannot be installed from GitHub. Install it from the adapter list in ioBroker Admin.
 
 Connects ioBroker to your [Emby](https://emby.media) media server. You see in ioBroker what is playing on your Emby apps (TV, phone, tablet, web browser) and can control them, for example:
 
